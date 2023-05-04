@@ -814,7 +814,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             
             
 
-        if "skull_petra_pipe" in params.keys():
+        if "skull_petra_pipe" in params.keys() and "petra" in ssoft:
 
             ### rename skull_mask
             rename_skull_mask = pe.Node(niu.Rename(), name = "rename_skull_mask")
@@ -830,7 +830,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                 rename_skull_mask, 'out_file',
                 datasink, '@skull_mask')
             
-        if "skull_petra_pipe" in params.keys():
+        if "skull_petra_pipe" in params.keys() and "petra" in ssoft:
 
             ### rename skull_stl
             rename_skull_stl = pe.Node(niu.Rename(), name = "rename_skull_stl")
@@ -846,7 +846,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                 rename_skull_stl, 'out_file',
                 datasink, '@skull_stl')
             
-        if "skull_petra_pipe" in params.keys():
+        if "skull_petra_pipe" in params.keys() and "petra" in ssoft:
 
             ### rename head_mask
             rename_head_mask = pe.Node(niu.Rename(), name = "rename_head_mask")
