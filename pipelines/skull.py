@@ -28,7 +28,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     
     # Creating input node
     inputnode= pe.Node(
-        niu.IdentifyInterface(fields=['ct', 'brainmask', 'debiased_T1',
+        niu.IdentityInterface(fields=['ct', 'brainmask', 'debiased_T1',
                                       'indiv_params']),
         name='inputnode'
     )
