@@ -810,7 +810,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             rename_skull_stl = pe.Node(niu.Rename(), name = "rename_skull_stl")
             rename_skull_stl.inputs.format_string = pref_deriv + "_space-{}_desc-skull_mask".format(space)
             rename_skull_stl.inputs.parse_string = parse_str
-            rename_skull_mask.inputs.keep_ext = True
+            rename_skull_stl.inputs.keep_ext = True
 
             main_workflow.connect(
                 skull_petra_pipe, 'outputnode.skull_stl',
@@ -826,7 +826,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             rename_head_mask = pe.Node(niu.Rename(), name = "rename_head_mask")
             rename_head_mask.inputs.format_string = pref_deriv + "_space-{}_desc-head_mask".format(space)
             rename_head_mask.inputs.parse_string = parse_str
-            rename_skull_mask.inputs.keep_ext = True
+            rename_head_mask.inputs.keep_ext = True
 
             main_workflow.connect(
                 skull_petra_pipe, 'outputnode.head_mask',
