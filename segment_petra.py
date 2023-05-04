@@ -785,6 +785,28 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             main_workflow.connect(
                 transfo_FLAIR_pipe, 'outputnode.norm_FLAIR',
                 datasink, '@norm_flair')
+            
+            
+
+        if "skull_petra_pipe" in params.keys():
+
+            ### rename skull_mask
+            rename_skull_mask = pe.Node(niu.Rename(), name = "rename_skull_mask")
+            rename_skull_mask.inputs.format_string = pref_deriv + "_space-{}_desc-skull_mask".format(space)
+            rename_skull_mask.inputs.parse_string = parse_str
+            rename_skull_mask.inputs.keep_ext = True
+
+            main_workflow.connect(
+                skull_petra_pipe, 'outputnode.skull_mask',
+                rename_skull_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_skull_mask, 'out_file',
+                datasink, '@skull_mask')
+
+            
+            
+            
 
     main_workflow.write_graph(graph2use="colored")
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
