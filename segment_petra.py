@@ -399,7 +399,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
     if 'ct' in ssoft:
         output_query['CT'] = {
             "datatype": "anat", "suffix": "T2star",
-            "acquisition": "ct",
+            "acquisition": "CT",
             "extension": ["nii", ".nii.gz"]}
 
     # MD and b0mean are optional, if "_MD" is added in the -soft arg
