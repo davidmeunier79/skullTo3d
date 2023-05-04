@@ -63,6 +63,7 @@ from macapype.pipelines.full_pipelines import (
     create_transfo_MD_pipe)
 
 from pipelines.skull import create_skull_petra_pipe
+from pipelines.skull import create_skull_ct_pipe
 
 from macapype.utils.utils_bids import (create_datasource,
                                        create_datasource_indiv_params,
@@ -394,6 +395,12 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             "datatype": "anat", "suffix": "T2star",
             "acquisition": "petra",
             "extension": ["nii", ".nii.gz"]}
+        
+    if 'ct' in ssoft:
+        output_query['CT'] = {
+            "datatype": "anat", "suffix": "T2star",
+            "acquisition": "ct",
+            "extension": ["nii", ".nii.gz"]}
 
     # MD and b0mean are optional, if "_MD" is added in the -soft arg
     if 'md' in ssoft:
@@ -501,6 +508,25 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.cropped_debiased_T1",
                               skull_petra_pipe, 'inputnode.debiased_T1')
+        
+    if "ct" in ssoft:
+
+        if "skull_ct_pipe" in params.keys():
+            print("Found skull_ct_pipe")
+
+        skull_ct_pipe = create_skull_ct_pipe(
+            params=parse_key(params, "skull_ct_pipe"))
+
+        main_workflow.connect(datasource, ('CT', get_first_elem),
+                              skull_ct_pipe, 'inputnode.ct')
+
+        main_workflow.connect(segment_pnh_pipe,
+                              "outputnode.cropped_brain_mask",
+                              skull_ct_pipe, 'inputnode.brainmask')
+
+        main_workflow.connect(segment_pnh_pipe,
+                              "outputnode.cropped_debiased_T1",
+                              skull_ct_pipe, 'inputnode.debiased_T1')
 
     if deriv:
 
