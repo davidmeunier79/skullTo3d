@@ -19,11 +19,10 @@ from macapype.utils.utils_nodes import NodeParams
 from nodes.skull import keep_gcc, wrap_nii2mesh, pad_zero_mri
 
 from macapype.nodes.prepare import average_align
-#a tester car la fonctrion average n'a pas ete copié
 
 from macapype.utils.misc import parse_key
-
-
+        
+    
 def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     
     # Creating pipeline
@@ -354,11 +353,21 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_segment_pipe.connect(inputnode, "brainmask",
                                pad_brainmask, "img_file")
 
+    # average if multiple PETRA
+    av_PETRA = pe.Node(
+        niu.Function(input_names=['list_img'],
+                        output_names=['avg_img'],
+                        function=average_align),
+        name="av_PETRA")
+
+    skull_segment_pipe.connect(inputnode, 'petra', 
+                               av_PETRA, "list_img")
+
     # align_petra_on_T1
     align_petra_on_T1 = pe.Node(interface=RegAladin(),
                                 name="align_petra_on_T1")
 
-    skull_segment_pipe.connect(inputnode, "petra",
+    skull_segment_pipe.connect(av_PETRA, 'avg_img', 
                                align_petra_on_T1, "flo_file")
 
     skull_segment_pipe.connect(pad_T1_debiased, "img_padded_file",
