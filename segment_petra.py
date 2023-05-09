@@ -727,6 +727,36 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                 main_workflow.connect(
                     rename_gen_5tt, 'out_file',
                     datasink, '@gen_5tt')
+                
+            if "nii2mesh_brain_pipe" in params["brain_segment_pipe"]:
+                print("Renaming wmgm_stl file")
+
+                rename_wmgm_stl = pe.Node(niu.Rename(), name = "rename_wmgm_stl")
+                rename_wmgm_stl.inputs.format_string = pref_deriv + "_space-{}_desc-wmgm_mask".format(space)
+                rename_wmgm_stl.inputs.parse_string = parse_str
+                rename_wmgm_stl.inputs.keep_ext = True
+
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.wmgm_stl',
+                    rename_wmgm_stl, 'in_file')
+
+                main_workflow.connect(
+                    rename_wmgm_stl, 'out_file',
+                    datasink, '@wmgm_stl')
+
+                print("Renaming wmgm_nii file")
+                rename_wmgm_nii = pe.Node(niu.Rename(), name = "rename_wmgm_nii")
+                rename_wmgm_nii.inputs.format_string = pref_deriv + "_space-{}_desc-wmgm_mask".format(space)
+                rename_wmgm_nii.inputs.parse_string = parse_str
+                rename_wmgm_nii.inputs.keep_ext = True
+
+                main_workflow.connect(
+                    segment_pnh_pipe, 'outputnode.wmgm_nii',
+                    rename_wmgm_nii, 'in_file')
+
+                main_workflow.connect(
+                    rename_wmgm_nii, 'out_file',
+                    datasink, '@wmgm_nii')
 
         elif "old_segment_pipe" in params.keys():
 
