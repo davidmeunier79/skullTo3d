@@ -18,6 +18,9 @@ from macapype.utils.utils_nodes import NodeParams
 
 from nodes.skull import keep_gcc, wrap_nii2mesh, pad_zero_mri
 
+from macapype.nodes.prepare import average_align
+#a tester car la fonctrion average n'a pas ete copié
+
 from macapype.utils.misc import parse_key
 
 
@@ -74,16 +77,26 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
                                align_ct_on_T1, "ref_file")
 
     # fast_ct ####### [okey][json]
-    fast_ct = NodeParams(interface=FAST(),
-                            params=parse_key(params, "fast_ct"),
-                            name="fast_ct")
+    #fast_ct = NodeParams(interface=FAST(),
+     #                       params=parse_key(params, "fast_ct"),
+      #                      name="fast_ct")
 
     # fast_petra.inputs.args = "-l 3"
     # fast_petra.inputs.output_biascorrected = True
     # fast_petra.inputs.output_biasfield = True
 
-    skull_segment_pipe.connect(align_ct_on_T1, "res_file",
-                               fast_ct, "in_files")
+    #skull_segment_pipe.connect(align_ct_on_T1, "res_file",
+     #                          fast_ct, "in_files")
+     
+    # align_aligned_ct_on_T1
+    align_aligned_ct_on_T1 = pe.Node(interface=RegAladin(),
+                                name="align_aligned_ct_on_T1")
+
+    skull_segment_pipe.connect(inputnode, "ct",
+                               align_aligned_ct_on_T1, "flo_file")
+
+    skull_segment_pipe.connect(pad_T1_debiased, "img_padded_file",
+                               align_aligned_ct_on_T1, "ref_file")
 
     # head_mask ####### [okey][json]
     head_mask = NodeParams(interface=Threshold(),

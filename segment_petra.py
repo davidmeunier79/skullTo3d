@@ -75,6 +75,7 @@ from macapype.utils.utils_params import update_params
 
 from macapype.utils.misc import show_files, get_first_elem, parse_key
 
+
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 ##########################################################################
 
@@ -498,8 +499,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         skull_petra_pipe = create_skull_petra_pipe(
             params=parse_key(params, "skull_petra_pipe"))
 
-        main_workflow.connect(datasource, ('PETRA', get_first_elem),
+        main_workflow.connect(datasource, 'PETRA',
                               skull_petra_pipe, 'inputnode.petra')
+        
+        #main_workflow.connect(datasource, ('PETRA', get_first_elem),
+        #                      skull_petra_pipe, 'inputnode.petra')
 
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.cropped_brain_mask",
