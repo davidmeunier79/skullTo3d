@@ -533,16 +533,16 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                               "outputnode.cropped_debiased_T1",
                               skull_ct_pipe, 'inputnode.debiased_T1')
 
-    if pad:
-        print("Using reg_aladin transfo to pad seg_mask back")
-        pad_skull_mask = pe.Node(RegResample(inter_val="NN"),
-                                 name="pad_skull_mask")
-        main_workflow.connect(skull_petra_pipe, 'outputnode.skull_mask',
-                         pad_skull_mask , "flo_file")
-        main_workflow.connect(segment_pnh_pipe, "data_preparation_pipe.av_T1.avg_img",
-                         pad_skull_mask , "ref_file")
-        main_workflow.connect(segment_pnh_pipe, "data_preparation_pipe.inv_tranfo.out_file",
-                         pad_skull_mask , "trans_file")
+    #if pad:
+        #print("Using reg_aladin transfo to pad seg_mask back")
+        #pad_skull_mask = pe.Node(RegResample(inter_val="NN"),
+                                 #name="pad_skull_mask")
+        #main_workflow.connect(skull_petra_pipe, 'outputnode.skull_mask',
+                         #pad_skull_mask , "flo_file")
+        #main_workflow.connect(segment_pnh_pipe, "data_preparation_pipe.av_T1.avg_img",
+                         #pad_skull_mask , "ref_file")
+        #main_workflow.connect(segment_pnh_pipe, "data_preparation_pipe.inv_tranfo.out_file",
+                         #pad_skull_mask , "trans_file")
 
     if deriv:
 
@@ -868,16 +868,19 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             rename_skull_mask.inputs.parse_string = parse_str
             rename_skull_mask.inputs.keep_ext = True
 
-            if pad:
-                main_workflow.connect(
-                    pad_skull_mask, 'out_file',
-                    rename_skull_mask, 'in_file')
+            #if pad:
+                #main_workflow.connect(
+                    #pad_skull_mask, 'out_file',
+                    #rename_skull_mask, 'in_file')
                 
-            else:
-                main_workflow.connect(
+            #else:
+                #main_workflow.connect(
+                    #skull_petra_pipe, 'outputnode.skull_mask',
+                    #rename_skull_mask, 'in_file')
+            main_workflow.connect(
                     skull_petra_pipe, 'outputnode.skull_mask',
                     rename_skull_mask, 'in_file')
-
+            
             main_workflow.connect(
                 rename_skull_mask, 'out_file',
                 datasink, '@skull_mask')
