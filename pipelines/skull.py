@@ -13,6 +13,7 @@ from nipype.interfaces.fsl.preprocess import FAST
 
 
 from nipype.interfaces.niftyreg.reg import RegAladin
+from nipype.interfaces.niftyreg.regutils import RegResample
 
 from macapype.utils.utils_nodes import NodeParams
 
