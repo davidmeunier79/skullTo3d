@@ -537,11 +537,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         print("Using reg_aladin transfo to pad seg_mask back")
         pad_skull_mask = pe.Node(RegResample(inter_val="NN"),
                                  name="pad_skull_mask")
-        seg_pipe.connect(skull_petra_pipe, 'outputnode.skull_mask',
+        main_workflow.connect(skull_petra_pipe, 'outputnode.skull_mask',
                          pad_skull_mask , "flo_file")
-        seg_pipe.connect(segment_pnh_pipe, "data_preparation_pipe.av_T1.avg_img",
+        main_workflow.connect(segment_pnh_pipe, "data_preparation_pipe.av_T1.avg_img",
                          pad_skull_mask , "ref_file")
-        seg_pipe.connect(segment_pnh_pipe, "data_preparation_pipe.inv_tranfo.out_file",
+        main_workflow.connect(segment_pnh_pipe, "data_preparation_pipe.inv_tranfo.out_file",
                          pad_skull_mask , "trans_file")
 
     if deriv:
