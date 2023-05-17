@@ -49,11 +49,12 @@ import os.path as op
 import argparse
 import json
 
-
 import nipype.pipeline.engine as pe
 import nipype.interfaces.utility as niu
 
 import nipype.interfaces.fsl as fsl
+
+from nipype.interfaces.niftyreg.regutils import RegResample
 
 from macapype.pipelines.full_pipelines import (
     create_full_spm_subpipes,
@@ -61,9 +62,6 @@ from macapype.pipelines.full_pipelines import (
     create_full_T1_ants_subpipes,
     create_transfo_FLAIR_pipe,
     create_transfo_MD_pipe)
-
-from pipelines.skull import create_skull_petra_pipe
-from pipelines.skull import create_skull_ct_pipe
 
 from macapype.utils.utils_bids import (create_datasource,
                                        create_datasource_indiv_params,
@@ -74,6 +72,9 @@ from macapype.utils.utils_tests import load_test_data, format_template
 from macapype.utils.utils_params import update_params
 
 from macapype.utils.misc import show_files, get_first_elem, parse_key
+
+from pipelines.skull import create_skull_petra_pipe
+from pipelines.skull import create_skull_ct_pipe
 
 
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
@@ -534,7 +535,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
 
     if pad:
         print("Using reg_aladin transfo to pad seg_mask back")
-        pad_skull_mask = pe.Node(Interfaces.RegResample(inter_val="NN"),
+        pad_skull_mask = pe.Node(RegResample(inter_val="NN"),
                                  name="pad_skull_mask ")
         seg_pipe.connect(skull_petra_pipe, 'outputnode.skull_mask',
                          pad_skull_mask , "flo_file")
