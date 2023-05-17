@@ -534,7 +534,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
 
     if pad:
         print("Using reg_aladin transfo to pad seg_mask back")
-        pad_skull_mask = pe.Node(RegResample(inter_val="NN"),
+        pad_skull_mask = pe.Node(Interfaces.RegResample(inter_val="NN"),
                                  name="pad_skull_mask ")
         seg_pipe.connect(skull_petra_pipe, 'outputnode.skull_mask',
                          pad_skull_mask , "flo_file")
