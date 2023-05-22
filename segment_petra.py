@@ -75,6 +75,7 @@ from macapype.utils.misc import show_files, get_first_elem, parse_key
 
 from pipelines.skull import create_skull_petra_pipe
 from pipelines.skull import create_skull_ct_pipe
+from pipelines.skull import create_skull_t1_pipe
 
 
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
@@ -532,6 +533,23 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.cropped_debiased_T1",
                               skull_ct_pipe, 'inputnode.debiased_T1')
+
+    if "skull_t1_pipe" in params.keys():
+        print("Found skull_petra_pipe")
+
+        skull_t1_pipe = create_skull_t1_pipe(
+            params=parse_key(params, "skull_T1_pipe"))
+
+        main_workflow.connect(segment_pnh_pipe,
+                                "outputnode.cropped_brain_mask",
+                                skull_t1_pipe, 'inputnode.brainmask')
+
+        main_workflow.connect(segment_pnh_pipe,
+                                "outputnode.cropped_debiased_T1",
+                                skull_t1_pipe, 'inputnode.debiased_T1')
+
+        #main_workflow.connect(datasource, ('PETRA', get_first_elem),
+        #                      skull_petra_pipe, 'inputnode.petra')
 
     #if pad:
         #print("Using reg_aladin transfo to pad seg_mask back")
