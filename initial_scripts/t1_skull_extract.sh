@@ -12,7 +12,9 @@ python resize_mri_riesling_t1.py sub-Riesling_T1w_restore2fois.nii.gz
 #create head_mask
 fslmaths padded_sub-Riesling_T1w_restore2fois.nii.gz -thr 60 -bin padded_sub-Riesling_T1w_restore2fois_thr60bin.nii.gz
 
+#
 python skull_filter2_T1.py padded_sub-Riesling_T1w_restore2fois_thr60bin.nii.gz
+
 ###
 fslmaths new_GCC_padded_sub-Riesling_T1w_restore2fois_thr60bin.nii.gz -kernel boxv 3 -dilD -fillh -ero sub-Riesling_T1w_headmask.nii.gz
 #!!!!! il faut dil et ero a plus que 9 voire plus que 15
