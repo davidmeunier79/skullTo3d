@@ -54,13 +54,13 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     skull_segment_pipe.connect(inputnode, "debiased_T1",
                                fast_t1, "in_files")
     
-    #fast2_t1 
-    #fast2_t1 = NodeParams(interface=FAST(),
-                            #params=parse_key(params, "fast2_t1"),
-                            #name="fast2_t1")
+    # fast2_t1 
+    fast2_t1 = NodeParams(interface=FAST(),
+                          params=parse_key(params, "fast2_t1"),
+                          name="fast2_t1")
 
-    #skull_segment_pipe.connect(fast_t1, "restored_image",
-                               #fast2_t1, "in_files")
+    skull_segment_pipe.connect(fast_t1, "restored_image",
+                               fast2_t1, "in_files")
     
     # pad_fast2
     #pad_fast2 = NodeParams(
