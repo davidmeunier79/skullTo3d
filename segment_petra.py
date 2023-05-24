@@ -326,6 +326,16 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         else:
             params_template_aladin = params_template
 
+        if "template_stereo_name" in params["general"].keys():
+
+            template_stereo_name = params["general"]["template_stereo_name"]
+            template_stereo_dir = load_test_data(template_stereo_name, path_to = my_path)
+            params_template_stereo = format_template(template_stereo_dir, template_stereo_name)
+
+        else:
+            params_template_stereo = params_template
+
+
 
 
 
@@ -365,6 +375,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             segment_pnh_pipe = create_full_ants_subpipes(
                 params_template=params_template,
                 params_template_aladin=params_template_aladin,
+                params_template_stereo=params_template_stereo,
                 params=params, mask_file=mask_file, space=space, pad=pad)
 
     # list of all required outputs
@@ -545,8 +556,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         #                        skull_t1_pipe, 'inputnode.brainmask')
 
         main_workflow.connect(segment_pnh_pipe,
-                              "outputnode.debiased_T1",
-                              skull_t1_pipe, 'inputnode.debiased_T1')
+                              "outputnode.cropped_debiased_T1",
+                              skull_t1_pipe, 'inputnode.cropped_debiased_T1')
 
         #main_workflow.connect(datasource, ('PETRA', get_first_elem),
         #                      skull_petra_pipe, 'inputnode.petra')
