@@ -679,7 +679,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_segment_pipe.connect(head_dilate, "out_file",
                                head_fill, "in_file")
 
-    # keep_gcc_head2 ####### [okey]
+    # keep_gcc_head2 ####### This step is useless i must take it off
     keep_gcc_head2 = pe.Node(
         interface=niu.Function(
             input_names=["nii_file"],
