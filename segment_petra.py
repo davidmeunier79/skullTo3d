@@ -531,7 +531,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         if pad and space == "native":
             if "short_preparation_pipe" in params.keys():
                 if "crop_T1" in params["short_preparation_pipe"].keys():
-
+                    pass
                     #print("Padding seg_mask in native space")
 
                     #pad_seg_mask = pe.Node(
