@@ -527,7 +527,51 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.cropped_debiased_T1",
                               skull_petra_pipe, 'inputnode.cropped_debiased_T1')
-        
+            
+        if pad and space == "native":
+            if "short_preparation_pipe" in params.keys():
+                if "crop_T1" in params["short_preparation_pipe"].keys():
+
+                    #print("Padding seg_mask in native space")
+
+                    #pad_seg_mask = pe.Node(
+                        #niu.Function(
+                            #input_names=['cropped_img_file', 'orig_img_file',
+                                        #'indiv_crop'],
+                            #output_names=['padded_img_file'],
+                            #function=padding_cropped_img),
+                        #name="pad_seg_mask")
+
+                    #seg_pipe.connect(brain_segment_pipe,
+                                    #"outputnode.segmented_file",
+                                    #pad_seg_mask, "cropped_img_file")
+
+                    #seg_pipe.connect(data_preparation_pipe, "outputnode.native_T1",
+                                    #pad_seg_mask, "orig_img_file")
+
+                    #seg_pipe.connect(inputnode, "indiv_params",
+                                    #pad_seg_mask, "indiv_crop")
+
+                    #seg_pipe.connect(pad_seg_mask, "padded_img_file",
+                                    #outputnode, "segmented_brain_mask")
+
+                else:
+                    print("Using reg_aladin transfo to pad skull_mask back")
+
+                    pad_skull_mask = pe.Node(RegResample(inter_val="NN"),
+                                        name="pad_skull_mask")
+
+                    main_workflow.connect(skull_petra_pipe,
+                                    "outputnode.skull_mask",
+                                    pad_skull_mask, "flo_file")
+
+                    main_workflow.connect(segment_pnh_pipe, "outputnode.native_T1",
+                                    pad_skull_mask, "ref_file")
+
+                    main_workflow.connect(segment_pnh_pipe, "outputnode.cropped_to_native_trans",
+                                    pad_skull_mask, "trans_file")
+
+
     if "ct" in ssoft:
 
         if "skull_ct_pipe" in params.keys():
@@ -624,19 +668,16 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             rename_skull_mask.inputs.parse_string = parse_str
             rename_skull_mask.inputs.keep_ext = True
 
-            #if pad:
-                #main_workflow.connect(
-                    #pad_skull_mask, 'out_file',
-                    #rename_skull_mask, 'in_file')
-                
-            #else:
-                #main_workflow.connect(
-                    #skull_petra_pipe, 'outputnode.skull_mask',
-                    #rename_skull_mask, 'in_file')
-            main_workflow.connect(
-                    skull_petra_pipe, 'outputnode.skull_mask',
-                    rename_skull_mask, 'in_file')
+            if pad:
             
+                main_workflow.connect(
+                        pad_skull_mask, "out_file",
+                        rename_skull_mask, 'in_file')
+            else:
+                main_workflow.connect(
+                        skull_petra_pipe, 'outputnode.skull_mask',
+                        rename_skull_mask, 'in_file')
+                
             main_workflow.connect(
                 rename_skull_mask, 'out_file',
                 datasink, '@skull_mask')
