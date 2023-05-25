@@ -569,7 +569,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['petra', 'brainmask', 'debiased_T1',
+        niu.IdentityInterface(fields=['petra', 'brainmask', 'cropped_debiased_T1',
                                       'indiv_params']),
         name='inputnode'
     )
@@ -583,7 +583,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         params=parse_key(params, "pad_T1_debiased"),
         name="pad_T1_debiased")
 
-    skull_segment_pipe.connect(inputnode, "debiased_T1",
+    skull_segment_pipe.connect(inputnode, "cropped_debiased_T1",
                                pad_T1_debiased, "img_file")
 
     # pad_brainmask
