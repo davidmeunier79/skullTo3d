@@ -802,14 +802,22 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_segment_pipe.connect(skull_bmask, "out_file",
                                skull_bmask_cleaning, "nii_file")
 
-    # skull_fov ####### [okey][json]
-    skull_fov = NodeParams(interface=RobustFOV(),
-                           params=parse_key(params, "skull_fov"),
-                           name="skull_fov")
+    #skull_fov ####### [okey][json]
+    #skull_fov = NodeParams(interface=RobustFOV(),
+                           #params=parse_key(params, "skull_fov"),
+                           #name="skull_fov")
+
+    #skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
+                               #skull_fov, "in_file")
+    
+    # skull_crop ####### 
+    skull_crop = NodeParams(interface=ExtractRoi(),
+                           params=parse_key(params, "skull_crop"),
+                           name="skull_crop")
 
     skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
-                               skull_fov, "in_file")
-
+                               skull_crop, "in_file")
+    
     # mesh_skull #######
     mesh_skull = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
@@ -817,7 +825,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                                function=wrap_nii2mesh),
         name="mesh_skull")
 
-    skull_segment_pipe.connect(skull_fov, "out_roi",
+    skull_segment_pipe.connect(skull_crop, "roi_file",
                                mesh_skull, "nii_file")
 
     # creating outputnode #######
@@ -832,7 +840,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_segment_pipe.connect(mesh_skull, "stl_file",
                                outputnode, "skull_stl")
 
-    skull_segment_pipe.connect(skull_fov, "out_roi",
+    skull_segment_pipe.connect(skull_crop, "roi_file",
                                outputnode, "skull_mask")
 
     return skull_segment_pipe
