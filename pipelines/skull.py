@@ -744,14 +744,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
     # skull_gcc_dilated ####### [okey][json]
     skull_gcc_dilated = NodeParams(
-        interface=Dilat        #main_workflow.connect(datasource, ('PETRA', get_first_elem),
-        #                      skull_petra_pipe, 'inputnode.petra')
-'stereo_brain_mask', 'stereo_segmented_brain_mask',
-                    'stereo_prob_gm', 'stereo_prob_wm',
-                    'stereo_prob_csf', "stereo_wmgm_mask",
-                    "native_to_stereo_trans"
-                    
-                    eImage(),
+        interface=DilateImage(),
         params=parse_key(params, "skull_gcc_dilated"),
         name="skull_gcc_dilated")
 
