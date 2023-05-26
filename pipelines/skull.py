@@ -637,11 +637,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                             params=parse_key(params, "fast_petra"),
                             name="fast_petra")
 
-    # fast_petra.inputs.args = "-l 3"
-    # fast_petra.inputs.output_biascorrected = True
-    # fast_petra.inputs.output_biasfield = True
-
-    skull_segment_pipe.connect(align_petra_on_stereo_brain_mask, "res_file",
+    skull_segment_pipe.connect(align_petra_on_stereo_brain_mask, "out_file",
                                fast_petra, "in_files")
 
     # head_mask ####### [okey][json]
