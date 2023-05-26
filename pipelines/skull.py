@@ -609,21 +609,21 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_segment_pipe.connect(inputnode, 'petra', 
                                av_PETRA, "list_img")
 
-    # align_petra_on_T1
-    align_petra_on_T1 = pe.Node(interface=RegAladin(),
-                                name="align_petra_on_T1")
+    #align_petra_on_T1
+    #align_petra_on_T1 = pe.Node(interface=RegAladin(),
+                                #name="align_petra_on_T1")
 
-    skull_segment_pipe.connect(av_PETRA, 'avg_img', 
-                               align_petra_on_T1, "flo_file")
+    #skull_segment_pipe.connect(av_PETRA, 'avg_img', 
+                               #align_petra_on_T1, "flo_file")
 
-    skull_segment_pipe.connect(inputnode, "native_T1",
-                               align_petra_on_T1, "ref_file")
+    #skull_segment_pipe.connect(inputnode, "native_T1",
+                               #align_petra_on_T1, "ref_file")
     
     # align_petra_on_stereo_brain_mask
-    align_petra_on_stereo_brain_mask = pe.Node(interface=RegResample(),
+    align_petra_on_stereo_brain_mask = pe.Node(interface=RegResample(pad_val = 0.0),
                                 name="align_petra_on_stereo_brain_mask")
 
-    skull_segment_pipe.connect(align_petra_on_T1, 'res_file', 
+    skull_segment_pipe.connect(av_PETRA, 'avg_img', 
                                align_petra_on_stereo_brain_mask, "flo_file")
     
     skull_segment_pipe.connect(inputnode, 'native_to_stereo_trans', 
