@@ -8,7 +8,7 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces.fsl.maths import (
     BinaryMaths, DilateImage, ErodeImage, ApplyMask, UnaryMaths, Threshold)
 
-from nipype.interfaces.fsl.utils import RobustFOV
+from nipype.interfaces.fsl.utils import RobustFOV, ExtractROI
 from nipype.interfaces.fsl.preprocess import FAST
 
 
@@ -811,7 +811,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                                #skull_fov, "in_file")
     
     # skull_crop ####### 
-    skull_crop = NodeParams(interface=ExtractRoi(),
+    skull_crop = NodeParams(interface=ExtractROI(),
                            params=parse_key(params, "skull_crop"),
                            name="skull_crop")
 
