@@ -517,16 +517,26 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         main_workflow.connect(datasource, ('PETRA', show_files), 
                               skull_petra_pipe, 'inputnode.petra')
         
-        #main_workflow.connect(datasource, ('PETRA', get_first_elem),
-        #                      skull_petra_pipe, 'inputnode.petra')
+        main_workflow.connect(segment_pnh_pipe,
+                              "outputnode.native_T1",
+                              skull_petra_pipe, 'inputnode.native_T1')
 
         main_workflow.connect(segment_pnh_pipe,
-                              "outputnode.cropped_brain_mask",
-                              skull_petra_pipe, 'inputnode.brainmask')
+                              "outputnode.stereo_brain_mask",
+                              skull_petra_pipe, 'inputnode.stereo_brain_mask')
 
         main_workflow.connect(segment_pnh_pipe,
-                              "outputnode.cropped_debiased_T1",
-                              skull_petra_pipe, 'inputnode.cropped_debiased_T1')
+                              "outputnode.native_to_stereo_trans",
+                              skull_petra_pipe, 'inputnode.native_to_stereo_trans')
+            
+                    
+        #main_workflow.connect(segment_pnh_pipe,
+                              #"outputnode.cropped_brain_mask",
+                              #skull_petra_pipe, 'inputnode.brainmask')
+
+        #main_workflow.connect(segment_pnh_pipe,
+                              #"outputnode.cropped_debiased_T1",
+                              #skull_petra_pipe, 'inputnode.cropped_debiased_T1')
             
         if pad and space == "native":
             if "short_preparation_pipe" in params.keys():

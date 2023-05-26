@@ -569,34 +569,35 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['petra', 'brainmask', 'cropped_debiased_T1',
+        niu.IdentityInterface(fields=['petra', 'stereo_brain_mask', 'native_T1',
+                                      'native_to_stereo_trans',
                                       'indiv_params']),
         name='inputnode'
     )
 
-    # pad_T1_debiased
-    pad_T1_debiased = NodeParams(
-        interface=niu.Function(
-            input_names=["img_file", "pad_val"],
-            output_names=["img_padded_file"],
-            function=pad_zero_mri),
-        params=parse_key(params, "pad_T1_debiased"),
-        name="pad_T1_debiased")
+    #pad_T1_debiased
+    #pad_T1_debiased = NodeParams(
+        #interface=niu.Function(
+            #input_names=["img_file", "pad_val"],
+            #output_names=["img_padded_file"],
+            #function=pad_zero_mri),
+        #params=parse_key(params, "pad_T1_debiased"),
+        #name="pad_T1_debiased")
 
-    skull_segment_pipe.connect(inputnode, "cropped_debiased_T1",
-                               pad_T1_debiased, "img_file")
+    #skull_segment_pipe.connect(inputnode, "cropped_debiased_T1",
+                               #pad_T1_debiased, "img_file")
 
-    # pad_brainmask
-    pad_brainmask = NodeParams(
-        interface=niu.Function(
-            input_names=["img_file", "pad_val"],
-            output_names=["img_padded_file"],
-            function=pad_zero_mri),
-        params=parse_key(params, "pad_brainmask"),
-        name="pad_brainmask")
+    #pad_brainmask
+    #pad_brainmask = NodeParams(
+        #interface=niu.Function(
+            #input_names=["img_file", "pad_val"],
+            #output_names=["img_padded_file"],
+            #function=pad_zero_mri),
+        #params=parse_key(params, "pad_brainmask"),
+        #name="pad_brainmask")
 
-    skull_segment_pipe.connect(inputnode, "brainmask",
-                               pad_brainmask, "img_file")
+    #skull_segment_pipe.connect(inputnode, "brainmask",
+                               #pad_brainmask, "img_file")
 
     # average if multiple PETRA
     av_PETRA = pe.Node(
@@ -615,8 +616,21 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_segment_pipe.connect(av_PETRA, 'avg_img', 
                                align_petra_on_T1, "flo_file")
 
-    skull_segment_pipe.connect(pad_T1_debiased, "img_padded_file",
+    skull_segment_pipe.connect(native_T1, "img_padded_file",
                                align_petra_on_T1, "ref_file")
+    
+    # align_petra_on_stereo_brain_mask
+    align_petra_on_stereo_brain_mask = pe.Node(interface=RegResample(),
+                                name="align_petra_on_stereo_brain_mask")
+
+    skull_segment_pipe.connect(align_petra_on_T1, 'res_file', 
+                               align_petra_on_stereo_brain_mask, "flo_file")
+    
+    skull_segment_pipe.connect(inputnode, 'native_to_stereo_trans', 
+                               align_petra_on_stereo_brain_mask, "trans_file")
+
+    skull_segment_pipe.connect(inputnode, "stereo_brain_mask",
+                               align_petra_on_stereo_brain_mask, "ref_file")
 
     # fast_petra ####### [okey][json]
     fast_petra = NodeParams(interface=FAST(),
@@ -627,7 +641,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     # fast_petra.inputs.output_biascorrected = True
     # fast_petra.inputs.output_biasfield = True
 
-    skull_segment_pipe.connect(align_petra_on_T1, "res_file",
+    skull_segment_pipe.connect(align_petra_on_stereo_brain_mask, "res_file",
                                fast_petra, "in_files")
 
     # head_mask ####### [okey][json]
@@ -730,7 +744,14 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
     # skull_gcc_dilated ####### [okey][json]
     skull_gcc_dilated = NodeParams(
-        interface=DilateImage(),
+        interface=Dilat        #main_workflow.connect(datasource, ('PETRA', get_first_elem),
+        #                      skull_petra_pipe, 'inputnode.petra')
+'stereo_brain_mask', 'stereo_segmented_brain_mask',
+                    'stereo_prob_gm', 'stereo_prob_wm',
+                    'stereo_prob_csf', "stereo_wmgm_mask",
+                    "native_to_stereo_trans"
+                    
+                    eImage(),
         params=parse_key(params, "skull_gcc_dilated"),
         name="skull_gcc_dilated")
 
@@ -776,7 +797,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         params=parse_key(params, "brainmask_res_dilated"),
         name="brainmask_res_dilated")
 
-    skull_segment_pipe.connect(pad_brainmask, "img_padded_file",
+    skull_segment_pipe.connect(inputnode, "stereo_brain_mask",
                                brainmask_res_dilated, "in_file")
 
     # skull_segment_pipe.connect(brainmask_res, "out_file",
@@ -810,14 +831,6 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     #skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
                                #skull_fov, "in_file")
     
-    # skull_crop ####### 
-    skull_crop = NodeParams(interface=ExtractROI(),
-                           params=parse_key(params, "skull_crop"),
-                           name="skull_crop")
-
-    skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
-                               skull_crop, "in_file")
-    
     # mesh_skull #######
     mesh_skull = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
@@ -825,7 +838,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                                function=wrap_nii2mesh),
         name="mesh_skull")
 
-    skull_segment_pipe.connect(skull_crop, "roi_file",
+    skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
                                mesh_skull, "nii_file")
 
     # creating outputnode #######
