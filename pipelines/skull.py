@@ -616,7 +616,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_segment_pipe.connect(av_PETRA, 'avg_img', 
                                align_petra_on_T1, "flo_file")
 
-    skull_segment_pipe.connect(native_T1, "img_padded_file",
+    skull_segment_pipe.connect(inputnode, "native_T1",
                                align_petra_on_T1, "ref_file")
     
     # align_petra_on_stereo_brain_mask
