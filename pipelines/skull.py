@@ -842,7 +842,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_segment_pipe.connect(mesh_skull, "stl_file",
                                outputnode, "skull_stl")
 
-    skull_segment_pipe.connect(skull_crop, "roi_file",
+    skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
                                outputnode, "skull_mask")
 
     return skull_segment_pipe
