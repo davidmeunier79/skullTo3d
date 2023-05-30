@@ -620,7 +620,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                                #align_petra_on_T1, "ref_file")
                                
     # align_petra_on_T2
-    align_petra_on_T2 = pe.Node(interface=Flirt(),
+    align_petra_on_T2 = pe.Node(interface=FLIRT(),
                                 name="align_petra_on_T2")
     
     align_petra_on_T2.inputs.apply_xfm = True
