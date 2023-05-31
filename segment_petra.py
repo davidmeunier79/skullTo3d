@@ -42,6 +42,7 @@
 #           Bastien Cagna (bastien.cagna@univ-amu.fr)
 #           Kepkee Loh (kepkee.loh@univ-amu.fr)
 #           Julien Sein (julien.sein@univ-amu.fr)
+#           Adam Sghari (adam.sghari@etu.univ-amu.fr)
 
 import os
 import os.path as op
@@ -604,6 +605,22 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.cropped_debiased_T1",
                               skull_ct_pipe, 'inputnode.debiased_T1')
+        
+        main_workflow.connect(segment_pnh_pipe,
+                              "outputnode.native_T1",
+                              skull_petra_pipe, 'inputnode.native_T1')
+        
+        main_workflow.connect(segment_pnh_pipe,
+                              "outputnode.native_T2",
+                              skull_petra_pipe, 'inputnode.native_T2')
+
+        main_workflow.connect(segment_pnh_pipe,
+                              "outputnode.stereo_brain_mask",
+                              skull_petra_pipe, 'inputnode.stereo_brain_mask')
+
+        main_workflow.connect(segment_pnh_pipe,
+                              "outputnode.native_to_stereo_trans",
+                              skull_petra_pipe, 'inputnode.native_to_stereo_trans')
 
     if "skull_t1_pipe" in params.keys():
         print("Found skull_t1_pipe")
@@ -672,8 +689,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                 transfo_FLAIR_pipe, 'outputnode.norm_FLAIR',
                 datasink, '@norm_flair')
             
-            
-
+# Rename in skull_petra_pipe
         if "skull_petra_pipe" in params.keys() and "petra" in ssoft:
 
             ### rename skull_mask
@@ -722,6 +738,61 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
 
             main_workflow.connect(
                 skull_petra_pipe, 'outputnode.head_mask',
+                rename_head_mask, 'in_file')
+
+            main_workflow.connect(
+                rename_head_mask, 'out_file',
+                datasink, '@head_mask')
+                     
+# Rename in skull_ct_pipe
+        if "skull_ct_pipe" in params.keys() and "ct" in ssoft:
+
+            ### rename skull_mask
+            rename_skull_mask = pe.Node(niu.Rename(), name = "rename_skull_mask")
+            rename_skull_mask.inputs.format_string = pref_deriv + "_space-{}_desc-skull_mask".format(space)
+            rename_skull_mask.inputs.parse_string = parse_str
+            rename_skull_mask.inputs.keep_ext = True
+
+            if pad:
+            
+                main_workflow.connect(
+                        pad_skull_mask, "out_file",
+                        rename_skull_mask, 'in_file')
+            else:
+                main_workflow.connect(
+                        skull_ct_pipe, 'outputnode.skull_mask',
+                        rename_skull_mask, 'in_file')
+                
+            main_workflow.connect(
+                rename_skull_mask, 'out_file',
+                datasink, '@skull_mask')
+            
+        if "skull_ct_pipe" in params.keys() and "ct" in ssoft:
+
+            ### rename skull_stl
+            rename_skull_stl = pe.Node(niu.Rename(), name = "rename_skull_stl")
+            rename_skull_stl.inputs.format_string = pref_deriv + "_space-{}_desc-skull_mask".format(space)
+            rename_skull_stl.inputs.parse_string = parse_str
+            rename_skull_stl.inputs.keep_ext = True
+
+            main_workflow.connect(
+                skull_ct_pipe, 'outputnode.skull_stl',
+                rename_skull_stl, 'in_file')
+
+            main_workflow.connect(
+                rename_skull_stl, 'out_file',
+                datasink, '@skull_stl')
+            
+        if "skull_ct_pipe" in params.keys() and "ct" in ssoft:
+
+            ### rename head_mask
+            rename_head_mask = pe.Node(niu.Rename(), name = "rename_head_mask")
+            rename_head_mask.inputs.format_string = pref_deriv + "_space-{}_desc-head_mask".format(space)
+            rename_head_mask.inputs.parse_string = parse_str
+            rename_head_mask.inputs.keep_ext = True
+
+            main_workflow.connect(
+                skull_ct_pipe, 'outputnode.head_mask',
                 rename_head_mask, 'in_file')
 
             main_workflow.connect(
