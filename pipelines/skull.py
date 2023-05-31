@@ -669,9 +669,9 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     debias_petra.inputs.operation = "div"
     debias_petra.inputs.output_datatype = "float"
 
-    masked_correct_bias_pipe.connect(align_petra_on_stereo_brain_mask, "out_file",
+    skull_segment_pipe.connect(align_petra_on_stereo_brain_mask, "out_file",
                                      debias_petra, 'in_file')
-    masked_correct_bias_pipe.connect(inputnode, 'smooth_bias',
+    skull_segment_pipe.connect(inputnode, 'smooth_bias',
                                      debias_petra, 'operand_file')
 
     # fast_petra 
