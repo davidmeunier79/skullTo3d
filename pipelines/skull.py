@@ -440,14 +440,14 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     skull_segment_pipe.connect(head_erode, "out_file",
                                ct_hmasked, "mask_file")
 
-    # fast_ct_hmasked_thr ####### [okey][json]
-    fast_ct_hmasked_thr = NodeParams(
+    # ct_hmasked_thr ####### [okey][json]
+    ct_hmasked_thr = NodeParams(
         interface=Threshold(),
-        params=parse_key(params, "fast_ct_hmasked_thr"),
-        name="fast_ct_hmasked_thr")
+        params=parse_key(params, "ct_hmasked_thr"),
+        name="ct_hmasked_thr")
 
-    skull_segment_pipe.connect(fast_ct_hmasked, "out_file",
-                               fast_ct_hmasked_thr, "in_file")
+    skull_segment_pipe.connect(ct_hmasked, "out_file",
+                               ct_hmasked_thr, "in_file")
 
     # skull_gcc ####### [okey]
     skull_gcc = pe.Node(
@@ -457,7 +457,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
             function=keep_gcc),
         name="skull_gcc")
 
-    skull_segment_pipe.connect(fast_ct_hmasked_thr, "out_file",
+    skull_segment_pipe.connect(ct_hmasked_thr, "out_file",
                                skull_gcc, "nii_file")
 
     # skull_gcc_dilated ####### [okey][json]
