@@ -608,19 +608,19 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.native_T1",
-                              skull_petra_pipe, 'inputnode.native_T1')
+                              skull_ct_pipe, 'inputnode.native_T1')
         
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.native_T2",
-                              skull_petra_pipe, 'inputnode.native_T2')
+                              skull_ct_pipe, 'inputnode.native_T2')
 
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.stereo_brain_mask",
-                              skull_petra_pipe, 'inputnode.stereo_brain_mask')
+                              skull_ct_pipe, 'inputnode.stereo_brain_mask')
 
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.native_to_stereo_trans",
-                              skull_petra_pipe, 'inputnode.native_to_stereo_trans')
+                              skull_ct_pipe, 'inputnode.native_to_stereo_trans')
 
     if "skull_t1_pipe" in params.keys():
         print("Found skull_t1_pipe")
