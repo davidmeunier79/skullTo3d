@@ -598,9 +598,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         main_workflow.connect(datasource, ('CT', get_first_elem),
                               skull_ct_pipe, 'inputnode.ct')
 
-        main_workflow.connect(segment_pnh_pipe,
-                              "outputnode.cropped_brain_mask",
-                              skull_ct_pipe, 'inputnode.brainmask')
+        #main_workflow.connect(segment_pnh_pipe,
+                              #"outputnode.cropped_brain_mask",
+                              #skull_ct_pipe, 'inputnode.brainmask')
 
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.cropped_debiased_T1",
