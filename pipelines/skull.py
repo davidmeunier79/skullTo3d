@@ -588,7 +588,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     # Creating input node
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['petra', 'stereo_brain_mask', 'native_T1',
-                                      'native_T2', 'native_to_stereo_trans', 
+                                      'native_T2', 'native_to_stereo_trans', 'smooth_bias',
                                       'indiv_params']),
         name='inputnode'
     )
@@ -664,12 +664,22 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_segment_pipe.connect(inputnode, "stereo_brain_mask",
                                align_petra_on_stereo_brain_mask, "ref_file")
 
+    # debias_petra
+    debias_petra = pe.Node(BinaryMaths(), name='debias_petra')
+    debias_petra.inputs.operation = "div"
+    debias_petra.inputs.output_datatype = "float"
+
+    masked_correct_bias_pipe.connect(align_petra_on_stereo_brain_mask, "out_file",
+                                     debias_petra, 'in_file')
+    masked_correct_bias_pipe.connect(inputnode, 'smooth_bias',
+                                     debias_petra, 'operand_file')
+
     # fast_petra 
     fast_petra = NodeParams(interface=FAST(),
                             params=parse_key(params, "fast_petra"),
                             name="fast_petra")
 
-    skull_segment_pipe.connect(align_petra_on_stereo_brain_mask, "out_file",
+    skull_segment_pipe.connect(debias_petra, 'out_file',
                                fast_petra, "in_files")
 
     # head_mask 

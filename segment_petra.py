@@ -519,6 +519,10 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                               skull_petra_pipe, 'inputnode.petra')
         
         main_workflow.connect(segment_pnh_pipe,
+                              "outputnode.smooth_bias",
+                              skull_petra_pipe, 'inputnode.smooth_bias')
+        
+        main_workflow.connect(segment_pnh_pipe,
                               "outputnode.native_T1",
                               skull_petra_pipe, 'inputnode.native_T1')
         
