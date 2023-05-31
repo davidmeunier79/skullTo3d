@@ -753,15 +753,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             rename_skull_mask.inputs.parse_string = parse_str
             rename_skull_mask.inputs.keep_ext = True
 
-            if pad:
-            
-                main_workflow.connect(
-                        pad_skull_mask, "out_file",
-                        rename_skull_mask, 'in_file')
-            else:
-                main_workflow.connect(
-                        skull_ct_pipe, 'outputnode.skull_mask',
-                        rename_skull_mask, 'in_file')
+
+            main_workflow.connect(
+                    skull_ct_pipe, "outputnode.skull_mask",
+                    rename_skull_mask, 'in_file')
+
                 
             main_workflow.connect(
                 rename_skull_mask, 'out_file',
