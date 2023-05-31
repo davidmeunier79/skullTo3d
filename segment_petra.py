@@ -602,9 +602,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                               #"outputnode.cropped_brain_mask",
                               #skull_ct_pipe, 'inputnode.brainmask')
 
-        main_workflow.connect(segment_pnh_pipe,
-                              "outputnode.cropped_debiased_T1",
-                              skull_ct_pipe, 'inputnode.debiased_T1')
+        #main_workflow.connect(segment_pnh_pipe,
+                              #"outputnode.cropped_debiased_T1",
+                              #skull_ct_pipe, 'inputnode.debiased_T1')
         
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.native_T1",
@@ -632,9 +632,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         #                    "outputnode.cropped_brain_mask",
         #                        skull_t1_pipe, 'inputnode.brainmask')
 
-        main_workflow.connect(segment_pnh_pipe,
-                              "outputnode.cropped_debiased_T1",
-                              skull_t1_pipe, 'inputnode.cropped_debiased_T1')
+        #main_workflow.connect(segment_pnh_pipe,
+                              #"outputnode.cropped_debiased_T1",
+                              #skull_t1_pipe, 'inputnode.cropped_debiased_T1')
 
         #main_workflow.connect(datasource, ('PETRA', get_first_elem),
         #                      skull_petra_pipe, 'inputnode.petra')
