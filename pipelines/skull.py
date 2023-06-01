@@ -8,6 +8,8 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces.fsl.maths import (
     BinaryMaths, DilateImage, ErodeImage, ApplyMask, UnaryMaths, Threshold)
 
+from nipype.interfaces.ants import DenoiseImage
+
 from nipype.interfaces.fsl.utils import RobustFOV, ExtractROI
 from nipype.interfaces.fsl.preprocess import FAST, FLIRT
 
@@ -664,22 +666,29 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_segment_pipe.connect(inputnode, "stereo_brain_mask",
                                align_petra_on_stereo_brain_mask, "ref_file")
 
-    # debias_petra
-    debias_petra = pe.Node(BinaryMaths(), name='debias_petra')
-    debias_petra.inputs.operation = "div"
-    debias_petra.inputs.output_datatype = "float"
+    #debias_petra
+    #debias_petra = pe.Node(BinaryMaths(), name='debias_petra')
+    #debias_petra.inputs.operation = "div"
+    #debias_petra.inputs.output_datatype = "float"
+
+    #skull_segment_pipe.connect(align_petra_on_stereo_brain_mask, "out_file",
+                                     #debias_petra, 'in_file')
+    #skull_segment_pipe.connect(inputnode, 'stereo_smooth_bias',
+                                     #debias_petra, 'operand_file')
+                                     
+    # denoise_petra
+    denoise_petra = pe.Node(interface=DenoiseImage(), 
+                            name='denoise_petra')
 
     skull_segment_pipe.connect(align_petra_on_stereo_brain_mask, "out_file",
-                                     debias_petra, 'in_file')
-    skull_segment_pipe.connect(inputnode, 'stereo_smooth_bias',
-                                     debias_petra, 'operand_file')
+                               denoise_petra, 'input_image')
 
     # fast_petra 
     fast_petra = NodeParams(interface=FAST(),
                             params=parse_key(params, "fast_petra"),
                             name="fast_petra")
 
-    skull_segment_pipe.connect(debias_petra, 'out_file',
+    skull_segment_pipe.connect(denoise_petra, 'output_image',
                                fast_petra, "in_files")
 
     # head_mask 
