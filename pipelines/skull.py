@@ -316,31 +316,41 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
                                #pad_brainmask, "img_file")
     
     # align_ct_on_T1
-    align_ct_on_T1 = pe.Node(interface=FLIRT(),
+    align_ct_on_T1 = pe.Node(interface=RegAladin(),
                                 name="align_ct_on_T1")
 
-    align_ct_on_T1.inputs.apply_xfm = True
-    align_ct_on_T1.inputs.uses_qform = True
-    align_ct_on_T1.inputs.interp = 'spline'
-
     skull_segment_pipe.connect(inputnode, 'ct', 
-                               align_ct_on_T1, "in_file")
+                               align_ct_on_T1, "flo_file")
 
     skull_segment_pipe.connect(inputnode, "native_T1",
-                               align_ct_on_T1, "reference")
-
-    # align_ct_on_stereo_brain_mask
-    align_ct_on_stereo_brain_mask = pe.Node(interface=RegResample(pad_val = 0.0),
-                                name="align_ct_on_stereo_brain_mask")
-
-    skull_segment_pipe.connect(align_ct_on_T1, 'out_file', 
-                               align_ct_on_stereo_brain_mask, "flo_file")
+                               align_ct_on_T1, "ref_file")
     
-    skull_segment_pipe.connect(inputnode, 'native_to_stereo_trans', 
-                               align_ct_on_stereo_brain_mask, "trans_file")
+    #align_ct_on_T1
+    #align_ct_on_T1 = pe.Node(interface=FLIRT(),
+                                #name="align_ct_on_T1")
 
-    skull_segment_pipe.connect(inputnode, "stereo_brain_mask",
-                               align_ct_on_stereo_brain_mask, "ref_file")
+    #align_ct_on_T1.inputs.apply_xfm = True
+    #align_ct_on_T1.inputs.uses_qform = True
+    #align_ct_on_T1.inputs.interp = 'spline'
+
+    #skull_segment_pipe.connect(inputnode, 'ct', 
+                               #align_ct_on_T1, "in_file")
+
+    #skull_segment_pipe.connect(inputnode, "native_T1",
+                               #align_ct_on_T1, "reference")
+
+    #align_ct_on_stereo_brain_mask
+    #align_ct_on_stereo_brain_mask = pe.Node(interface=RegResample(pad_val = 0.0),
+                                #name="align_ct_on_stereo_brain_mask")
+
+    #skull_segment_pipe.connect(align_ct_on_T1, 'out_file', 
+                               #align_ct_on_stereo_brain_mask, "flo_file")
+    
+    #skull_segment_pipe.connect(inputnode, 'native_to_stereo_trans', 
+                               #align_ct_on_stereo_brain_mask, "trans_file")
+
+    #skull_segment_pipe.connect(inputnode, "stereo_brain_mask",
+                               #align_ct_on_stereo_brain_mask, "ref_file")
     
     # fast_ct ####### [okey][json]
     #fast_ct = NodeParams(interface=FAST(),
@@ -354,7 +364,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     #skull_segment_pipe.connect(align_ct_on_T1, "res_file",
      #                          fast_ct, "in_files")
      
-    #align_aligned_ct_on_T1
+    # align_aligned_ct_on_T1
     #align_aligned_ct_on_T1 = pe.Node(interface=RegAladin(),
                                 #name="align_aligned_ct_on_T1")
 
@@ -369,7 +379,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
                            params=parse_key(params, "head_mask"),
                            name="head_mask")
 
-    skull_segment_pipe.connect(align_ct_on_stereo_brain_mask, "out_file",
+    skull_segment_pipe.connect(align_ct_on_T1, "res_file",
                                head_mask, "in_file")
 
     # head_mask_binary ####### [okey]
@@ -436,7 +446,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     ct_hmasked = pe.Node(interface=ApplyMask(),
                                  name="ct_hmasked")
 
-    skull_segment_pipe.connect(align_ct_on_stereo_brain_mask, "out_file",
+    skull_segment_pipe.connect(align_ct_on_T1, "res_file",
                                ct_hmasked, "in_file")
 
     skull_segment_pipe.connect(head_erode, "out_file",
@@ -690,13 +700,21 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
     skull_segment_pipe.connect(denoise_petra, 'output_image',
                                fast_petra, "in_files")
+    
+    # fast2_petra 
+    fast2_petra = NodeParams(interface=FAST(),
+                            params=parse_key(params, "fast2_petra"),
+                            name="fast2_petra")
 
+    skull_segment_pipe.connect(fast_petra, 'restored_image',
+                               fast2_petra, "in_files")
+    
     # head_mask 
     head_mask = NodeParams(interface=Threshold(),
                            params=parse_key(params, "head_mask"),
                            name="head_mask")
 
-    skull_segment_pipe.connect(fast_petra, "restored_image",
+    skull_segment_pipe.connect(fast2_petra, "restored_image",
                                head_mask, "in_file")
 
     # head_mask_binary 
