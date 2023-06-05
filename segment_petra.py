@@ -787,21 +787,21 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                 rename_skull_stl, 'out_file',
                 datasink, '@skull_stl')
             
-        if "skull_ct_pipe" in params.keys() and "ct" in ssoft:
+        #if "skull_ct_pipe" in params.keys() and "ct" in ssoft:
 
-            ### rename head_mask
-            rename_head_mask = pe.Node(niu.Rename(), name = "rename_head_mask")
-            rename_head_mask.inputs.format_string = pref_deriv + "_space-{}_desc-head_mask".format(space)
-            rename_head_mask.inputs.parse_string = parse_str
-            rename_head_mask.inputs.keep_ext = True
+            #rename head_mask
+            #rename_head_mask = pe.Node(niu.Rename(), name = "rename_head_mask")
+            #rename_head_mask.inputs.format_string = pref_deriv + "_space-{}_desc-head_mask".format(space)
+            #rename_head_mask.inputs.parse_string = parse_str
+            #rename_head_mask.inputs.keep_ext = True
 
-            main_workflow.connect(
-                skull_ct_pipe, 'outputnode.head_mask',
-                rename_head_mask, 'in_file')
+            #main_workflow.connect(
+                #skull_ct_pipe, 'outputnode.head_mask',
+                #rename_head_mask, 'in_file')
 
-            main_workflow.connect(
-                rename_head_mask, 'out_file',
-                datasink, '@head_mask')
+            #main_workflow.connect(
+                #rename_head_mask, 'out_file',
+                #datasink, '@head_mask')
 
             
             
