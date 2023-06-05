@@ -567,11 +567,17 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     # creating outputnode #######
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["skull_mask", "skull_stl", "head_mask"]),
+            fields=["skull_mask", "skull_stl"]),
         name='outputnode')
+        
+            #creating outputnode #######
+    #outputnode = pe.Node(
+        #niu.IdentityInterface(
+            #fields=["skull_mask", "skull_stl", "head_mask"]),
+        #name='outputnode')
 
-    skull_segment_pipe.connect(head_erode, "out_file",
-                               outputnode, "head_mask")
+    #skull_segment_pipe.connect(head_erode, "out_file",
+                               #outputnode, "head_mask")
 
     skull_segment_pipe.connect(mesh_skull, "stl_file",
                                outputnode, "skull_stl")
