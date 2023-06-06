@@ -530,10 +530,14 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                               "outputnode.native_T2",
                               skull_petra_pipe, 'inputnode.native_T2')
 
+        #main_workflow.connect(segment_pnh_pipe,
+                              #"outputnode.stereo_brain_mask",
+                              #skull_petra_pipe, 'inputnode.stereo_brain_mask')
+                              
         main_workflow.connect(segment_pnh_pipe,
-                              "outputnode.stereo_brain_mask",
-                              skull_petra_pipe, 'inputnode.stereo_brain_mask')
-
+                              "outputnode.stereo_native_T1",
+                              skull_petra_pipe, 'inputnode.stereo_native_T1')
+        
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.native_to_stereo_trans",
                               skull_petra_pipe, 'inputnode.native_to_stereo_trans')

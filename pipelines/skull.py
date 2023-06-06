@@ -606,7 +606,8 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     # Creating input node
     inputnode = pe.Node(
         niu.IdentityInterface(fields=['petra', 'stereo_native_T1', 'native_T1',
-                                      'native_T2', 'native_to_stereo_trans', 'stereo_smooth_bias',
+                                      'native_T2', 'native_to_stereo_trans', 
+                                      'stereo_smooth_bias',
                                       'indiv_params']),
         name='inputnode'
     )
