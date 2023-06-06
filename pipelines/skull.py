@@ -582,7 +582,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     skull_segment_pipe.connect(mesh_skull, "stl_file",
                                outputnode, "skull_stl")
 
-    skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
+    skull_segment_pipe.connect(ct_hmasked_thr, "out_file",
                                outputnode, "skull_mask")
 
     return skull_segment_pipe
