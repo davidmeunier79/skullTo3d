@@ -6,11 +6,11 @@ import nipype.interfaces.utility as niu
 import nipype.pipeline.engine as pe
 
 from nipype.interfaces.fsl.maths import (
-    BinaryMaths, DilateImage, ErodeImage, ApplyMask, UnaryMaths, Threshold)
+    DilateImage, ErodeImage, ApplyMask, UnaryMaths, Threshold)
 
 from nipype.interfaces.ants import DenoiseImage
 
-from nipype.interfaces.fsl.utils import RobustFOV, ExtractROI
+# from nipype.interfaces.fsl.utils import RobustFOV, ExtractROI
 from nipype.interfaces.fsl.preprocess import FAST, FLIRT
 
 
@@ -267,7 +267,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     skull_segment_pipe = pe.Workflow(name=name)
 
     # Creating input node
-    inputnode= pe.Node(
+    inputnode = pe.Node(
         niu.IdentityInterface(fields=['ct', 'stereo_native_T1', 'native_T1',
                                       'native_T2', 'native_to_stereo_trans',
                                       'stereo_native_T1', 'indiv_params']),
@@ -645,13 +645,14 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                                skull_bmask_cleaning, "nii_file")
 
     # skull_fov ####### [okey][json]
-    #skull_fov = NodeParams(interface=RobustFOV(),
-                           #params=parse_key(params, "skull_fov"),
-                           #name="skull_fov")
+    """
+    skull_fov = NodeParams(interface=RobustFOV(),
+                           params=parse_key(params, "skull_fov"),
+                           name="skull_fov")
 
-    #skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
-                               #skull_fov, "in_file")
-    
+    skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
+                               skull_fov, "in_file")
+    """
     # mesh_skull #######
     mesh_skull = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
