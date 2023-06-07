@@ -350,12 +350,18 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
                                   params=parse_key(params, "skull_fill_erode"),
                                   name="skull_fill_erode")
 
-    skull_fill_erode.inputs.kernel_shape = 'boxv'
-    skull_fill_erode.inputs.kernel_size = 7.0
-
     skull_segment_pipe.connect(skull_fill, "out_file",
                                skull_fill_erode, "in_file")
 
+    # skull_fov ####### [okey][json]
+    """
+    skull_fov = NodeParams(interface=RobustFOV(),
+                           params=parse_key(params, "skull_fov"),
+                           name="skull_fov")
+
+    skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
+                               skull_fov, "in_file")
+    """
     # mesh_skull #######
     mesh_skull = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
