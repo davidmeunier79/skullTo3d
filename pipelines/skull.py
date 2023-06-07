@@ -452,107 +452,64 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     #skull_segment_pipe.connect(head_erode, "out_file",
                                #ct_hmasked, "mask_file")
 
-    # ct_hmasked_thr ####### Direct apres aligner
-    ct_hmasked_thr = NodeParams(
+    # ct_thr ####### Direct apres aligner
+    ct_thr = NodeParams(
         interface=Threshold(),
-        params=parse_key(params, "ct_hmasked_thr"),
-        name="ct_hmasked_thr")
+        params=parse_key(params, "ct_thr"),
+        name="ct_thr")
 
     skull_segment_pipe.connect(align_ct_on_stereo_native_T1, "out_file",
-                               ct_hmasked_thr, "in_file")
+                               ct_thr, "in_file")
 
-    #skull_gcc ####### [okey]
-    #skull_gcc = pe.Node(
-        #interface=niu.Function(
-            #input_names=["nii_file"],
-            #output_names=["gcc_nii_file"],
-            #function=keep_gcc),
-        #name="skull_gcc")
+    # ct_binary ####### [okey]
+    ct_binary = pe.Node(interface=UnaryMaths(),
+                        name="ct_binary")
 
-    #skull_segment_pipe.connect(ct_hmasked_thr, "out_file",
-                               #skull_gcc, "nii_file")
+    ct_binary.inputs.operation = 'bin'
+    ct_binary.inputs.output_type = 'NIFTI_GZ'
 
-    #skull_gcc_dilated ####### [okey][json]
-    #skull_gcc_dilated = NodeParams(
-        #interface=DilateImage(),
-        #params=parse_key(params, "skull_gcc_dilated"),
-        #name="skull_gcc_dilated")
+    skull_segment_pipe.connect(ct_thr, "out_file",
+                               ct_binary, "in_file")
 
-    #skull_segment_pipe.connect(skull_gcc, "gcc_nii_file",
-                               #skull_gcc_dilated, "in_file")
+    # skull_gcc ####### [okey]
+    skull_gcc = pe.Node(
+        interface=niu.Function(
+            input_names=["nii_file"],
+            output_names=["gcc_nii_file"],
+            function=keep_gcc),
+        name="skull_gcc")
 
-    #skull_fill #######  [okey]
-    #skull_fill = pe.Node(interface=UnaryMaths(),
-                         #name="skull_fill")
+    skull_segment_pipe.connect(ct_binary, "out_file",
+                               skull_gcc, "nii_file")
 
-    #skull_fill.inputs.operation = 'fillh'
+    # skull_gcc_dilated ####### [okey][json]
+    skull_gcc_dilated = NodeParams(
+        interface=DilateImage(),
+        params=parse_key(params, "skull_gcc_dilated"),
+        name="skull_gcc_dilated")
 
-    #skull_segment_pipe.connect(skull_gcc_dilated, "out_file",
-                               #skull_fill, "in_file")
+    skull_segment_pipe.connect(skull_gcc, "gcc_nii_file",
+                               skull_gcc_dilated, "in_file")
 
-    #skull_fill_erode ####### [okey][json]
-    #skull_fill_erode = NodeParams(interface=ErodeImage(),
-                                  #params=parse_key(params, "skull_fill_erode"),
-                                  #name="skull_fill_erode")
+    # skull_fill #######  [okey]
+    skull_fill = pe.Node(interface=UnaryMaths(),
+                         name="skull_fill")
 
-    #skull_fill_erode.inputs.kernel_shape = 'boxv'
-    #skull_fill_erode.inputs.kernel_size = 7.0
+    skull_fill.inputs.operation = 'fillh'
 
-    #skull_segment_pipe.connect(skull_fill, "out_file",
-                               #skull_fill_erode, "in_file")
+    skull_segment_pipe.connect(skull_gcc_dilated, "out_file",
+                               skull_fill, "in_file")
 
-    # brainmask_res
-    """
-    brainmask_res = pe.Node(interface=RegResample(),
-                            name="brainmask_res")
-    brainmask_res.inputs.inter_val = 'NN'
+    # skull_fill_erode ####### [okey][json]
+    skull_fill_erode = NodeParams(interface=ErodeImage(),
+                                  params=parse_key(params, "skull_fill_erode"),
+                                  name="skull_fill_erode")
 
-    skull_segment_pipe.connect(pad_brainmask, "img_padded_file",
-                               brainmask_res, "flo_file")
+    skull_fill_erode.inputs.kernel_shape = 'boxv'
+    skull_fill_erode.inputs.kernel_size = 7.0
 
-    skull_segment_pipe.connect(skull_fill_erode, "out_file",
-                               brainmask_res, "ref_file")
-    """
-
-    #brainmask_res_dilated ####### [okey][json]
-    #brainmask_res_dilated = NodeParams(
-        #interface=DilateImage(),
-        #params=parse_key(params, "brainmask_res_dilated"),
-        #name="brainmask_res_dilated")
-
-    #skull_segment_pipe.connect(pad_brainmask, "img_padded_file",
-                               #brainmask_res_dilated, "in_file")
-
-    # skull_segment_pipe.connect(brainmask_res, "out_file",
-    # brainmask_res_dilated, "in_file")
-
-    #skull_bmask ####### [okey]
-    #skull_bmask = pe.Node(interface=ApplyMask(),
-                          #name="skull_bmask")
-
-    #skull_segment_pipe.connect(skull_fill_erode, "out_file",
-                               #skull_bmask, "in_file")
-
-    #skull_segment_pipe.connect(brainmask_res_dilated, "out_file",
-                               #skull_bmask, "mask_file")
-
-    #skull_bmask_cleaning ####### [okey]
-    #skull_bmask_cleaning = pe.Node(
-        #interface=niu.Function(input_names=["nii_file"],
-                               #output_names=["gcc_nii_file"],
-                               #function=keep_gcc),
-        #name="skull_bmask_cleaning")
-
-    #skull_segment_pipe.connect(skull_fill_erode, "out_file",
-                               #skull_bmask_cleaning, "nii_file")
-
-    #skull_fov ####### [okey][json]
-    #skull_fov = NodeParams(interface=RobustFOV(),
-                           #params=parse_key(params, "skull_fov"),
-                           #name="skull_fov")
-
-    #skull_segment_pipe.connect(skull_bmask_cleaning, "gcc_nii_file",
-                               #skull_fov, "in_file")
+    skull_segment_pipe.connect(skull_fill, "out_file",
+                               skull_fill_erode, "in_file")
 
     # mesh_skull #######
     mesh_skull = pe.Node(
@@ -561,7 +518,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
                                function=wrap_nii2mesh),
         name="mesh_skull")
 
-    skull_segment_pipe.connect(ct_hmasked_thr, "out_file",
+    skull_segment_pipe.connect(skull_fill_erode, "out_file",
                                mesh_skull, "nii_file")
 
     # creating outputnode #######
