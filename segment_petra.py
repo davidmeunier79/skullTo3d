@@ -401,12 +401,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             "extension": ["nii", ".nii.gz"]}
 
     # FLAIR is optional, if "_FLAIR" is added in the -soft arg
-    if 'flair' in ssoft:
-        output_query['FLAIR'] = {
-            "datatype": "anat", "suffix": "FLAIR",
-            "extension": ["nii", ".nii.gz"]}
-
-    # FLAIR is optional, if "_FLAIR" is added in the -soft arg
     if 'petra' in ssoft:
         output_query['PETRA'] = {
             "datatype": "anat", "suffix": "T2star",
@@ -417,16 +411,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         output_query['CT'] = {
             "datatype": "anat", "suffix": "T2star",
             "acquisition": "CT",
-            "extension": ["nii", ".nii.gz"]}
-
-    # MD and b0mean are optional, if "_MD" is added in the -soft arg
-    if 'md' in ssoft:
-        output_query['MD'] = {
-            "datatype": "dwi", "acquisition": "MD", "suffix": "dwi",
-            "extension": ["nii", ".nii.gz"]}
-
-        output_query['b0mean'] = {
-            "datatype": "dwi", "acquisition": "b0mean", "suffix": "dwi",
             "extension": ["nii", ".nii.gz"]}
 
     # indiv_params
@@ -453,60 +437,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         main_workflow.connect(datasource, 'T1',
                               segment_pnh_pipe, 'inputnode.list_T2')
 
-    if "flair" in ssoft:
-
-
-        if "transfo_FLAIR_pipe" in params.keys():
-            print("Found transfo_FLAIR_pipe")
-
-        transfo_FLAIR_pipe = create_transfo_FLAIR_pipe(params=parse_key(params, "transfo_FLAIR_pipe"),
-                                                       params_template=params_template)
-
-        if "t1" in ssoft:
-            main_workflow.connect(segment_pnh_pipe, "short_preparation_pipe.outputnode.preproc_T1",
-                                transfo_FLAIR_pipe, 'inputnode.orig_T1')
-
-        else:
-            main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_file",
-                                transfo_FLAIR_pipe, 'inputnode.orig_T1')
-
-
-        main_workflow.connect(segment_pnh_pipe, "reg.transfo_file",
-                              transfo_FLAIR_pipe, 'inputnode.lin_transfo_file')
-
-        main_workflow.connect(datasource, ('FLAIR', get_first_elem),
-                              transfo_FLAIR_pipe, 'inputnode.FLAIR')
-
-    if 'md' in ssoft:
-
-        if "transfo_MD_pipe" in params.keys():
-            print("Found transfo_MD_pipe")
-
-        transfo_MD_pipe = create_transfo_MD_pipe(params=parse_key(params, "transfo_MD_pipe"),
-                                                 params_template=params_template)
-
-        main_workflow.connect(segment_pnh_pipe,
-                                "old_segment_pipe.outputnode.threshold_wm",
-                                transfo_MD_pipe, 'inputnode.threshold_wm')
-
-        main_workflow.connect(datasource, ('MD', get_first_elem),
-                                transfo_MD_pipe, 'inputnode.MD')
-
-        main_workflow.connect(datasource, ('b0mean', get_first_elem),
-                                transfo_MD_pipe, 'inputnode.b0mean')
-
-        main_workflow.connect(segment_pnh_pipe, "debias.t1_debiased_file",
-                            transfo_MD_pipe, 'inputnode.orig_T1')
-
-        main_workflow.connect(segment_pnh_pipe, "debias.t2_debiased_brain_file",
-                            transfo_MD_pipe, 'inputnode.SS_T2')
-
-        main_workflow.connect(segment_pnh_pipe, "reg.transfo_file",
-                            transfo_MD_pipe, 'inputnode.lin_transfo_file')
-
-        main_workflow.connect(segment_pnh_pipe, "reg.inv_transfo_file",
-                            transfo_MD_pipe, 'inputnode.inv_lin_transfo_file')
-
     if "petra" in ssoft:
 
         if "skull_petra_pipe" in params.keys():
@@ -515,17 +445,17 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         skull_petra_pipe = create_skull_petra_pipe(
             params=parse_key(params, "skull_petra_pipe"))
 
-        main_workflow.connect(datasource, ('PETRA', show_files), 
+        main_workflow.connect(datasource, ('PETRA', show_files),
                               skull_petra_pipe, 'inputnode.petra')
-        
+
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.stereo_smooth_bias",
                               skull_petra_pipe, 'inputnode.stereo_smooth_bias')
-        
+
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.native_T1",
                               skull_petra_pipe, 'inputnode.native_T1')
-        
+
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.native_T2",
                               skull_petra_pipe, 'inputnode.native_T2')
@@ -533,16 +463,16 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         #main_workflow.connect(segment_pnh_pipe,
                               #"outputnode.stereo_brain_mask",
                               #skull_petra_pipe, 'inputnode.stereo_brain_mask')
-                              
+
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.stereo_native_T1",
                               skull_petra_pipe, 'inputnode.stereo_native_T1')
-        
+
         main_workflow.connect(segment_pnh_pipe,
                               "outputnode.native_to_stereo_trans",
                               skull_petra_pipe, 'inputnode.native_to_stereo_trans')
-            
-                    
+
+
         #main_workflow.connect(segment_pnh_pipe,
                               #"outputnode.cropped_brain_mask",
                               #skull_petra_pipe, 'inputnode.brainmask')
@@ -550,7 +480,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         #main_workflow.connect(segment_pnh_pipe,
                               #"outputnode.cropped_debiased_T1",
                               #skull_petra_pipe, 'inputnode.cropped_debiased_T1')
-            
+
         if pad and space == "native":
             if "short_preparation_pipe" in params.keys():
                 if "crop_T1" in params["short_preparation_pipe"].keys():
@@ -723,8 +653,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             main_workflow.connect(
                 rename_skull_mask, 'out_file',
                 datasink, '@skull_mask')
-            
-        if "skull_petra_pipe" in params.keys() and "petra" in ssoft:
 
             ### rename skull_stl
             rename_skull_stl = pe.Node(niu.Rename(), name = "rename_skull_stl")
@@ -739,8 +667,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             main_workflow.connect(
                 rename_skull_stl, 'out_file',
                 datasink, '@skull_stl')
-            
-        if "skull_petra_pipe" in params.keys() and "petra" in ssoft:
 
             ### rename head_mask
             rename_head_mask = pe.Node(niu.Rename(), name = "rename_head_mask")
@@ -775,8 +701,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                 rename_skull_mask, 'out_file',
                 datasink, '@skull_mask')
             
-        #if "skull_ct_pipe" in params.keys() and "ct" in ssoft:
-
             #### rename skull_stl
             #rename_skull_stl = pe.Node(niu.Rename(), name = "rename_skull_stl")
             #rename_skull_stl.inputs.format_string = pref_deriv + "_space-{}_desc-skull_mask".format(space)
@@ -791,8 +715,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                 #rename_skull_stl, 'out_file',
                 #datasink, '@skull_stl')
             
-        #if "skull_ct_pipe" in params.keys() and "ct" in ssoft:
-
             #rename head_mask
             #rename_head_mask = pe.Node(niu.Rename(), name = "rename_head_mask")
             #rename_head_mask.inputs.format_string = pref_deriv + "_space-{}_desc-head_mask".format(space)
