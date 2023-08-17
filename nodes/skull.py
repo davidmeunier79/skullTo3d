@@ -1,4 +1,72 @@
 
+def mask_auto_threshold(img_file, operation, index):
+    import os
+    import numpy as np
+    import nibabel as nib
+    import matplotlib.pyplot as plt
+    from sklearn.cluster import KMeans
+    from nipype.utils.filemanip import split_filename as split_f
+
+    ## Mean function
+    def calculate_mean(data):
+        total = sum(data)
+        count = len(data)
+        mean = total / count
+        return mean
+
+    img_nii = nib.load(img_file)
+    img_arr = np.array(img_nii.dataobj)
+    img_arr_copy = np.copy(img_arr)
+    img_arr1d_copy = img_arr_copy.flatten()
+    data = img_arr1d_copy
+    print("data shape : ", data.shape)
+
+    ## Reshape data to a 2D array (required by k-means)
+    X = np.array(data).reshape(-1, 1)
+    print("X shape : ", X.shape)
+
+    ## Create a k-means clustering model with 3 clusters using k-means++ initialization
+    num_clusters = 3
+    kmeans = KMeans(n_clusters=num_clusters, random_state=0)
+
+    ## Fit the model to the data and predict cluster labels
+    cluster_labels = kmeans.fit_predict(X)
+
+    ## Split data into groups based on cluster labels
+    groups = [X[cluster_labels == i].flatten() for i in range(num_clusters)]
+
+    ## Calculate the mean for each group
+
+    avail_operations = ["min", "mean"]
+
+    assert operation in avail_operations, "Error, \
+        {} is not in {}".format(operation, avail_operations)
+
+    assert 0 <= index and index < num_clusters-1, "Error \
+        with index {}".format(index)
+
+    if operation == "min":  # for head mask
+        # We must define : the minimum of the second group for the headmask
+        # we create minimums array, we sort and then take the middle value
+        minimums_array = np.array([np.amin(group) for group in groups])
+        minimums_array_sorted = np.sort(minimums_array)
+        mask_threshold = minimums_array_sorted[index]
+
+        print("headmask_threshold : ", mask_threshold)
+
+    elif operation == "mean":  # for skull mask
+
+        # We must define :  mean of the second group for the skull extraction
+        # we create means array, we sort and then take the middle value
+        means_array = np.array([calculate_mean(group) for group in groups])
+        means_array_sorted = np.sort(means_array)
+        mask_threshold = means_array_sorted[index]
+
+        print("skull_extraction_threshold : ", mask_threshold)
+
+    return mask_threshold
+
+
 def pad_zero_mri(img_file, pad_val=10):
 
     import os
@@ -74,6 +142,24 @@ def keep_gcc(nii_file):
     return gcc_nii_file
 
 
+
+def wrap_nii2mesh_old(nii_file):
+
+    import os
+    from nipype.utils.filemanip import split_filename as split_f
+
+    path, fname, ext = split_f(nii_file)
+
+    stl_file = os.path.abspath(fname + ".stl")
+
+    cmd = "nii2mesh_old_gcc {} {}".format(nii_file, stl_file)
+
+    ret = os.system(cmd)
+
+    print(ret)
+
+    assert ret == 0, "Error, cmd {} did not work".format(cmd)
+    return stl_file
 
 def wrap_nii2mesh(nii_file):
 
