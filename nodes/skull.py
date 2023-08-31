@@ -21,23 +21,23 @@ def mask_auto_threshold(img_file, operation, index):
     data = img_arr1d_copy
     print("data shape : ", data.shape)
 
-    ## Reshape data to a 2D array (required by k-means)
+    # Reshape data to a 2D array (required by k-means)
     X = np.array(data).reshape(-1, 1)
     print("X shape : ", X.shape)
 
-    ## Create a k-means clustering model with 3 clusters using k-means++ initialization
+    # Create a k-means clustering model with 3 clusters
+    # using k-means++ initialization
+
     num_clusters = 3
     kmeans = KMeans(n_clusters=num_clusters, random_state=0)
 
-    ## Fit the model to the data and predict cluster labels
+    # Fit the model to the data and predict cluster labels
     cluster_labels = kmeans.fit_predict(X)
 
-    ## Split data into groups based on cluster labels
+    # Split data into groups based on cluster labels
     groups = [X[cluster_labels == i].flatten() for i in range(num_clusters)]
 
-    ## Calculate the mean for each group
-
-    avail_operations = ["min", "mean"]
+    avail_operations = ["min", "mean", "max"]
 
     assert operation in avail_operations, "Error, \
         {} is not in {}".format(operation, avail_operations)
@@ -45,24 +45,38 @@ def mask_auto_threshold(img_file, operation, index):
     assert 0 <= index and index < num_clusters-1, "Error \
         with index {}".format(index)
 
-    if operation == "min":  # for head mask
-        # We must define : the minimum of the second group for the headmask
-        # we create minimums array, we sort and then take the middle value
-        minimums_array = np.array([np.amin(group) for group in groups])
-        minimums_array_sorted = np.sort(minimums_array)
-        mask_threshold = minimums_array_sorted[index]
+    # We must define : the minimum of the second group for the headmask
+    # we create minimums array, we sort and then take the middle value
+    minimums_array = np.array([np.amin(group) for group in groups])
+    min_sorted = np.sort(minimums_array)
 
+    print("Min : {}".format(" ".join(str(val) for val in min_sorted)))
+
+    # We must define :  mean of the second group for the skull extraction
+    # we create means array, we sort and then take the middle value
+    means_array = np.array([calculate_mean(group) for group in groups])
+    mean_sorted = np.sort(means_array)
+
+    print("Mean : {}".format(" ".join(str(int(val)) for val in mean_sorted)))
+
+    maximums_array = np.array([np.amax(group) for group in groups])
+    max_sorted = np.sort(maximums_array)
+
+    print("Max : {}".format(" ".join(str(val) for val in max_sorted)))
+
+    if operation == "min":  # for head mask
+        mask_threshold = min_sorted[index]
         print("headmask_threshold : ", mask_threshold)
 
     elif operation == "mean":  # for skull mask
 
-        # We must define :  mean of the second group for the skull extraction
-        # we create means array, we sort and then take the middle value
-        means_array = np.array([calculate_mean(group) for group in groups])
-        means_array_sorted = np.sort(means_array)
-        mask_threshold = means_array_sorted[index]
-
+        mask_threshold = mean_sorted[index]
         print("skull_extraction_threshold : ", mask_threshold)
+
+    elif operation == "max":  # unused
+
+        mask_threshold = max_sorted[index]
+        print("max threshold : ", mask_threshold)
 
     return mask_threshold
 
@@ -136,7 +150,7 @@ def keep_gcc(nii_file):
 
     path, fname, ext = split_f(nii_file)
 
-    gcc_nii_file = os.path.abspath("GCC_" + fname + ext)
+    gcc_nii_file = os.path.abspath(fname + "_gcc" + ext)
 
     nib.save(new_img, gcc_nii_file)
     return gcc_nii_file
