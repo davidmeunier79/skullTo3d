@@ -102,7 +102,7 @@ def mask_auto_img(img_file):
 
     print("X shape : ", X.shape)
     print("X max : ", np.round(np.max(X)))
-    nb_bins = np.rint(np.max(X)/10)
+    nb_bins = (np.rint(np.max(X)/10)).astype(int)
 
     print("Nb bins: ", nb_bins)
 
