@@ -528,8 +528,8 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         #petra_head_auto_thresh.inputs.operation = "min"
         #petra_head_auto_thresh.inputs.index = "1"
 
-        skull_petra_pipe.connect(align_petra_on_stereo_native_T1, "out_file",
-                                 petra_head_auto_thresh, "img_file")
+        #skull_petra_pipe.connect(align_petra_on_stereo_native_T1, "out_file",
+                                 #petra_head_auto_thresh, "img_file")
 
         petra_head_auto_mask = NodeParams(
                 interface=niu.Function(
