@@ -122,18 +122,6 @@ def mask_auto_img(img_file):
     hist, bins, _ = plt.hist(X, bins=nb_bins,
                              alpha=0.5, color='b', label='Histogram')
 
-    print("hist :", hist)
-    print("bins :", bins)
-
-    # Find local minima in the histogram
-    peaks, indexes = find_peaks(-hist, distance = 10)  # Use negative histogram for minima
-
-    print("peaks indexes :", peaks)
-
-    print("peak_hist :", hist[peaks])
-    print("peak_bins :", bins[peaks])
-
-
     # Add labels and a legend
     plt.xlabel('Value')
     plt.ylabel('Probability')
@@ -143,10 +131,34 @@ def mask_auto_img(img_file):
     # Save the figure as a PNG file
     plt.savefig(os.path.abspath('histogram.png'))
 
-    0/0
+    # Find local minima in the histogram
+    peaks, indexes = find_peaks(-hist, distance = 10)  # Use negative histogram for minima
+
+    assert peaks.shape[0] > 2, \
+        "Error, could not find at least two local minima"
+
+    print("peaks indexes :", peaks)
+
+    print("peak_hist :", hist[peaks])
+    print("peak_bins :", bins[peaks])
+
+    index_peak_min = bins[peaks][0]
+    index_peak_max = bins[peaks][1]
+
+
+    # filtering
+    new_mask_data = np.zeros(img_arr.shape, dtype = "int")
+    new_mask_data[index_peak_min < img_arr &&  img_arr < index_peak_max] = 1
+
+    print(np.sum(new_mask_data))
+
+    # saving mask as nii
     path, fname, ext = os.path.split_f(img_file)
 
     mask_img_file = os.path.abspath(fname + "_autothresh" + ext)
+
+    mask_img = nib.Nifti1Image(dataobj = new_mask_data, header = img_nii.header, affine = img_nii.affine)
+    nii.save(mask_img, mask_img_file)
 
     return mask_img_file
 
