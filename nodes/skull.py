@@ -148,7 +148,7 @@ def mask_auto_img(img_file):
 
     # filtering
     new_mask_data = np.zeros(img_arr.shape, dtype = "int")
-    new_mask_data[np.and(index_peak_min < img_arr , img_arr < index_peak_max)] = 1
+    new_mask_data[np.logical_and(index_peak_min < img_arr , img_arr < index_peak_max)] = 1
 
     print(np.sum(new_mask_data))
 
