@@ -88,7 +88,7 @@ def mask_auto_threshold(img_file, operation, index):
     return mask_threshold
 
 
-def mask_auto_img(img_file):
+def mask_auto_img(img_file, operation):
 
     import os
     import numpy as np
@@ -98,13 +98,6 @@ def mask_auto_img(img_file):
     from scipy.signal import find_peaks
 
     from nipype.utils.filemanip import split_filename as split_f
-
-    ## Mean function
-    def calculate_mean(data):
-        total = sum(data)
-        count = len(data)
-        mean = total / count
-        return mean
 
     img_nii = nib.load(img_file)
     img_arr = np.array(img_nii.dataobj)
@@ -148,8 +141,17 @@ def mask_auto_img(img_file):
     # filtering
     new_mask_data = np.zeros(img_arr.shape, dtype=int)
 
-    new_mask_data[np.logical_and(index_peak_min < img_arr,
-                                 img_arr < index_peak_max)] = 1
+    assert operation in ["higher", "interval", "lower"], \
+        "Error in operation {}".format(operation)
+
+    if operation == "interval":
+        filter_arr = np.logical_and(index_peak_min < img_arr,
+                                    img_arr < index_peak_max)
+
+    elif operation == "higher":
+        filter_arr = index_peak_min < img_arr
+
+    new_mask_data[filter_arr] = 1
 
     print(np.sum(new_mask_data))
 
@@ -158,7 +160,9 @@ def mask_auto_img(img_file):
 
     mask_img_file = os.path.abspath(fname + "_autothresh" + ext)
 
-    mask_img = nib.Nifti1Image(dataobj = new_mask_data, header = img_nii.header, affine = img_nii.affine)
+    mask_img = nib.Nifti1Image(dataobj=new_mask_data,
+                               header=img_nii.header,
+                               affine=img_nii.affine)
     nib.save(mask_img, mask_img_file)
 
     return mask_img_file
