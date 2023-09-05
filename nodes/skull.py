@@ -104,14 +104,15 @@ def mask_auto_img(img_file):
 
     print("X shape : ", X.shape)
     print("X max : ", np.round(np.max(X)))
-    nb_bins = (np.rint(np.max(X)/30)).astype(int)
-
+    sample_bins = 30
+    nb_bins = (np.rint(np.max(X)/sample_bins)).astype(int)
     print("Nb bins: ", nb_bins)
 
     # Create a histogram
     hist, bins, _ = plt.hist(X, bins=nb_bins,
                              alpha=0.5, color='b', label='Histogram')
 
+    print("hist :", hist)
     print("bins :", bins)
 
     # Find local minima in the histogram
