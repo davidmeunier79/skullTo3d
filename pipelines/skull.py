@@ -13,6 +13,7 @@ from nipype.interfaces.fsl.utils import RobustFOV
 from nipype.interfaces.fsl.preprocess import FAST, FLIRT
 
 
+from nipype.interfaces.niftyreg.regutils import RegResample
 from nipype.interfaces.niftyreg.reg import RegAladin
 
 from macapype.utils.utils_nodes import NodeParams

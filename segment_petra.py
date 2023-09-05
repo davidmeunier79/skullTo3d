@@ -52,11 +52,9 @@ import json
 import pprint
 
 import nipype.pipeline.engine as pe
-import nipype.interfaces.utility as niu
 
 import nipype.interfaces.fsl as fsl
 
-from nipype.interfaces.niftyreg.regutils import RegResample
 
 from macapype.pipelines.full_pipelines import (
     create_full_spm_subpipes,
