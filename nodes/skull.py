@@ -102,9 +102,10 @@ def mask_auto_img(img_file):
 
     print("X shape : ", X.shape)
     print("X max : ", np.round(np.max(X)))
+    nb_bins = np.round(np.max(X)/10)
 
     # Create a histogram
-    plt.hist(X, bins=np.round(np.max(X)),
+    plt.hist(X, bins=nb_bins,
              density=True, alpha=0.5, color='b', label='Histogram')
 
     # Calculate and plot the probability density function (PDF)
