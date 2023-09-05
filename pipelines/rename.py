@@ -100,58 +100,6 @@ def rename_all_skull_petra_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_stereo_petra_head_mask, 'out_file',
             datasink, '@stereo_petra_head_mask')
 
-        if pad and space == "native":
-
-            # rename petra_skull_mask
-            rename_petra_skull_mask = pe.Node(niu.Rename(),
-                                              name="rename_petra_skull_mask")
-            rename_petra_skull_mask.inputs.format_string = \
-                pref_deriv + "_space-{}_desc-petra_skullmask".format(space)
-            rename_petra_skull_mask.inputs.parse_string = parse_str
-            rename_petra_skull_mask.inputs.keep_ext = True
-
-            main_workflow.connect(
-                skull_petra_pipe, "outputnode_native.native_petra_skull_mask",
-                rename_petra_skull_mask, 'in_file')
-
-            main_workflow.connect(
-                rename_petra_skull_mask, 'out_file',
-                datasink, '@petra_skull_mask')
-
-            # rename robustpetra_skull_mask
-            rename_robustpetra_skull_mask = pe.Node(
-                niu.Rename(), name="rename_robustpetra_skull_mask")
-            rename_robustpetra_skull_mask.inputs.format_string = \
-                pref_deriv + "_space-{}_desc-robustpetra_skullmask".format(
-                    space)
-            rename_robustpetra_skull_mask.inputs.parse_string = parse_str
-            rename_robustpetra_skull_mask.inputs.keep_ext = True
-
-            main_workflow.connect(
-                skull_petra_pipe,
-                "outputnode_native.native_robustpetra_skull_mask",
-                rename_robustpetra_skull_mask, 'in_file')
-
-            main_workflow.connect(
-                rename_robustpetra_skull_mask, 'out_file',
-                datasink, '@robustpetra_skull_mask')
-
-            # rename petra_head_mask
-            rename_petra_head_mask = pe.Node(
-                niu.Rename(), name="rename_petra_head_mask")
-            rename_petra_head_mask.inputs.format_string = \
-                pref_deriv + "_space-{}_desc-petra_headmask".format(space)
-            rename_petra_head_mask.inputs.parse_string = parse_str
-            rename_petra_head_mask.inputs.keep_ext = True
-
-            main_workflow.connect(
-                skull_petra_pipe, "outputnode_native.native_petra_head_mask",
-                rename_petra_head_mask, 'in_file')
-
-            main_workflow.connect(
-                rename_petra_head_mask, 'out_file',
-                datasink, '@petra_head_mask')
-
 
 def rename_all_skull_ct_derivatives(params, main_workflow, segment_pnh_pipe,
                                     skull_ct_pipe, datasink, pref_deriv,
