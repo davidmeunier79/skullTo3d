@@ -147,13 +147,15 @@ def mask_auto_img(img_file):
 
 
     # filtering
-    new_mask_data = np.zeros(img_arr.shape, dtype = "int")
-    new_mask_data[np.logical_and(index_peak_min < img_arr , img_arr < index_peak_max)] = 1
+    new_mask_data = np.zeros(img_arr.shape, dtype=int)
+
+    new_mask_data[np.logical_and(index_peak_min < img_arr,
+                                 img_arr < index_peak_max)] = 1
 
     print(np.sum(new_mask_data))
 
     # saving mask as nii
-    path, fname, ext = os.path.split_f(img_file)
+    path, fname, ext = split_f(img_file)
 
     mask_img_file = os.path.abspath(fname + "_autothresh" + ext)
 
