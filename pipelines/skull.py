@@ -19,7 +19,7 @@ from nipype.interfaces.niftyreg.regutils import RegResample
 from macapype.utils.utils_nodes import NodeParams
 
 from nodes.skull import (
-    mask_auto_threshold,
+    mask_auto_img,
     keep_gcc, wrap_nii2mesh, wrap_nii2mesh_old)
 
 from macapype.pipelines.prepare import _create_avg_reorient_pipeline
@@ -516,40 +516,17 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
             inputnode, ('indiv_params', parse_key, "petra_head_mask_thr"),
             petra_head_mask_thr, "indiv_params")
     else:
-        if "petra_head_auto_thresh" in params.keys():
-            # petra_head_auto_thresh
-            petra_head_auto_thresh = NodeParams(
+
+        petra_head_auto_thresh = NodeParams(
                 interface=niu.Function(
-                    input_names=["img_file", "operation", "index"],
-                    output_names=["mask_threshold"],
-                    function=mask_auto_threshold),
+                    input_names=["img_file"],
+                    output_names=["mask_img_file"],
+                    function=mask_auto_img),
                 params=parse_key(params, "petra_head_auto_thresh"),
                 name="petra_head_auto_thresh")
 
-        else:
-            # petra_head_auto_thresh
-            petra_head_auto_thresh = pe.Node(
-                interface=niu.Function(
-                    input_names=["img_file", "operation", "index"],
-                    output_names=["mask_threshold"],
-                    function=mask_auto_threshold),
-                name="petra_head_auto_thresh")
-
-            # petra_head_auto_thresh.inputs.operation = "max"
-            petra_head_auto_thresh.inputs.operation = "min"
-            petra_head_auto_thresh.inputs.index = 1
-
         skull_petra_pipe.connect(align_petra_on_stereo_native_T1, "out_file",
                                  petra_head_auto_thresh, "img_file")
-
-        # petra_head_mask_thr
-        petra_head_mask_thr = pe.Node(interface=Threshold(),
-                                      name="petra_head_mask_thr")
-
-        skull_petra_pipe.connect(petra_head_auto_thresh, "mask_threshold",
-                                 petra_head_mask_thr, "thresh")
-        skull_petra_pipe.connect(align_petra_on_stereo_native_T1, "out_file",
-                                 petra_head_mask_thr, "in_file")
 
     # petra_head_mask_binary
     petra_head_mask_binary = pe.Node(interface=UnaryMaths(),
@@ -558,9 +535,14 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     petra_head_mask_binary.inputs.operation = 'bin'
     petra_head_mask_binary.inputs.output_type = 'NIFTI_GZ'
 
-    skull_petra_pipe.connect(petra_head_mask_thr, "out_file",
-                             petra_head_mask_binary, "in_file")
+    if "petra_head_mask_thr" in params.keys():
 
+        skull_petra_pipe.connect(petra_head_mask_thr, "out_file",
+                                 petra_head_mask_binary, "in_file")
+    else:
+
+        skull_petra_pipe.connect(petra_head_auto_thresh, "mask_img_file",
+                                 petra_head_mask_binary, "in_file")
     # petra_head_mask_binary_clean1
     petra_head_gcc = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
@@ -568,8 +550,6 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                                function=keep_gcc),
         name="petra_head_gcc")
 
-    skull_petra_pipe.connect(petra_head_mask_binary, "out_file",
-                             petra_head_gcc, "nii_file")
 
     # petra_head_dilate
     petra_head_dilate = NodeParams(
