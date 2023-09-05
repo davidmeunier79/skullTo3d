@@ -108,8 +108,9 @@ def mask_auto_img(img_file):
     # Calculate and plot the probability density function (PDF)
     xmin, xmax = plt.xlim()
     x = np.linspace(xmin, xmax, 100)
-    p = norm.pdf(x, loc=np.mean(X), scale=np.std(X))
-    plt.plot(x, p, 'k', linewidth=2, label='PDF')
+    #p = norm.pdf(x, loc=np.mean(X), scale=np.std(X))
+    pdf = (1 / (np.std(X) * np.sqrt(2 * np.pi))) * np.exp(-(x - np.mean(X))**2 / (2 * np.var(X)))
+    plt.plot(x, pdf, 'k', linewidth=2, label='PDF')
 
     # Add labels and a legend
     plt.xlabel('Value')
@@ -118,12 +119,12 @@ def mask_auto_img(img_file):
     plt.legend()
 
     # Save the figure as a PNG file
-    plt.savefig('histogram_and_pdf.png')
+    plt.savefig(os.path.abspath('histogram_and_pdf.png'))
 
     0/0
     path, fname, ext = os.path.split_f(img_file)
 
-    mask_img_file =
+    mask_img_file = os.path.abspath(fname + "_autothresh" + ext)
 
     return mask_img_file
 
