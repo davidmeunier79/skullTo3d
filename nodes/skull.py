@@ -101,9 +101,11 @@ def mask_auto_img(img_file):
     X = np.copy(img_arr).flatten().reshape(-1, 1)
 
     print("X shape : ", X.shape)
+    print("X max : ", np.round(np.max(X)))
 
     # Create a histogram
-    plt.hist(X, bins=1, density=True, alpha=0.5, color='b', label='Histogram')
+    plt.hist(X, bins=np.round(np.max(X)),
+             density=True, alpha=0.5, color='b', label='Histogram')
 
     # Calculate and plot the probability density function (PDF)
     xmin, xmax = plt.xlim()
