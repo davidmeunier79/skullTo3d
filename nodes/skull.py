@@ -54,7 +54,17 @@ def mask_auto_threshold(img_file, operation, index):
     means_array = np.array([calculate_mean(group) for group in groups])
     mean_sorted = np.sort(means_array)
 
+    index_sorted = np.argsort(means_array)
+
     print("Mean : {}".format(" ".join(str(int(val)) for val in mean_sorted)))
+
+    print("Index = {}".format(" ".join(str(int(val)) for val in index_sorted)))
+
+    print("Index mid group : ", index_sorted[index])
+    print("Min/max mid group : ", np.amin(groups[index_sorted[index]]),
+          np.amax(groups[index_sorted[index]]))
+
+    0/0
 
     maximums_array = np.array([np.amax(group) for group in groups])
     max_sorted = np.sort(maximums_array)
@@ -116,9 +126,13 @@ def mask_auto_img(img_file):
     print("bins :", bins)
 
     # Find local minima in the histogram
-    peaks, _ = find_peaks(-hist, distance = 10)  # Use negative histogram for minima
+    peaks, indexes = find_peaks(-hist, distance = 10)  # Use negative histogram for minima
 
-    rescaled_peaks = (peaks + bins[0])* sample_bins
+    print("peaks :", peaks)
+    print("indexes :", indexes)
+
+    rescaled_peaks = (-peaks * sample_bins) + bins[0]
+
     print("Local minimas: ", rescaled_peaks)
 
     # Add labels and a legend
