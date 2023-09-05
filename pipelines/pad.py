@@ -8,9 +8,9 @@ import nipype.pipeline.engine as pe
 
 from nipype.interfaces.niftyreg.regutils import RegResample
 
-def pad_skull_petra_derivatives(params, main_workflow, segment_pnh_pipe,
-                                skull_petra_pipe, datasink, pref_deriv,
-                                parse_str, space):
+
+def pad_skull_petra_outputs(params, main_workflow, segment_pnh_pipe,
+                            skull_petra_pipe):
 
     # output node
     outputnode_native = pe.Node(

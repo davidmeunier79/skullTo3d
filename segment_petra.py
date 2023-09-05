@@ -503,7 +503,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                               skull_petra_pipe, 'inputnode.indiv_params')
 
         if pad and space == "native":
-            pad_skull_petra_outputs(main_workflow, segment_pnh_pipe,
+            pad_skull_petra_outputs(params, main_workflow, segment_pnh_pipe,
                                     skull_petra_pipe)
 
     if "ct" in ssoft and "skull_ct_pipe" in params.keys():
