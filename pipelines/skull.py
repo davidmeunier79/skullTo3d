@@ -617,6 +617,8 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     # petra_skull_auto_thresh
     if "petra_skull_mask_thr" in params.keys():
 
+        print("*** petra_skull_mask_thr ***")
+
         # petra_skull_mask_thr ####### [okey][json]
         petra_skull_mask_thr = NodeParams(
             interface=Threshold(),
@@ -632,49 +634,38 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         skull_petra_pipe.connect(petra_fast, "restored_image",
                                  petra_skull_mask_thr, "in_file")
     else:
-        if "petra_skull_auto_thresh" in params.keys():
 
-            petra_skull_auto_thresh = NodeParams(
+        print("*** petra_skull_auto_mask ***")
+
+        petra_skull_auto_mask = NodeParams(
                 interface=niu.Function(
-                    input_names=["img_file", "operation", "index"],
-                    output_names=["mask_threshold"],
-                    function=mask_auto_threshold),
-                params=parse_key(params, "petra_skull_auto_thresh"),
-                name="petra_skull_auto_thresh")
+                    input_names=["img_file", "operation"],
+                    output_names=["mask_img_file"],
+                    function=mask_auto_img),
+                params=parse_key(params, "petra_skull_auto_mask"),
+                name="petra_skull_auto_mask")
 
-            skull_petra_pipe.connect(
-                inputnode, ("indiv_params", parse_key,
-                            "petra_skull_auto_thresh"),
-                petra_skull_auto_thresh, "indiv_params")
+        petra_skull_auto_mask.inputs.operation = "interval"
 
-        else:
-            petra_skull_auto_thresh = pe.Node(
-                interface=niu.Function(
-                    input_names=["img_file", "operation", "index"],
-                    output_names=["mask_threshold"],
-                    function=mask_auto_threshold),
-                name="petra_skull_auto_thresh")
-
-            # petra_skull_auto_thresh.inputs.operation = "max"
-            petra_skull_auto_thresh.inputs.operation = "min"
-            petra_skull_auto_thresh.inputs.index = 1
 
         skull_petra_pipe.connect(petra_fast, "restored_image",
-                                 petra_skull_auto_thresh, "img_file")
+                                 petra_skull_auto_mask, "img_file")
 
-        # petra_skull_mask_thr ####### [okey][json]
-        petra_skull_mask_thr = pe.Node(
-            interface=Threshold(),
-            name="petra_skull_mask_thr")
+    # petra_skull_mask_binary
+    petra_skull_mask_binary = pe.Node(interface=UnaryMaths(),
+                                     name="petra_skull_mask_binary")
 
-        petra_skull_mask_thr.inputs.direction = 'above'
+    petra_skull_mask_binary.inputs.operation = 'bin'
+    petra_skull_mask_binary.inputs.output_type = 'NIFTI_GZ'
 
-        skull_petra_pipe.connect(petra_skull_auto_thresh,
-                                 "mask_threshold",
-                                 petra_skull_mask_thr, "thresh")
+    if "petra_skull_mask_thr" in params.keys():
 
-        skull_petra_pipe.connect(petra_fast, "restored_image",
-                                 petra_skull_mask_thr, "in_file")
+        skull_petra_pipe.connect(petra_skull_mask_thr, "out_file",
+                                 petra_skull_mask_binary, "in_file")
+    else:
+
+        skull_petra_pipe.connect(petra_skull_auto_mask, "mask_img_file",
+                                 petra_skull_mask_binary, "in_file")
 
     # petra_skull_auto_thresh
     if "petra_head_erode_skin" in params.keys():
@@ -692,7 +683,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         petra_skin_masked = pe.Node(interface=ApplyMask(),
                                     name="petra_skin_masked")
 
-        skull_petra_pipe.connect(petra_skull_mask_thr, "out_file",
+        skull_petra_pipe.connect(petra_skull_mask_binary, "out_file",
                                  petra_skin_masked, "in_file")
 
         skull_petra_pipe.connect(petra_head_erode_skin, "out_file",
@@ -711,7 +702,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         skull_petra_pipe.connect(petra_skin_masked, "out_file",
                                  petra_skull_gcc, "nii_file")
     else:
-        skull_petra_pipe.connect(petra_skull_mask_thr, "out_file",
+        skull_petra_pipe.connect(petra_skull_mask_binary, "out_file",
                                  petra_skull_gcc, "nii_file")
 
     # petra_skull_dilate ####### [okey][json]

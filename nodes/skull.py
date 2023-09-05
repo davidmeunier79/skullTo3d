@@ -145,10 +145,16 @@ def mask_auto_img(img_file, operation):
         "Error in operation {}".format(operation)
 
     if operation == "interval":
+        print("Keeping interval between {} and {}".format(index_peak_min,
+                                                          index_peak_max))
+
         filter_arr = np.logical_and(index_peak_min < img_arr,
                                     img_arr < index_peak_max)
 
     elif operation == "higher":
+
+        print("Keeping higher than {} ".format(index_peak_min))
+
         filter_arr = index_peak_min < img_arr
 
     new_mask_data[filter_arr] = 1
