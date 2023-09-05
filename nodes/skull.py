@@ -116,9 +116,11 @@ def mask_auto_img(img_file):
     print("bins :", bins)
 
     # Find local minima in the histogram
-    peaks, _ = find_peaks(-hist)  # Use negative histogram for minima
+    peaks, _ = find_peaks(-hist, distance = 10)  # Use negative histogram for minima
 
-    print("Local minimas: ", peaks)
+
+    rescaled_peaks = (peaks + bins[0])* bin_sample
+    print("Local minimas: ", rescaled_peaks)
 
     # Add labels and a legend
     plt.xlabel('Value')
