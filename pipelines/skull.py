@@ -517,16 +517,16 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
             petra_head_mask_thr, "indiv_params")
     else:
 
-        petra_head_auto_thresh = NodeParams(
-                interface=niu.Function(
-                    input_names=["img_file", "operation", "index"],
-                    output_names=["mask_threshold"],
-                    function=mask_auto_threshold),
-                params=parse_key(params, "petra_head_auto_thresh"),
-                name="petra_head_auto_thresh")
+        #petra_head_auto_thresh = NodeParams(
+                #interface=niu.Function(
+                    #input_names=["img_file", "operation", "index"],
+                    #output_names=["mask_threshold"],
+                    #function=mask_auto_threshold),
+                #params=parse_key(params, "petra_head_auto_thresh"),
+                #name="petra_head_auto_thresh")
 
-        petra_head_auto_thresh.inputs.operation = "min"
-        petra_head_auto_thresh.inputs.index = "1"
+        #petra_head_auto_thresh.inputs.operation = "min"
+        #petra_head_auto_thresh.inputs.index = "1"
 
         skull_petra_pipe.connect(align_petra_on_stereo_native_T1, "out_file",
                                  petra_head_auto_thresh, "img_file")
