@@ -112,7 +112,7 @@ def mask_auto_img(img_file):
     hist, bins, _ = plt.hist(X, bins=nb_bins,
                              alpha=0.5, color='b', label='Histogram')
 
-    print("bins :" , bins)
+    print("bins :", bins)
 
     # Find local minima in the histogram
     peaks, _ = find_peaks(-hist)  # Use negative histogram for minima
