@@ -19,7 +19,7 @@ from nipype.interfaces.niftyreg.regutils import RegResample
 from macapype.utils.utils_nodes import NodeParams
 
 from nodes.skull import (
-    mask_auto_img,
+    mask_auto_img, mask_auto_threshold,
     keep_gcc, wrap_nii2mesh, wrap_nii2mesh_old)
 
 from macapype.pipelines.prepare import _create_avg_reorient_pipeline
