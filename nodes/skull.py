@@ -84,7 +84,9 @@ def mask_auto_img(img_file):
     import numpy as np
     import nibabel as nib
     import matplotlib.pyplot as plt
-    from sklearn.cluster import KMeans
+
+    from scipy.signal import find_peaks
+
     from nipype.utils.filemanip import split_filename as split_f
 
     ## Mean function
@@ -107,24 +109,22 @@ def mask_auto_img(img_file):
     print("Nb bins: ", nb_bins)
 
     # Create a histogram
-    plt.hist(X, bins=nb_bins,
-             density=True, alpha=0.5, color='b', label='Histogram')
+    hist, bins, _ = plt.hist(X, bins=nb_bins,
+                             alpha=0.5, color='b', label='Histogram')
 
-    # Calculate and plot the probability density function (PDF)
-    xmin, xmax = plt.xlim()
-    x = np.linspace(xmin, xmax, 100)
+    # Find local minima in the histogram
+    peaks, _ = find_peaks(-hist)  # Use negative histogram for minima
 
-    pdf = (1 / (np.std(X) * np.sqrt(2 * np.pi))) * np.exp(-(x - np.mean(X))**2 / (2 * np.var(X)))
-    plt.plot(x, pdf, 'k', linewidth=2, label='PDF')
+    print("Local minimas: ", peaks)
 
     # Add labels and a legend
     plt.xlabel('Value')
     plt.ylabel('Probability')
-    plt.title('Histogram and PDF')
+    plt.title('Histogram')
     plt.legend()
 
     # Save the figure as a PNG file
-    plt.savefig(os.path.abspath('histogram_and_pdf.png'))
+    plt.savefig(os.path.abspath('histogram.png'))
 
     0/0
     path, fname, ext = os.path.split_f(img_file)
