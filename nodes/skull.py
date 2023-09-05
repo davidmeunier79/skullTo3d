@@ -145,7 +145,6 @@ def mask_auto_img(img_file):
     index_peak_min = bins[peaks][0]
     index_peak_max = bins[peaks][1]
 
-
     # filtering
     new_mask_data = np.zeros(img_arr.shape, dtype=int)
 
@@ -160,7 +159,7 @@ def mask_auto_img(img_file):
     mask_img_file = os.path.abspath(fname + "_autothresh" + ext)
 
     mask_img = nib.Nifti1Image(dataobj = new_mask_data, header = img_nii.header, affine = img_nii.affine)
-    nii.save(mask_img, mask_img_file)
+    nib.save(mask_img, mask_img_file)
 
     return mask_img_file
 
