@@ -85,6 +85,7 @@ from pipelines.rename import (rename_all_skull_petra_derivatives,
                               rename_all_skull_t1_derivatives,
                               rename_all_skull_ct_derivatives)
 
+from pipelines.pad import (pad_skull_petra_outputs)
 
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 ##########################################################################
@@ -502,65 +503,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                               skull_petra_pipe, 'inputnode.indiv_params')
 
         if pad and space == "native":
-            if "short_preparation_pipe" in params.keys():
-                if "crop_T1" in params["short_preparation_pipe"].keys():
-                    pass
-                else:
-                    print("Using reg_aladin transfo to pad skull_mask back")
-
-                    pad_petra_skull_mask = pe.Node(RegResample(inter_val="NN"),
-                                        name="pad_petra_skull_mask")
-
-                    main_workflow.connect(
-                        skull_petra_pipe, "outputnode.petra_skull_mask",
-                        pad_petra_skull_mask, "flo_file")
-
-                    main_workflow.connect(
-                        segment_pnh_pipe, "outputnode.native_T1",
-                        pad_petra_skull_mask, "ref_file")
-
-                    main_workflow.connect(
-                        segment_pnh_pipe, "outputnode.cropped_to_native_trans",
-                        pad_petra_skull_mask, "trans_file")
-
-                    print("Using reg_aladin transfo \
-                        to pad robustpetra_skull_mask back")
-
-                    print("Using reg_aladin transfo to pad head_mask back")
-
-                    pad_petra_head_mask = pe.Node(RegResample(inter_val="NN"),
-                                            name="pad_petra_head_mask")
-
-                    main_workflow.connect(skull_petra_pipe,
-                                          "outputnode.petra_head_mask",
-                                          pad_petra_head_mask, "flo_file")
-
-                    main_workflow.connect(segment_pnh_pipe,
-                                          "outputnode.native_T1",
-                                          pad_petra_head_mask, "ref_file")
-
-                    main_workflow.connect(segment_pnh_pipe,
-                                          "outputnode.cropped_to_native_trans",
-                                          pad_petra_head_mask, "trans_file")
-
-                    if "petra_skull_fov" in params["skull_petra_pipe"]:
-                        pad_robustpetra_skull_mask = pe.Node(
-                            RegResample(inter_val="NN"),
-                            name="pad_robustpetra_skull_mask")
-
-                        main_workflow.connect(
-                            skull_petra_pipe,
-                            "outputnode.robustpetra_skull_mask",
-                            pad_robustpetra_skull_mask, "flo_file")
-
-                        main_workflow.connect(
-                            segment_pnh_pipe, "outputnode.native_T1",
-                            pad_robustpetra_skull_mask, "ref_file")
-
-                        main_workflow.connect(
-                            segment_pnh_pipe,
-                            "outputnode.cropped_to_native_trans",
-                            pad_robustpetra_skull_mask, "trans_file")
+            pad_skull_petra_outputs(main_workflow, segment_pnh_pipe,
+                                    skull_petra_pipe)
 
     if "ct" in ssoft and "skull_ct_pipe" in params.keys():
         print("Found skull_ct_pipe")

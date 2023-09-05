@@ -111,7 +111,7 @@ def rename_all_skull_petra_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_petra_skull_mask.inputs.keep_ext = True
 
             main_workflow.connect(
-                pad_petra_skull_mask, "out_file",
+                skull_petra_pipe, "outputnode_native.native_petra_skull_mask",
                 rename_petra_skull_mask, 'in_file')
 
             main_workflow.connect(
@@ -128,7 +128,8 @@ def rename_all_skull_petra_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_robustpetra_skull_mask.inputs.keep_ext = True
 
             main_workflow.connect(
-                pad_robustpetra_skull_mask, "out_file",
+                skull_petra_pipe,
+                "outputnode_native.native_robustpetra_skull_mask",
                 rename_robustpetra_skull_mask, 'in_file')
 
             main_workflow.connect(
@@ -144,7 +145,7 @@ def rename_all_skull_petra_derivatives(params, main_workflow, segment_pnh_pipe,
             rename_petra_head_mask.inputs.keep_ext = True
 
             main_workflow.connect(
-                pad_petra_head_mask, 'out_file',
+                skull_petra_pipe, "outputnode_native.native_petra_head_mask",
                 rename_petra_head_mask, 'in_file')
 
             main_workflow.connect(

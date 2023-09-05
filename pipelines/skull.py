@@ -14,7 +14,6 @@ from nipype.interfaces.fsl.preprocess import FAST, FLIRT
 
 
 from nipype.interfaces.niftyreg.reg import RegAladin
-from nipype.interfaces.niftyreg.regutils import RegResample
 
 from macapype.utils.utils_nodes import NodeParams
 
