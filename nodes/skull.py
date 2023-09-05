@@ -118,7 +118,6 @@ def mask_auto_img(img_file):
     # Find local minima in the histogram
     peaks, _ = find_peaks(-hist, distance = 10)  # Use negative histogram for minima
 
-
     rescaled_peaks = (peaks + bins[0])* sample_bins
     print("Local minimas: ", rescaled_peaks)
 
