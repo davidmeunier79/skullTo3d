@@ -138,7 +138,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
     print("peak_bins :", bins[peaks])
 
     # filtering
-    new_mask_data = np.zeros(img_arr.shape, dtype=int)
+    new_mask_data = np.zeros(img_arr.shape, dtype=img_arr.dtype)
 
     assert operation in ["higher", "interval", "lower"], \
         "Error in operation {}".format(operation)
@@ -171,7 +171,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         filter_arr = index_peak_min < img_arr
 
-    new_mask_data[filter_arr] = 1
+    new_mask_data[filter_arr] = img_arr[filter_array]
 
     print(np.sum(new_mask_data))
 
