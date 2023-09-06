@@ -171,7 +171,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         filter_arr = index_peak_min < img_arr
 
-    new_mask_data[filter_arr] = img_arr[filter_array]
+    new_mask_data[filter_arr] = img_arr[filter_arr]
 
     print(np.sum(new_mask_data))
 
