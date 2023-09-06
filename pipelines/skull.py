@@ -371,9 +371,6 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
                 params=parse_key(params, "ct_skull_auto_mask"),
                 name="ct_skull_auto_mask")
 
-        ct_skull_auto_mask.inputs.operation = "higher"
-        ct_skull_auto_mask.inputs.index = -1
-
         skull_ct_pipe.connect(align_ct_on_stereo_native_T1, "out_file",
                               ct_skull_auto_mask, "img_file")
 
@@ -550,13 +547,14 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
         petra_head_auto_mask = NodeParams(
                 interface=niu.Function(
-                    input_names=["img_file", "operation"],
+                    input_names=["img_file", "operation", "index"],
                     output_names=["mask_img_file"],
                     function=mask_auto_img),
                 params=parse_key(params, "petra_head_auto_mask"),
                 name="petra_head_auto_mask")
 
         petra_head_auto_mask.inputs.operation = "higher"
+        petra_head_auto_mask.inputs.index = 0
 
         skull_petra_pipe.connect(align_petra_on_stereo_native_T1, "out_file",
                                  petra_head_auto_mask, "img_file")
@@ -656,13 +654,14 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
         petra_skull_auto_mask = NodeParams(
                 interface=niu.Function(
-                    input_names=["img_file", "operation"],
+                    input_names=["img_file", "operation", "index"],
                     output_names=["mask_img_file"],
                     function=mask_auto_img),
                 params=parse_key(params, "petra_skull_auto_mask"),
                 name="petra_skull_auto_mask")
 
         petra_skull_auto_mask.inputs.operation = "interval"
+        petra_skull_auto_mask.inputs.index = [0, 1]
 
         skull_petra_pipe.connect(petra_fast, "restored_image",
                                  petra_skull_auto_mask, "img_file")
