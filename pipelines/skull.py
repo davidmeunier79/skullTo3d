@@ -357,8 +357,8 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
             inputnode, ("indiv_params", parse_key, "ct_skull_mask_thr"),
             ct_skull_mask_thr, "indiv_params")
 
-        skull_ct_pipe.connect(ct_fast, "restored_image",
-                                 ct_skull_mask_thr, "in_file")
+        skull_ct_pipe.connect(align_ct_on_stereo_native_T1, "out_file",
+                              ct_skull_mask_thr, "in_file")
     else:
 
         print("*** ct_skull_auto_mask ***")
@@ -373,12 +373,12 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
 
         ct_skull_auto_mask.inputs.operation = "interval"
 
-        skull_ct_pipe.connect(ct_fast, "restored_image",
-                                 ct_skull_auto_mask, "img_file")
+        skull_ct_pipe.connect(align_ct_on_stereo_native_T1, "out_file",
+                              ct_skull_auto_mask, "img_file")
 
     # ct_skull_mask_binary
     ct_skull_mask_binary = pe.Node(interface=UnaryMaths(),
-                                     name="ct_skull_mask_binary")
+                                   name="ct_skull_mask_binary")
 
     ct_skull_mask_binary.inputs.operation = 'bin'
     ct_skull_mask_binary.inputs.output_type = 'NIFTI_GZ'
