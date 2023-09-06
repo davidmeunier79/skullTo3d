@@ -129,7 +129,7 @@ def mask_auto_img(img_file, operation):
 
     print("peaks indexes :", peaks)
 
-    assert peaks.shape[0] > 2, \
+    assert peaks.shape[0] > 1, \
         "Error, could not find at least two local minima"
 
     print("peak_hist :", hist[peaks])
