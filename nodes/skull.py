@@ -99,7 +99,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
     from nipype.utils.filemanip import split_filename as split_f
 
-    print(img_file, operation, index, sample_bins, distance)
+    print(operation, index, sample_bins, distance)
 
 
     img_nii = nib.load(img_file)
