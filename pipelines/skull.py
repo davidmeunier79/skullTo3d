@@ -365,13 +365,14 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
 
         ct_skull_auto_mask = NodeParams(
                 interface=niu.Function(
-                    input_names=["img_file", "operation"],
+                    input_names=["img_file", "operation", "index"],
                     output_names=["mask_img_file"],
                     function=mask_auto_img),
                 params=parse_key(params, "ct_skull_auto_mask"),
                 name="ct_skull_auto_mask")
 
-        ct_skull_auto_mask.inputs.operation = "interval"
+        ct_skull_auto_mask.inputs.operation = "higher"
+        ct_skull_auto_mask.inputs.index = -1
 
         skull_ct_pipe.connect(align_ct_on_stereo_native_T1, "out_file",
                               ct_skull_auto_mask, "img_file")

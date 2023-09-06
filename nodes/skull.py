@@ -88,7 +88,7 @@ def mask_auto_threshold(img_file, operation, index):
     return mask_threshold
 
 
-def mask_auto_img(img_file, operation):
+def mask_auto_img(img_file, operation, index):
 
     import os
     import numpy as np
@@ -135,9 +135,6 @@ def mask_auto_img(img_file, operation):
     print("peak_hist :", hist[peaks])
     print("peak_bins :", bins[peaks])
 
-    index_peak_min = bins[peaks][0]
-    index_peak_max = bins[peaks][1]
-
     # filtering
     new_mask_data = np.zeros(img_arr.shape, dtype=int)
 
@@ -145,6 +142,18 @@ def mask_auto_img(img_file, operation):
         "Error in operation {}".format(operation)
 
     if operation == "interval":
+        assert isinstance(index, list) and len(index) == 2, \
+            "Error, index {} should be a list for interval".format(index)
+
+        assert 0 < index[0] and index[0] < len(bins[peaks]), \
+            "Error, {} out of peak indexes ".format(index[0])
+
+        assert 0 < index[1] and index[1] < len(bins[peaks]), \
+            "Error, {} out of peak indexes ".format(index[0])
+
+        index_peak_min = bins[peaks][index[0]]
+        index_peak_max = bins[peaks][index[1]]
+
         print("Keeping interval between {} and {}".format(index_peak_min,
                                                           index_peak_max))
 
@@ -152,7 +161,10 @@ def mask_auto_img(img_file, operation):
                                     img_arr < index_peak_max)
 
     elif operation == "higher":
+        assert isinstance(index, int),  \
+            "Error, index {} should be a integer for higher".format(index)
 
+        index_peak_min = bins[peaks][index]
         print("Keeping higher than {} ".format(index_peak_min))
 
         filter_arr = index_peak_min < img_arr
