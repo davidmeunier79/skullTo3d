@@ -88,7 +88,7 @@ def mask_auto_threshold(img_file, operation, index):
     return mask_threshold
 
 
-def mask_auto_img(img_file, operation, index):
+def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
     import os
     import numpy as np
@@ -107,7 +107,6 @@ def mask_auto_img(img_file, operation, index):
 
     print("X shape : ", X.shape)
     print("X max : ", np.round(np.max(X)))
-    sample_bins = 30
     nb_bins = (np.rint(np.max(X)/sample_bins)).astype(int)
     print("Nb bins: ", nb_bins)
 
@@ -125,7 +124,7 @@ def mask_auto_img(img_file, operation, index):
     plt.savefig(os.path.abspath('histogram.png'))
 
     # Find local minima in the histogram
-    peaks, _ = find_peaks(-hist, distance = 10)  # Use negative histogram for minima
+    peaks, _ = find_peaks(-hist, distance = distance)  # Use negative histogram for minima
 
     print("peaks indexes :", peaks)
 

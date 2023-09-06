@@ -374,6 +374,10 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
         skull_ct_pipe.connect(align_ct_on_stereo_native_T1, "out_file",
                               ct_skull_auto_mask, "img_file")
 
+        skull_ct_pipe.connect(
+            inputnode, ("indiv_params", parse_key, "ct_skull_auto_mask"),
+            ct_skull_auto_mask, "indiv_params")
+
     # ct_skull_mask_binary
     ct_skull_mask_binary = pe.Node(interface=UnaryMaths(),
                                    name="ct_skull_mask_binary")
@@ -552,9 +556,6 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                     function=mask_auto_img),
                 params=parse_key(params, "petra_head_auto_mask"),
                 name="petra_head_auto_mask")
-
-        petra_head_auto_mask.inputs.operation = "higher"
-        petra_head_auto_mask.inputs.index = 0
 
         skull_petra_pipe.connect(align_petra_on_stereo_native_T1, "out_file",
                                  petra_head_auto_mask, "img_file")
