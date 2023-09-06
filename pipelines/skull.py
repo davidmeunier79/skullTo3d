@@ -647,7 +647,6 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
         petra_skull_auto_mask.inputs.operation = "interval"
 
-
         skull_petra_pipe.connect(petra_fast, "restored_image",
                                  petra_skull_auto_mask, "img_file")
 

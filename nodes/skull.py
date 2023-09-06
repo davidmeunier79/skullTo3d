@@ -125,12 +125,12 @@ def mask_auto_img(img_file, operation):
     plt.savefig(os.path.abspath('histogram.png'))
 
     # Find local minima in the histogram
-    peaks, indexes = find_peaks(-hist, distance = 10)  # Use negative histogram for minima
+    peaks, _ = find_peaks(-hist, distance = 10)  # Use negative histogram for minima
+
+    print("peaks indexes :", peaks)
 
     assert peaks.shape[0] > 2, \
         "Error, could not find at least two local minima"
-
-    print("peaks indexes :", peaks)
 
     print("peak_hist :", hist[peaks])
     print("peak_bins :", bins[peaks])
