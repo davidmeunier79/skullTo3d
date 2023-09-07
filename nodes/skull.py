@@ -198,9 +198,6 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
     print("peaks indexes :", peaks)
 
-    assert peaks.shape[0] > 1, \
-        "Error, could not find at least two local minima"
-
     print("peak_hist :", hist[peaks])
     print("peak_bins :", bins[peaks])
 
@@ -211,6 +208,9 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         "Error in operation {}".format(operation)
 
     proceed = True
+    if not (peaks.shape[0] > 1)
+        print("Error, could not find at least two local minima")
+        proceed = False
 
     if operation == "interval":
         if not (isinstance(index, list) and len(index) == 2):
