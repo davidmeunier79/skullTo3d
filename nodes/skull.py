@@ -1,72 +1,4 @@
 
-def compute_Kmeans(img_arr, operation, index=1, num_clusters=3):
-    import os
-    import numpy as np
-    import nibabel as nib
-    import matplotlib.pyplot as plt
-    from sklearn.cluster import KMeans
-
-    ## Mean function
-    def calculate_mean(data):
-        total = sum(data)
-        count = len(data)
-        mean = total / count
-        return mean
-
-    # Reshape data to a 1D array (required by k-means)
-    X = np.copy(img_arr).flatten().reshape(-1, 1)
-
-    kmeans = KMeans(n_clusters=num_clusters, random_state=0)
-
-    # Fit the model to the data and predict cluster labels
-    cluster_labels = kmeans.fit_predict(X)
-
-    # Split data into groups based on cluster labels
-    groups = [X[cluster_labels == i].flatten() for i in range(num_clusters)]
-
-    avail_operations = ["min", "mean", "max"]
-
-    assert operation in avail_operations, "Error, \
-        {} is not in {}".format(operation, avail_operations)
-
-    assert 0 <= index and index < num_clusters-1, "Error \
-        with index {}".format(index)
-
-    # We must define : the minimum of the second group for the headmask
-    # we create minimums array, we sort and then take the middle value
-    minimums_array = np.array([np.amin(group) for group in groups])
-    min_sorted = np.sort(minimums_array)
-
-    print("Min : {}".format(" ".join(str(val) for val in min_sorted)))
-
-    # We must define :  mean of the second group for the skull extraction
-    # we create means array, we sort and then take the middle value
-    means_array = np.array([calculate_mean(group) for group in groups])
-    mean_sorted = np.sort(means_array)
-
-    index_sorted = np.argsort(means_array)
-
-    print("Mean : {}".format(" ".join(str(int(val)) for val in mean_sorted)))
-
-    print("Index = {}".format(" ".join(str(int(val)) for val in index_sorted)))
-
-    print("Index mid group : ", index_sorted[index])
-
-    min_thresh = np.amin(groups[index_sorted[index]])
-    max_thresh = np.amax(groups[index_sorted[index]])
-
-    print("Min/max mid group : ", min_thresh, max_thresh)
-
-    if operation == "min":
-
-        fiter_array = np.logical_and(min_thresh < img_arr)
-
-    elif operation == "interval":
-
-        fiter_array = np.logical_and(min_thresh < img_arr, img_arr < max_thresh)
-
-    return fiter_array
-
 def mask_auto_threshold(img_file, operation, index):
     import os
     import numpy as np
@@ -168,6 +100,73 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
     print(operation, index, sample_bins, distance)
 
+    def compute_Kmeans(img_arr, operation, index=1, num_clusters=3):
+        import os
+        import numpy as np
+        import nibabel as nib
+        import matplotlib.pyplot as plt
+        from sklearn.cluster import KMeans
+
+        ## Mean function
+        def calculate_mean(data):
+            total = sum(data)
+            count = len(data)
+            mean = total / count
+            return mean
+
+        # Reshape data to a 1D array (required by k-means)
+        X = np.copy(img_arr).flatten().reshape(-1, 1)
+
+        kmeans = KMeans(n_clusters=num_clusters, random_state=0)
+
+        # Fit the model to the data and predict cluster labels
+        cluster_labels = kmeans.fit_predict(X)
+
+        # Split data into groups based on cluster labels
+        groups = [X[cluster_labels == i].flatten() for i in range(num_clusters)]
+
+        avail_operations = ["min", "mean", "max"]
+
+        assert operation in avail_operations, "Error, \
+            {} is not in {}".format(operation, avail_operations)
+
+        assert 0 <= index and index < num_clusters-1, "Error \
+            with index {}".format(index)
+
+        # We must define : the minimum of the second group for the headmask
+        # we create minimums array, we sort and then take the middle value
+        minimums_array = np.array([np.amin(group) for group in groups])
+        min_sorted = np.sort(minimums_array)
+
+        print("Min : {}".format(" ".join(str(val) for val in min_sorted)))
+
+        # We must define :  mean of the second group for the skull extraction
+        # we create means array, we sort and then take the middle value
+        means_array = np.array([calculate_mean(group) for group in groups])
+        mean_sorted = np.sort(means_array)
+
+        index_sorted = np.argsort(means_array)
+
+        print("Mean : {}".format(" ".join(str(int(val)) for val in mean_sorted)))
+
+        print("Index = {}".format(" ".join(str(int(val)) for val in index_sorted)))
+
+        print("Index mid group : ", index_sorted[index])
+
+        min_thresh = np.amin(groups[index_sorted[index]])
+        max_thresh = np.amax(groups[index_sorted[index]])
+
+        print("Min/max mid group : ", min_thresh, max_thresh)
+
+        if operation == "min":
+
+            fiter_array = np.logical_and(min_thresh < img_arr)
+
+        elif operation == "interval":
+
+            fiter_array = np.logical_and(min_thresh < img_arr, img_arr < max_thresh)
+
+        return fiter_array
 
     img_nii = nib.load(img_file)
     img_arr = np.array(img_nii.dataobj)
