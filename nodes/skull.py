@@ -208,7 +208,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         "Error in operation {}".format(operation)
 
     proceed = True
-    if not (peaks.shape[0] > 1)
+    if not (peaks.shape[0] > 1):
         print("Error, could not find at least two local minima")
         proceed = False
 
