@@ -127,7 +127,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         # Split data into groups based on cluster labels
         groups = [X[cluster_labels == i].flatten() for i in range(num_clusters)]
 
-        avail_operations = ["min", "mean", "max"]
+        avail_operations = ["min", "interval"]
 
         assert operation in avail_operations, "Error, \
             {} is not in {}".format(operation, avail_operations)
