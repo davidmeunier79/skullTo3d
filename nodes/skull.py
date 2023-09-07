@@ -1,5 +1,5 @@
 
-def compute_Kmeans(img_arr, num_clusters = 3, operation):
+def compute_Kmeans(img_arr, operation, index=1, num_clusters=3):
     import os
     import numpy as np
     import nibabel as nib
@@ -93,6 +93,7 @@ def mask_auto_threshold(img_file, operation, index):
     # Create a k-means clustering model with 3 clusters
     # using k-means++ initialization
 
+    num_clusters = 3
 
     kmeans = KMeans(n_clusters=num_clusters, random_state=0)
 
@@ -131,8 +132,6 @@ def mask_auto_threshold(img_file, operation, index):
     print("Index mid group : ", index_sorted[index])
     print("Min/max mid group : ", np.amin(groups[index_sorted[index]]),
           np.amax(groups[index_sorted[index]]))
-
-    0/0
 
     maximums_array = np.array([np.amax(group) for group in groups])
     max_sorted = np.sort(maximums_array)
@@ -238,7 +237,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         else:
 
-            filter_arr = compute_Kmeans(img_arr, operation="interval", index=1)
+            filter_arr = compute_Kmeans(img_arr, operation="interval")
 
 
     elif operation == "higher":
@@ -258,7 +257,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
             filter_arr = index_peak_min < img_arr
         else:
 
-            filter_arr = compute_Kmeans(img_arr, operation="min", index=1)
+            filter_arr = compute_Kmeans(img_arr, operation="min",)
 
     new_mask_data[filter_arr] = img_arr[filter_arr]
 
