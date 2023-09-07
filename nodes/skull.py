@@ -1,4 +1,72 @@
 
+def compute_Kmeans(img_arr, num_clusters = 3, operation):
+    import os
+    import numpy as np
+    import nibabel as nib
+    import matplotlib.pyplot as plt
+    from sklearn.cluster import KMeans
+
+    ## Mean function
+    def calculate_mean(data):
+        total = sum(data)
+        count = len(data)
+        mean = total / count
+        return mean
+
+    # Reshape data to a 1D array (required by k-means)
+    X = np.copy(img_arr).flatten().reshape(-1, 1)
+
+    kmeans = KMeans(n_clusters=num_clusters, random_state=0)
+
+    # Fit the model to the data and predict cluster labels
+    cluster_labels = kmeans.fit_predict(X)
+
+    # Split data into groups based on cluster labels
+    groups = [X[cluster_labels == i].flatten() for i in range(num_clusters)]
+
+    avail_operations = ["min", "mean", "max"]
+
+    assert operation in avail_operations, "Error, \
+        {} is not in {}".format(operation, avail_operations)
+
+    assert 0 <= index and index < num_clusters-1, "Error \
+        with index {}".format(index)
+
+    # We must define : the minimum of the second group for the headmask
+    # we create minimums array, we sort and then take the middle value
+    minimums_array = np.array([np.amin(group) for group in groups])
+    min_sorted = np.sort(minimums_array)
+
+    print("Min : {}".format(" ".join(str(val) for val in min_sorted)))
+
+    # We must define :  mean of the second group for the skull extraction
+    # we create means array, we sort and then take the middle value
+    means_array = np.array([calculate_mean(group) for group in groups])
+    mean_sorted = np.sort(means_array)
+
+    index_sorted = np.argsort(means_array)
+
+    print("Mean : {}".format(" ".join(str(int(val)) for val in mean_sorted)))
+
+    print("Index = {}".format(" ".join(str(int(val)) for val in index_sorted)))
+
+    print("Index mid group : ", index_sorted[index])
+
+    min_thresh = np.amin(groups[index_sorted[index]])
+    max_thresh = np.amax(groups[index_sorted[index]])
+
+    print("Min/max mid group : ", min_thresh, max_thresh)
+
+    if operation == "min":
+
+        fiter_array = np.logical_and(min_thresh < img_arr)
+
+    elif operation == "interval":
+
+        fiter_array = np.logical_and(min_thresh < img_arr, img_arr < max_thresh)
+
+    return fiter_array
+
 def mask_auto_threshold(img_file, operation, index):
     import os
     import numpy as np
@@ -25,7 +93,7 @@ def mask_auto_threshold(img_file, operation, index):
     # Create a k-means clustering model with 3 clusters
     # using k-means++ initialization
 
-    num_clusters = 3
+
     kmeans = KMeans(n_clusters=num_clusters, random_state=0)
 
     # Fit the model to the data and predict cluster labels
@@ -143,33 +211,54 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
     assert operation in ["higher", "interval", "lower"], \
         "Error in operation {}".format(operation)
 
+    proceed = True
+
     if operation == "interval":
-        assert isinstance(index, list) and len(index) == 2, \
-            "Error, index {} should be a list for interval".format(index)
+        if not (isinstance(index, list) and len(index) == 2):
+            print("Error, index {} should be a list for interval".format(
+                index))
 
-        assert 0 < index[0] and index[0] < len(bins[peaks]), \
-            "Error, {} out of peak indexes ".format(index[0])
+            proceed = False
 
-        assert 0 < index[1] and index[1] < len(bins[peaks]), \
-            "Error, {} out of peak indexes ".format(index[0])
+        if not(0 < index[0] and index[0] < len(bins[peaks])):
+            print("Error, {} out of peak indexes ".format(index[0]))
 
-        index_peak_min = bins[peaks][index[0]]
-        index_peak_max = bins[peaks][index[1]]
+        if not (0 < index[1] and index[1] < len(bins[peaks])):
+            print("Error, {} out of peak indexes ".format(index[0]))
 
-        print("Keeping interval between {} and {}".format(index_peak_min,
+        if proceed:
+            index_peak_min = bins[peaks][index[0]]
+            index_peak_max = bins[peaks][index[1]]
+
+            print("Keeping interval between {} and {}".format(index_peak_min,
                                                           index_peak_max))
 
-        filter_arr = np.logical_and(index_peak_min < img_arr,
+            filter_arr = np.logical_and(index_peak_min < img_arr,
                                     img_arr < index_peak_max)
 
+        else:
+
+            filter_arr = compute_Kmeans(img_arr, operation="interval", index=1)
+
+
     elif operation == "higher":
-        assert isinstance(index, int),  \
-            "Error, index {} should be a integer for higher".format(index)
+        if not isinstance(index, int):
+            print("Error, index {} should be a integer for higher".format(index))
+            proceed = False
 
-        index_peak_min = bins[peaks][index]
-        print("Keeping higher than {} ".format(index_peak_min))
+        if not (0 < index and index < len(bins[peaks])):
 
-        filter_arr = index_peak_min < img_arr
+            print("Error, {} out of peak indexes ".format(index))
+            proceed = False
+
+        if proceed:
+            index_peak_min = bins[peaks][index]
+            print("Keeping higher than {} ".format(index_peak_min))
+
+            filter_arr = index_peak_min < img_arr
+        else:
+
+            filter_arr = compute_Kmeans(img_arr, operation="min", index=1)
 
     new_mask_data[filter_arr] = img_arr[filter_arr]
 
