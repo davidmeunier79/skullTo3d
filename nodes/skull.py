@@ -98,7 +98,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
     from nipype.utils.filemanip import split_filename as split_f
 
-    print(operation, index, sample_bins, distance)
+    print("Running local minimas with : ", operation, index, sample_bins, distance)
 
     def compute_Kmeans(img_arr, operation, index=1, num_clusters=3):
         import os
@@ -106,6 +106,8 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         import nibabel as nib
         import matplotlib.pyplot as plt
         from sklearn.cluster import KMeans
+
+        print("Running Kmeans with : ", operation, index, num_clusters)
 
         ## Mean function
         def calculate_mean(data):
@@ -160,7 +162,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         if operation == "min":
 
-            fiter_array = np.logical_and(min_thresh < img_arr)
+            fiter_array = min_thresh < img_arr
 
         elif operation == "interval":
 
