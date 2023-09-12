@@ -16,6 +16,8 @@ from nipype.interfaces.fsl.preprocess import FAST, FLIRT
 from nipype.interfaces.niftyreg.regutils import RegResample
 from nipype.interfaces.niftyreg.reg import RegAladin
 
+from nipype.interfaces.ants import N4BiasFieldCorrection
+
 from macapype.utils.utils_nodes import NodeParams
 
 from nodes.skull import (
@@ -614,23 +616,35 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_petra_pipe.connect(petra_head_erode, "out_file",
                              petra_hmasked, "mask_file")
 
-    # petra_head_mask_binary_clean1
-    petra_hmasked_gcc = pe.Node(
-        interface=niu.Function(input_names=["nii_file"],
-                               output_names=["gcc_nii_file"],
-                               function=keep_gcc),
-        name="petra_hmasked_gcc")
+    # N4 intensity normalization over T1
+    petra_debias = NodeParams(N4BiasFieldCorrection(),
+                              params=parse_key(params, "petra_debias"),
+                              name='petra_debias')
 
     skull_petra_pipe.connect(petra_hmasked, "out_file",
-                             petra_hmasked_gcc, "nii_file")
+                             petra_debias, "input_image")
 
-    # petra_fast
-    petra_fast = NodeParams(interface=FAST(),
-                            params=parse_key(params, "petra_fast"),
-                            name="petra_fast")
+    skull_petra_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "petra_debias"),
+        petra_debias, "indiv_params")
 
-    skull_petra_pipe.connect(petra_hmasked_gcc, "gcc_nii_file",
-                             petra_fast, "in_files")
+    # # petra_head_mask_binary_clean1
+    # petra_hmasked_gcc = pe.Node(
+        #interface=niu.Function(input_names=["nii_file"],
+                               #output_names=["gcc_nii_file"],
+                               #function=keep_gcc),
+        #name="petra_hmasked_gcc")
+
+    #skull_petra_pipe.connect(petra_hmasked, "out_file",
+                             #petra_hmasked_gcc, "nii_file")
+
+    ## petra_fast
+    #petra_fast = NodeParams(interface=FAST(),
+                            #params=parse_key(params, "petra_fast"),
+                            #name="petra_fast")
+
+    #skull_petra_pipe.connect(petra_hmasked_gcc, "gcc_nii_file",
+                             #petra_fast, "in_files")
 
     # petra_skull_auto_thresh
     if "petra_skull_mask_thr" in params.keys():
@@ -649,7 +663,8 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
             inputnode, ("indiv_params", parse_key, "petra_skull_mask_thr"),
             petra_skull_mask_thr, "indiv_params")
 
-        skull_petra_pipe.connect(petra_fast, "restored_image",
+        skull_petra_pipe.connect(petra_debias, "output_image",
+        #skull_petra_pipe.connect(petra_fast, "restored_image",
                                  petra_skull_mask_thr, "in_file")
     else:
 
@@ -664,12 +679,13 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                 params=parse_key(params, "petra_skull_auto_mask"),
                 name="petra_skull_auto_mask")
 
-        skull_petra_pipe.connect(petra_fast, "restored_image",
+        skull_petra_pipe.connect(petra_debias, "output_image",
+        #skull_petra_pipe.connect(petra_fast, "restored_image",
                                  petra_skull_auto_mask, "img_file")
 
     # petra_skull_mask_binary
     petra_skull_mask_binary = pe.Node(interface=UnaryMaths(),
-                                     name="petra_skull_mask_binary")
+                                      name="petra_skull_mask_binary")
 
     petra_skull_mask_binary.inputs.operation = 'bin'
     petra_skull_mask_binary.inputs.output_type = 'NIFTI_GZ'
