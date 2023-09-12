@@ -40,23 +40,9 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['brainmask', 't1', 'debiased_T1',
-                                      'indiv_params', 'stereo_native_T1',
-                                      'native_to_stereo_trans']),
+        niu.IdentityInterface(fields=['brainmask', 'debiased_T1',
+                                      'indiv_params', 'stereo_native_T1']),
         name='inputnode')
-
-    # align_on_stereo_native_T1
-    align_on_stereo_native_T1 = pe.Node(interface=RegResample(pad_val=0.0),
-                                        name="align_on_stereo_native_T1")
-
-    skull_t1_pipe.connect(inputnode, 't1',
-                          align_on_stereo_native_T1, "flo_file")
-
-    skull_t1_pipe.connect(inputnode, 'native_to_stereo_trans',
-                          align_on_stereo_native_T1, "trans_file")
-
-    skull_t1_pipe.connect(inputnode, "stereo_native_T1",
-                          align_on_stereo_native_T1, "ref_file")
 
     # t1_head_mask
     if "t1_head_mask_thr" in params.keys():
@@ -66,7 +52,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
             params=parse_key(params, "t1_head_mask_thr"),
             name="t1_head_mask_thr")
 
-        skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
+        skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_head_mask_thr, "in_file")
 
     else:
@@ -82,7 +68,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
         t1_head_auto_thresh.inputs.operation = "min"
         t1_head_auto_thresh.inputs.index = 1
 
-        skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
+        skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_head_auto_thresh, "img_file")
 
         # t1_head_mask_thr
