@@ -78,7 +78,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
         skull_t1_pipe.connect(t1_head_auto_thresh, "mask_threshold",
                               t1_head_mask_thr, "thresh")
 
-        skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
+        skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_head_mask_thr, "in_file")
 
     # t1_head_mask_binary
@@ -130,7 +130,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     t1_hmasked = pe.Node(interface=ApplyMask(),
                          name="t1_hmasked")
 
-    skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
+    skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                           t1_hmasked, "in_file")
 
     skull_t1_pipe.connect(t1_head_erode, "out_file",
