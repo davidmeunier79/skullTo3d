@@ -614,12 +614,22 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_petra_pipe.connect(petra_head_erode, "out_file",
                              petra_hmasked, "mask_file")
 
+    # petra_head_mask_binary_clean1
+    petra_hmasked_gcc = pe.Node(
+        interface=niu.Function(input_names=["nii_file"],
+                               output_names=["gcc_nii_file"],
+                               function=keep_gcc),
+        name="petra_hmasked_gcc")
+
+    skull_petra_pipe.connect(petra_hmasked, "out_file",
+                             petra_hmasked_gcc, "nii_file")
+
     # petra_fast
     petra_fast = NodeParams(interface=FAST(),
                             params=parse_key(params, "petra_fast"),
                             name="petra_fast")
 
-    skull_petra_pipe.connect(petra_hmasked, "out_file",
+    skull_petra_pipe.connect(petra_hmasked_gcc, "gcc_nii_file",
                              petra_fast, "in_files")
 
     # petra_skull_auto_thresh
