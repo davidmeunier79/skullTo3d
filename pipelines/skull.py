@@ -206,7 +206,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
             params=parse_key(params, 't1_skull_mask_thr'),
             name="t1_skull_mask_thr")
 
-        #skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
+        #skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
         skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_skull_mask_thr, "in_file")
 
@@ -224,7 +224,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
                 params=parse_key(params, "t1_skull_auto_mask"),
                 name="t1_skull_auto_mask")
 
-        #skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
+        #skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
         skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_skull_auto_mask, "img_file")
 
