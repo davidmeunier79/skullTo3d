@@ -502,8 +502,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         main_workflow.connect(datasource, "indiv_params",
                               skull_petra_pipe, 'inputnode.indiv_params')
 
-
-
         if pad and space == "native":
 
             # output node
@@ -623,7 +621,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
 
         main_workflow.connect(datasource, "indiv_params",
                               skull_t1_pipe, 'inputnode.indiv_params')
-
 
     if deriv:
 
