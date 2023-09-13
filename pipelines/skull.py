@@ -102,8 +102,14 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     t1_head_mask_binary.inputs.operation = 'bin'
     t1_head_mask_binary.inputs.output_type = 'NIFTI_GZ'
 
-    skull_t1_pipe.connect(t1_head_mask_thr, "out_file",
-                          t1_head_mask_binary, "in_file")
+    if "t1_head_mask_thr" in params.keys():
+
+        skull_t1_pipe.connect(t1_head_mask_thr, "out_file",
+                              t1_head_mask_binary, "in_file")
+    else:
+
+        skull_t1_pipe.connect(t1_head_auto_mask, "mask_img_file",
+                              t1_head_mask_binary, "in_file")
 
     # keep_gcc_t1_head
     keep_gcc_t1_head = pe.Node(
