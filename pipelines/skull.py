@@ -60,45 +60,40 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     #skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                           #align_on_stereo_native_T1, "ref_file")
 
-    # t1_head_mask
+    # ### head mask
+    # headmask_threshold
     if "t1_head_mask_thr" in params.keys():
-
+        # t1_head_mask_thr
         t1_head_mask_thr = NodeParams(
             interface=Threshold(),
-            params=parse_key(params, "t1_head_mask_thr"),
+            params=parse_key(params, 't1_head_mask_thr'),
             name="t1_head_mask_thr")
 
         #skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
         skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_head_mask_thr, "in_file")
 
+        skull_t1_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "t1_head_mask_thr"),
+            t1_head_mask_thr, "indiv_params")
     else:
-        # t1_head_auto_thresh
-        t1_head_auto_thresh = pe.Node(
-            interface=niu.Function(
-                input_names=["img_file", "operation", "index"],
-                output_names=["mask_threshold"],
-                function=mask_auto_threshold),
-            name="t1_head_auto_thresh")
 
-        # t1_head_auto_thresh.inputs.operation = "max"
-        t1_head_auto_thresh.inputs.operation = "min"
-        t1_head_auto_thresh.inputs.index = 1
+        t1_head_auto_mask = NodeParams(
+                interface=niu.Function(
+                    input_names=["img_file", "operation",
+                                 "index", "sample_bins", "distance"],
+                    output_names=["mask_img_file"],
+                    function=mask_auto_img),
+                params=parse_key(params, "t1_head_auto_mask"),
+                name="t1_head_auto_mask")
 
         #skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
-        skull_t1_pipe.connect(inputnode, "stereo_native_T1",
-                              t1_head_auto_thresh, "img_file")
+        skull_t1_pipe.connect(inputnode, "stereo_native_T1",*
+                              t1_head_auto_mask, "img_file")
 
-        # t1_head_mask_thr
-        t1_head_mask_thr = pe.Node(interface=Threshold(),
-                                   name="t1_head_mask_thr")
-
-        skull_t1_pipe.connect(t1_head_auto_thresh, "mask_threshold",
-                              t1_head_mask_thr, "thresh")
-
-        skull_t1_pipe.connect(inputnode, "stereo_native_T1",
-        #skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
-                              t1_head_mask_thr, "in_file")
+        skull_t1_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "t1_head_auto_mask"),
+            t1_head_auto_mask, "indiv_params")
 
     # t1_head_mask_binary
     t1_head_mask_binary = pe.Node(interface=UnaryMaths(),
