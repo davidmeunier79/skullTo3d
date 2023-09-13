@@ -165,36 +165,36 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     skull_t1_pipe.connect(t1_hmasked, "out_file",
                           t1_fast, "in_files")
 
-    # t1_hmasked_recip
-    t1_hmasked_recip = pe.Node(
-         interface=UnaryMaths(),
-         name="t1_hmasked_recip")
+    ## t1_hmasked_recip
+    #t1_hmasked_recip = pe.Node(
+         #interface=UnaryMaths(),
+         #name="t1_hmasked_recip")
 
-    t1_hmasked_recip.inputs.operation = 'recip'
+    #t1_hmasked_recip.inputs.operation = 'recip'
 
-    skull_t1_pipe.connect(t1_fast, "restored_image",
-                          t1_hmasked_recip, "in_file")
+    #skull_t1_pipe.connect(t1_fast, "restored_image",
+                          #t1_hmasked_recip, "in_file")
 
-    # t1_hmasked_log
-    t1_hmasked_log = pe.Node(
-        interface=UnaryMaths(),
-        name="t1_hmasked_log")
+    ## t1_hmasked_log
+    #t1_hmasked_log = pe.Node(
+        #interface=UnaryMaths(),
+        #name="t1_hmasked_log")
 
-    t1_hmasked_log.inputs.operation = 'log'
+    #t1_hmasked_log.inputs.operation = 'log'
 
-    skull_t1_pipe.connect(t1_hmasked_recip, "out_file",
-                          t1_hmasked_log, "in_file")
+    #skull_t1_pipe.connect(t1_hmasked_recip, "out_file",
+                          #t1_hmasked_log, "in_file")
 
-    # t1_hmasked_inv
-    t1_hmasked_inv = pe.Node(
-        interface=BinaryMaths(),
-        name="t1_hmasked_inv")
+    ## t1_hmasked_inv
+    #t1_hmasked_inv = pe.Node(
+        #interface=BinaryMaths(),
+        #name="t1_hmasked_inv")
 
-    skull_t1_pipe.connect(t1_hmasked_log, "out_file",
-                          t1_hmasked_inv, "in_file")
+    #skull_t1_pipe.connect(t1_hmasked_log, "out_file",
+                          #t1_hmasked_inv, "in_file")
 
-    t1_hmasked_inv.inputs.operation = 'mul'
-    t1_hmasked_inv.inputs.operand_value = -1
+    #t1_hmasked_inv.inputs.operation = 'mul'
+    #t1_hmasked_inv.inputs.operand_value = -1
 
 
     # ### skull mask
@@ -206,7 +206,8 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
             params=parse_key(params, 't1_skull_mask_thr'),
             name="t1_skull_mask_thr")
 
-        skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
+        #skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
+        skull_t1_pipe.connect(t1_fast, "restored_image",
         #skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_skull_mask_thr, "in_file")
 
@@ -224,7 +225,8 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
                 params=parse_key(params, "t1_skull_auto_mask"),
                 name="t1_skull_auto_mask")
 
-        skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
+        #skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
+        skull_t1_pipe.connect(t1_fast, "restored_image",
         #skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_skull_auto_mask, "img_file")
 
