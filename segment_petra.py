@@ -622,7 +622,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             skull_t1_pipe, 'inputnode.native_to_stereo_trans')
 
         main_workflow.connect(datasource, "indiv_params",
-                              skull_petra_pipe, 'inputnode.indiv_params')
+                              skull_t1_pipe, 'inputnode.indiv_params')
 
 
     if deriv:
