@@ -88,7 +88,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
                 name="t1_head_auto_mask")
 
         #skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
-        skull_t1_pipe.connect(inputnode, "stereo_native_T1",*
+        skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_head_auto_mask, "img_file")
 
         skull_t1_pipe.connect(
