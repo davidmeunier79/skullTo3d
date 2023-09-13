@@ -170,6 +170,12 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         return fiter_array
 
+    path, fname, ext = split_f(img_file)
+
+    log_file = os.path.abspath(fname + ".log")
+
+    f = open(log_file, "w+")
+
     img_nii = nib.load(img_file)
     img_arr = np.array(img_nii.dataobj)
 
@@ -177,9 +183,14 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
     X = np.copy(img_arr).flatten().reshape(-1, 1)
 
     print("X shape : ", X.shape)
+
     print("X max : ", np.round(np.max(X)))
     nb_bins = (np.rint(np.max(X)/sample_bins)).astype(int)
     print("Nb bins: ", nb_bins)
+
+    f.write("X shape : ", X.shape)
+    f.write("X max : ", np.round(np.max(X)))
+    f.write("Nb bins: ", nb_bins)
 
     # Create a histogram
     hist, bins, _ = plt.hist(X, bins=nb_bins,
@@ -201,6 +212,11 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
     print("peak_hist :", hist[peaks])
     print("peak_bins :", bins[peaks])
+
+    f.write("peaks indexes :", peaks)
+    f.write("peak_hist :", hist[peaks])
+    f.write("peak_bins :", bins[peaks])
+
 
     # filtering
     new_mask_data = np.zeros(img_arr.shape, dtype=img_arr.dtype)
@@ -233,12 +249,17 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
             print("Keeping interval between {} and {}".format(index_peak_min,
                                                           index_peak_max))
 
+            f.write("Keeping interval between {} and {}".format(index_peak_min,
+                                                          index_peak_max))
+
             filter_arr = np.logical_and(index_peak_min < img_arr,
                                     img_arr < index_peak_max)
 
         else:
 
             filter_arr = compute_Kmeans(img_arr, operation="interval")
+
+            f.write("Running Kmeans with interval ")
 
     elif operation == "higher":
         if not isinstance(index, int):
@@ -256,9 +277,13 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
             print("Keeping higher than {} ".format(index_peak_min))
 
             filter_arr = index_peak_min < img_arr
+
+            f.write("Keeping higher than {} ".format(index_peak_min))
         else:
 
-            filter_arr = compute_Kmeans(img_arr, operation="min",)
+            filter_arr = compute_Kmeans(img_arr, operation="min")
+
+            f.write("Running Kmeans with min")
 
     elif operation == "lower":
         if not isinstance(index, int):
@@ -273,11 +298,12 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         if proceed:
             index_peak_max = bins[peaks][index]
-            print("Keeping higher than {} ".format(index_peak_max))
+            print("Keeping lower than {} ".format(index_peak_max))
+            f.write("Keeping lower than {} ".format(index_peak_min))
 
             filter_arr = img_arr < index_peak_max
         else:
-
+            f.write("Running Kmeans with max")
             filter_arr = compute_Kmeans(img_arr, operation="max",)
 
 
@@ -286,14 +312,14 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
     print(np.sum(new_mask_data))
 
     # saving mask as nii
-    path, fname, ext = split_f(img_file)
-
     mask_img_file = os.path.abspath(fname + "_autothresh" + ext)
 
     mask_img = nib.Nifti1Image(dataobj=new_mask_data,
                                header=img_nii.header,
                                affine=img_nii.affine)
     nib.save(mask_img, mask_img_file)
+
+    f.close()
 
     return mask_img_file
 
