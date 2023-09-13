@@ -111,9 +111,11 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
             mean = total / count
             return mean
 
+        g = open(os.path.abspath("kmeans.log"))
+
         print("Running Kmeans with : ", operation, index, num_clusters)
 
-        f.write("Running Kmeans with : {} {} {}".format(
+        g.write("Running Kmeans with : {} {} {}".format(
             operation, index, num_clusters))
 
 
@@ -142,6 +144,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         min_sorted = np.sort(minimums_array)
 
         print("Min : {}".format(" ".join(str(val) for val in min_sorted)))
+        g.write("Min : {}".format(" ".join(str(val) for val in min_sorted)))
 
         # We must define :  mean of the second group for the skull extraction
         # we create means array, we sort and then take the middle value
@@ -151,23 +154,32 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         index_sorted = np.argsort(means_array)
 
         print("Mean : {}".format(" ".join(str(int(val)) for val in mean_sorted)))
+        g.write("Mean : {}".format(" ".join(str(int(val)) for val in mean_sorted)))
 
         print("Index = {}".format(" ".join(str(int(val)) for val in index_sorted)))
+        g.write("Index = {}".format(" ".join(str(int(val)) for val in index_sorted)))
 
         print("Index mid group : ", index_sorted[index])
+        g.write("Index mid group : ", index_sorted[index])
 
         min_thresh = np.amin(groups[index_sorted[index]])
         max_thresh = np.amax(groups[index_sorted[index]])
 
-        print("Min/max mid group : ", min_thresh, max_thresh)
+        print("Min/max mid group : {} {}".format( min_thresh, max_thresh))
+        g.write("Min/max mid group : {} {}".format( min_thresh, max_thresh))
 
         if operation == "min":
 
             fiter_array = min_thresh < img_arr
 
+        elif operation == "max":
+
+            fiter_array = img_arr < min_thresh
         elif operation == "interval":
 
             fiter_array = np.logical_and(min_thresh < img_arr, img_arr < max_thresh)
+
+        g.close()
 
         return fiter_array
 
