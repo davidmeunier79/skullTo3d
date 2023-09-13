@@ -621,6 +621,10 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             segment_pnh_pipe, "outputnode.native_to_stereo_trans",
             skull_t1_pipe, 'inputnode.native_to_stereo_trans')
 
+        main_workflow.connect(datasource, "indiv_params",
+                              skull_petra_pipe, 'inputnode.indiv_params')
+
+
     if deriv:
 
         datasink_name = os.path.join("derivatives", wf_name)
