@@ -113,7 +113,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         print("Running Kmeans with : ", operation, index, num_clusters)
 
-        f.write("Running Kmeans with : {} {} {} {}".format(
+        f.write("Running Kmeans with : {} {} {}".format(
             operation, index, num_clusters))
 
 
