@@ -240,10 +240,10 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
             filter_arr = compute_Kmeans(img_arr, operation="interval")
 
-
     elif operation == "higher":
         if not isinstance(index, int):
-            print("Error, index {} should be a integer for higher".format(index))
+            print("Error, index {} should be a integer for higher".format(
+                index))
             proceed = False
 
         if index < 0 or len(bins[peaks]) <= index:
