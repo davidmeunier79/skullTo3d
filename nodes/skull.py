@@ -246,7 +246,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
             print("Error, index {} should be a integer for higher".format(index))
             proceed = False
 
-        if not (0 < index and index < len(bins[peaks])):
+        if index < 0 or len(bins[peaks]) <= index:
 
             print("Error, {} out of peak indexes ".format(index))
             proceed = False
