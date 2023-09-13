@@ -196,7 +196,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
     f.write("X shape : {}".format(X.shape))
     f.write("X max : {}".format(np.round(np.max(X))))
-    f.write("Nb bins: {}".foramt(nb_bins))
+    f.write("Nb bins: {}".format(nb_bins))
 
     # Create a histogram
     hist, bins, _ = plt.hist(X, bins=nb_bins,
