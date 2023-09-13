@@ -180,7 +180,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
     print("Running local minimas with : ", operation, index, sample_bins, distance)
 
-    f.write("Running local minimas with : {} {} {} {}".format(operation, index, sample_bins, distance))
+    f.write("Running local minimas with : {} {} {} {}\n".format(operation, index, sample_bins, distance))
 
     img_nii = nib.load(img_file)
     img_arr = np.array(img_nii.dataobj)
@@ -194,9 +194,9 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
     nb_bins = (np.rint(np.max(X)/sample_bins)).astype(int)
     print("Nb bins: ", nb_bins)
 
-    f.write("X shape : {}".format(X.shape))
-    f.write("X max : {}".format(np.round(np.max(X))))
-    f.write("Nb bins: {}".format(nb_bins))
+    f.write("X shape : {}\n".format(X.shape))
+    f.write("X max : {}\n".format(np.round(np.max(X))))
+    f.write("Nb bins: {}\n".format(nb_bins))
 
     # Create a histogram
     hist, bins, _ = plt.hist(X, bins=nb_bins,
@@ -219,9 +219,9 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
     print("peak_hist :", hist[peaks])
     print("peak_bins :", bins[peaks])
 
-    f.write("peaks indexes : {}".format(peaks))
-    f.write("peak_hist : {}".format(hist[peaks]))
-    f.write("peak_bins : {}".format(bins[peaks]))
+    f.write("peaks indexes : {}\n".format(peaks))
+    f.write("peak_hist : {}\n".format(hist[peaks]))
+    f.write("peak_bins : {}\n".format(bins[peaks]))
 
 
     # filtering
@@ -255,8 +255,8 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
             print("Keeping interval between {} and {}".format(index_peak_min,
                                                           index_peak_max))
 
-            f.write("Keeping interval between {} and {}".format(index_peak_min,
-                                                          index_peak_max))
+            f.write("Keeping interval between {} and {}\n".format(
+                index_peak_min, index_peak_max))
 
             filter_arr = np.logical_and(index_peak_min < img_arr,
                                     img_arr < index_peak_max)
@@ -265,7 +265,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
             filter_arr = compute_Kmeans(img_arr, operation="interval")
 
-            f.write("Running Kmeans with interval ")
+            f.write("Running Kmeans with interval\n")
 
     elif operation == "higher":
         if not isinstance(index, int):
@@ -280,16 +280,16 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         if proceed:
             index_peak_min = bins[peaks][index]
-            print("Keeping higher than {} ".format(index_peak_min))
+            print("Keeping higher than {}".format(index_peak_min))
 
             filter_arr = index_peak_min < img_arr
 
-            f.write("Keeping higher than {} ".format(index_peak_min))
+            f.write("Keeping higher than {}\n".format(index_peak_min))
         else:
 
             filter_arr = compute_Kmeans(img_arr, operation="min")
 
-            f.write("Running Kmeans with min")
+            f.write("Running Kmeans with min\n")
 
     elif operation == "lower":
         if not isinstance(index, int):
@@ -305,11 +305,11 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         if proceed:
             index_peak_max = bins[peaks][index]
             print("Keeping lower than {} ".format(index_peak_max))
-            f.write("Keeping lower than {} ".format(index_peak_min))
+            f.write("Keeping lower than {}\n".format(index_peak_min))
 
             filter_arr = img_arr < index_peak_max
         else:
-            f.write("Running Kmeans with max")
+            f.write("Running Kmeans with max\n")
             filter_arr = compute_Kmeans(img_arr, operation="max",)
 
 
