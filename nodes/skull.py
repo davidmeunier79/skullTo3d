@@ -98,23 +98,24 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
     from nipype.utils.filemanip import split_filename as split_f
 
-    print("Running local minimas with : ", operation, index, sample_bins, distance)
-
     def compute_Kmeans(img_arr, operation, index=1, num_clusters=3):
         import os
         import numpy as np
         import nibabel as nib
         import matplotlib.pyplot as plt
         from sklearn.cluster import KMeans
-
-        print("Running Kmeans with : ", operation, index, num_clusters)
-
         ## Mean function
         def calculate_mean(data):
             total = sum(data)
             count = len(data)
             mean = total / count
             return mean
+
+        print("Running Kmeans with : ", operation, index, num_clusters)
+
+        f.write("Running Kmeans with : {} {} {} {}".format(
+            operation, index, num_clusters))
+
 
         # Reshape data to a 1D array (required by k-means)
         X = np.copy(img_arr).flatten().reshape(-1, 1)
@@ -176,6 +177,11 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
     f = open(log_file, "w+")
 
+
+    print("Running local minimas with : ", operation, index, sample_bins, distance)
+
+    f.write("Running local minimas with : {} {} {} {}".format(operation, index, sample_bins, distance))
+
     img_nii = nib.load(img_file)
     img_arr = np.array(img_nii.dataobj)
 
@@ -188,9 +194,9 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
     nb_bins = (np.rint(np.max(X)/sample_bins)).astype(int)
     print("Nb bins: ", nb_bins)
 
-    f.write("X shape : ", X.shape)
-    f.write("X max : ", np.round(np.max(X)))
-    f.write("Nb bins: ", nb_bins)
+    f.write("X shape : {}".format(X.shape))
+    f.write("X max : {}".format(np.round(np.max(X))))
+    f.write("Nb bins: {}".foramt(nb_bins))
 
     # Create a histogram
     hist, bins, _ = plt.hist(X, bins=nb_bins,
@@ -213,9 +219,9 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
     print("peak_hist :", hist[peaks])
     print("peak_bins :", bins[peaks])
 
-    f.write("peaks indexes :", peaks)
-    f.write("peak_hist :", hist[peaks])
-    f.write("peak_bins :", bins[peaks])
+    f.write("peaks indexes : {}".format(peaks))
+    f.write("peak_hist : {}".format(hist[peaks]))
+    f.write("peak_bins : {}".format(bins[peaks]))
 
 
     # filtering
