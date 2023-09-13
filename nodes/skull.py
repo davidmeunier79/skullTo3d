@@ -260,6 +260,27 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
             filter_arr = compute_Kmeans(img_arr, operation="min",)
 
+    elif operation == "lower":
+        if not isinstance(index, int):
+            print("Error, index {} should be a integer for higher".format(
+                index))
+            proceed = False
+
+        if index < 0 or len(bins[peaks]) <= index:
+
+            print("Error, {} out of peak indexes ".format(index))
+            proceed = False
+
+        if proceed:
+            index_peak_max = bins[peaks][index]
+            print("Keeping higher than {} ".format(index_peak_max))
+
+            filter_arr = img_arr < index_peak_max
+        else:
+
+            filter_arr = compute_Kmeans(img_arr, operation="max",)
+
+
     new_mask_data[filter_arr] = img_arr[filter_arr]
 
     print(np.sum(new_mask_data))
