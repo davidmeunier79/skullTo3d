@@ -730,6 +730,11 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         #skull_petra_pipe.connect(petra_fast, "restored_image",
                                  petra_skull_auto_mask, "img_file")
 
+        skull_petra_pipe.connect(
+            inputnode, ("indiv_params", parse_key, "petra_skull_auto_mask"),
+            petra_skull_mask_thr, "indiv_params")
+
+
     # petra_skull_mask_binary
     petra_skull_mask_binary = pe.Node(interface=UnaryMaths(),
                                       name="petra_skull_mask_binary")
