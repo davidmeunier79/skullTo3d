@@ -111,7 +111,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
             mean = total / count
             return mean
 
-        g = open(os.path.abspath("kmeans.log"))
+        g = open(os.path.abspath("kmeans.log"), "w+")
 
         print("Running Kmeans with : ", operation, index, num_clusters)
 
@@ -293,10 +293,10 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         if proceed:
             index_peak_min = bins[peaks][index]
             print("Keeping higher than {}".format(index_peak_min))
+            f.write("Keeping higher than {}\n".format(index_peak_min))
 
             filter_arr = index_peak_min < img_arr
 
-            f.write("Keeping higher than {}\n".format(index_peak_min))
         else:
 
             filter_arr = compute_Kmeans(img_arr, operation="min")
@@ -317,7 +317,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         if proceed:
             index_peak_max = bins[peaks][index]
             print("Keeping lower than {} ".format(index_peak_max))
-            f.write("Keeping lower than {}\n".format(index_peak_min))
+            f.write("Keeping lower than {}\n".format(index_peak_max))
 
             filter_arr = img_arr < index_peak_max
         else:
