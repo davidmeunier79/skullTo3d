@@ -130,7 +130,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         # Split data into groups based on cluster labels
         groups = [X[cluster_labels == i].flatten() for i in range(num_clusters)]
 
-        avail_operations = ["min", "interval", "max"]
+        avail_operations = ["lower", "interval", "higher"]
 
         assert operation in avail_operations, "Error, \
             {} is not in {}".format(operation, avail_operations)
@@ -168,11 +168,11 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         print("Min/max mid group : {} {}".format( min_thresh, max_thresh))
         g.write("Min/max mid group : {} {}".format( min_thresh, max_thresh))
 
-        if operation == "min":
+        if operation == "lower":
 
             fiter_array = min_thresh < img_arr
 
-        elif operation == "max":
+        elif operation == "higher":
 
             fiter_array = img_arr < max_thresh
 
@@ -312,13 +312,15 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
 
         else:
 
-            filter_arr = compute_Kmeans(img_arr, operation="min", index=index)
 
-            f.write("Running Kmeans with min\n")
+            print("Running Kmeans with higher\n")
+            f.write("Running Kmeans with higher\n")
+            filter_arr = compute_Kmeans(img_arr, operation="higher", index=index)
+
 
     elif operation == "lower":
         if not isinstance(index, int):
-            print("Error, index {} should be a integer for higher".format(
+            print("Error, index {} should be a integer for lower".format(
                 index))
             proceed = False
 
@@ -334,8 +336,9 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
 
             filter_arr = img_arr < index_peak_max
         else:
-            f.write("Running Kmeans with max\n")
-            filter_arr = compute_Kmeans(img_arr, operation="max",index = index)
+            print("Running Kmeans with lower\n")
+            f.write("Running Kmeans with lower\n")
+            filter_arr = compute_Kmeans(img_arr, operation="lower",index = index)
 
 
     new_mask_data[filter_arr] = img_arr[filter_arr]
