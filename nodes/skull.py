@@ -174,7 +174,8 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         elif operation == "max":
 
-            fiter_array = img_arr < min_thresh
+            fiter_array = img_arr < max_thresh
+
         elif operation == "interval":
 
             fiter_array = np.logical_and(min_thresh < img_arr, img_arr < max_thresh)
