@@ -244,22 +244,24 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         "Error in operation {}".format(operation)
 
     proceed = True
-    if not (peaks.shape[0] > 1):
-        print("Error, could not find at least two local minima")
-        proceed = False
 
     if operation == "interval":
         if not (isinstance(index, list) and len(index) == 2):
             print("Error, index {} should be a list for interval".format(
                 index))
+            proceed = False
 
+        if not (peaks.shape[0] > 1):
+            print("Error, could not find at least two local minima")
             proceed = False
 
         if index[0] < 0 or len(bins[peaks]) <= index[0]:
             print("Error, index 0 {} out of peak indexes ".format(index[0]))
+            proceed = False
 
         if index[1] < index[0] or len(bins[peaks]) <= index[1]:
             print("Error, index 1 {} out of peak indexes ".format(index[1]))
+            proceed = False
 
         if proceed:
             index_peak_min = bins[peaks][index[0]]
