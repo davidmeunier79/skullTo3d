@@ -288,7 +288,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
 
         else:
 
-            filter_arr = compute_Kmeans(img_arr, operation="interval", index=index)
+            filter_arr = compute_Kmeans(img_arr, operation="interval", index=1)
 
             f.write("Running Kmeans with interval\n")
 
