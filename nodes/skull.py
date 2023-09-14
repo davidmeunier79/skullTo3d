@@ -190,10 +190,11 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
 
     f = open(log_file, "w+")
 
+    print("Running local minimas with : kmeans=",
+          kmeans, operation, index, sample_bins, distance)
 
-    print("Running local minimas with : ", operation, index, sample_bins, distance)
-
-    f.write("Running local minimas with : {} {} {} {}\n".format(operation, index, sample_bins, distance))
+    f.write("Running local minimas with : kmeans={} {} {} {} {}\n".format(
+        kmeans, operation, index, sample_bins, distance))
 
     img_nii = nib.load(img_file)
     img_arr = np.array(img_nii.dataobj)
@@ -244,6 +245,9 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         "Error in operation {}".format(operation)
 
     if kmeans:
+        print("Skipping local minima")
+        f.write("Skipping local minima")
+
         proceed = False
     else:
         proceed = True
