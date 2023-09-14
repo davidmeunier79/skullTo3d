@@ -87,7 +87,7 @@ def mask_auto_threshold(img_file, operation, index):
     return mask_threshold
 
 
-def mask_auto_img(img_file, operation, index, sample_bins, distance):
+def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
 
     import os
     import numpy as np
@@ -243,7 +243,10 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
     assert operation in ["higher", "interval", "lower"], \
         "Error in operation {}".format(operation)
 
-    proceed = True
+    if kmeans:
+        proceed = False
+    else:
+        proceed = True
 
     if operation == "interval":
         if not (isinstance(index, list) and len(index) == 2):
