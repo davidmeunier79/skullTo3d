@@ -325,7 +325,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
             filter_arr = img_arr < index_peak_max
         else:
             f.write("Running Kmeans with max\n")
-            filter_arr = compute_Kmeans(img_arr, operation="max",)
+            filter_arr = compute_Kmeans(img_arr, operation="max",index = 0)
 
 
     new_mask_data[filter_arr] = img_arr[filter_arr]
