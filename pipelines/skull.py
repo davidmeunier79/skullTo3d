@@ -708,7 +708,6 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
             inputnode, ("indiv_params", parse_key, "petra_skull_mask_thr"),
             petra_skull_mask_thr, "indiv_params")
 
-
         skull_petra_pipe.connect(petra_debias, "output_image",
         #skull_petra_pipe.connect(petra_fast, "restored_image",
                                  petra_skull_mask_thr, "in_file")
@@ -724,7 +723,6 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                     function=mask_auto_img),
                 params=parse_key(params, "petra_skull_auto_mask"),
                 name="petra_skull_auto_mask")
-
 
         skull_petra_pipe.connect(petra_debias, "output_image",
         #skull_petra_pipe.connect(petra_fast, "restored_image",
