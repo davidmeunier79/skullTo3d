@@ -160,7 +160,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
         g.write("Index = {}".format(" ".join(str(int(val)) for val in index_sorted)))
 
         print("Index mid group : ", index_sorted[index])
-        g.write("Index mid group : ", index_sorted[index])
+        g.write("Index mid group : {}".format(index_sorted[index]))
 
         min_thresh = np.amin(groups[index_sorted[index]])
         max_thresh = np.amax(groups[index_sorted[index]])
