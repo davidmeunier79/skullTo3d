@@ -220,7 +220,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
 
         #skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
         #skull_t1_pipe.connect(t1_fast, "restored_image",
-        skull_t1_pipe.connect(t1_debias, "restored_image",
+        skull_t1_pipe.connect(t1_debias, "output_image",
                               t1_skull_mask_thr, "in_file")
 
         skull_t1_pipe.connect(
@@ -239,7 +239,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
 
         #skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
         #skull_t1_pipe.connect(t1_fast, "restored_image",
-        skull_t1_pipe.connect(t1_debias, "restored_image",
+        skull_t1_pipe.connect(t1_debias, "output_image",
                               t1_skull_auto_mask, "img_file")
 
         skull_t1_pipe.connect(
