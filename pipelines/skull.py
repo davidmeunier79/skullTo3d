@@ -157,13 +157,25 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     skull_t1_pipe.connect(t1_head_erode, "out_file",
                           t1_hmasked, "mask_file")
 
-    # fast_t1
-    t1_fast = NodeParams(interface=FAST(),
-                         params=parse_key(params, "t1_fast"),
-                         name="t1_fast")
+    ## fast_t1
+    #t1_fast = NodeParams(interface=FAST(),
+                         #params=parse_key(params, "t1_fast"),
+                         #name="t1_fast")
+
+    #skull_t1_pipe.connect(t1_hmasked, "out_file",
+                          #t1_fast, "in_files")
+
+    # N4 intensity normalization over T1
+    t1_debias = NodeParams(N4BiasFieldCorrection(),
+                              params=parse_key(params, "t1_debias"),
+                              name='t1_debias')
 
     skull_t1_pipe.connect(t1_hmasked, "out_file",
-                          t1_fast, "in_files")
+                             t1_debias, "input_image")
+
+    skull_t1_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "t1_debias"),
+        t1_debias, "indiv_params")
 
     ## t1_hmasked_recip
     #t1_hmasked_recip = pe.Node(
@@ -207,8 +219,8 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
             name="t1_skull_mask_thr")
 
         #skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
-        skull_t1_pipe.connect(t1_fast, "restored_image",
-        #skull_t1_pipe.connect(inputnode, "stereo_native_T1",
+        #skull_t1_pipe.connect(t1_fast, "restored_image",
+        skull_t1_pipe.connect(t1_debias, "restored_image",
                               t1_skull_mask_thr, "in_file")
 
         skull_t1_pipe.connect(
@@ -226,8 +238,8 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
                 name="t1_skull_auto_mask")
 
         #skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
-        skull_t1_pipe.connect(t1_fast, "restored_image",
-        #skull_t1_pipe.connect(inputnode, "stereo_native_T1",
+        #skull_t1_pipe.connect(t1_fast, "restored_image",
+        skull_t1_pipe.connect(t1_debias, "restored_image",
                               t1_skull_auto_mask, "img_file")
 
         skull_t1_pipe.connect(

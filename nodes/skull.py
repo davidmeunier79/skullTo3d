@@ -278,7 +278,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         else:
 
-            filter_arr = compute_Kmeans(img_arr, operation="interval")
+            filter_arr = compute_Kmeans(img_arr, operation="interval", index=index)
 
             f.write("Running Kmeans with interval\n")
 
@@ -302,7 +302,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
 
         else:
 
-            filter_arr = compute_Kmeans(img_arr, operation="min")
+            filter_arr = compute_Kmeans(img_arr, operation="min", index=index)
 
             f.write("Running Kmeans with min\n")
 
@@ -325,7 +325,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance):
             filter_arr = img_arr < index_peak_max
         else:
             f.write("Running Kmeans with max\n")
-            filter_arr = compute_Kmeans(img_arr, operation="max",index = 0)
+            filter_arr = compute_Kmeans(img_arr, operation="max",index = index)
 
 
     new_mask_data[filter_arr] = img_arr[filter_arr]
