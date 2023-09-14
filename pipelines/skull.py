@@ -730,7 +730,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
         skull_petra_pipe.connect(
             inputnode, ("indiv_params", parse_key, "petra_skull_auto_mask"),
-            petra_skull_mask_thr, "indiv_params")
+            petra_skull_auto_mask, "indiv_params")
 
 
     # petra_skull_mask_binary
