@@ -319,15 +319,15 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
             print("Keeping higher than {}".format(index_peak_min))
             f.write("Keeping higher than {}\n".format(index_peak_min))
 
-            filter_arr = index_peak_min < img_arr
+            filter_arr = img_arr < index_peak_max
 
         else:
 
-
             print("Running Kmeans with higher\n")
             f.write("Running Kmeans with higher\n")
-            filter_arr = compute_Kmeans(img_arr, operation="higher", index=index)
 
+            filter_arr = compute_Kmeans(
+                img_arr, operation="higher", index=index)
 
     elif operation == "lower":
         if not isinstance(index, int):
@@ -344,7 +344,8 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
             index_peak_max = bins[peaks][index]
             print("Keeping lower than {} ".format(index_peak_max))
             f.write("Keeping lower than {}\n".format(index_peak_max))
-            filter_arr = img_arr < index_peak_max
+
+            filter_arr = index_peak_min < img_arr
         else:
             print("Running Kmeans with lower\n")
             f.write("Running Kmeans with lower\n")
