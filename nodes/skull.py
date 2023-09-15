@@ -244,13 +244,13 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
 
     if kmeans:
         print("Skipping local minima")
-        f.write("Skipping local minima")
+        f.write("Skipping local minima\n")
 
         proceed = False
     else:
 
         print("Running local minima, then Kmeans if failing")
-        f.write("Running local minima, then Kmeans if failing")
+        f.write("Running local minima, then Kmeans if failing\n")
         proceed = True
 
     if operation == "interval":
