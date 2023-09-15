@@ -115,7 +115,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
 
         print("Running Kmeans with : ", operation, index, num_clusters)
 
-        g.write("Running Kmeans with : {} {} {}".format(
+        g.write("Running Kmeans with : {} {} {}\n".format(
             operation, index, num_clusters))
 
 
@@ -153,32 +153,45 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
 
         index_sorted = np.argsort(means_array)
 
-        print("Mean : {}".format(" ".join(str(int(val)) for val in mean_sorted)))
-        g.write("Mean : {}".format(" ".join(str(int(val)) for val in mean_sorted)))
+        print("Mean : {}".format(
+            " ".join(str(int(val)) for val in mean_sorted)))
+        g.write("Mean : {}\n".format(
+            " ".join(str(int(val)) for val in mean_sorted)))
 
-        print("Index = {}".format(" ".join(str(int(val)) for val in index_sorted)))
-        g.write("Index = {}".format(" ".join(str(int(val)) for val in index_sorted)))
+        print("Index = {}".format(
+            " ".join(str(int(val)) for val in index_sorted)))
+        g.write("Index = {}\n".format(
+            " ".join(str(int(val)) for val in index_sorted)))
 
         print("Index mid group : ", index_sorted[index])
-        g.write("Index mid group : {}".format(index_sorted[index]))
+        g.write("Index mid group : {}\n".format(index_sorted[index]))
 
         min_thresh = np.amin(groups[index_sorted[index]])
         max_thresh = np.amax(groups[index_sorted[index]])
 
-        print("Min/max mid group : {} {}".format( min_thresh, max_thresh))
-        g.write("Min/max mid group : {} {}".format( min_thresh, max_thresh))
+        print("Min/max mid group : {} {}".format(min_thresh,
+                                                 max_thresh))
+        g.write("Min/max mid group : {} {}\n".format(min_thresh,
+                                                     max_thresh))
 
         if operation == "lower":
 
+            g.write("Filtering with lower threshold {}\n".format(min_thresh))
             fiter_array = min_thresh < img_arr
 
         elif operation == "higher":
 
+            g.write("Filtering with higher threshold {}\n".format(max_thresh))
             fiter_array = img_arr < max_thresh
 
         elif operation == "interval":
 
-            fiter_array = np.logical_and(min_thresh < img_arr, img_arr < max_thresh)
+            g.write(
+                "Filtering between lower {} and higher {}\n".format(
+                    min_thresh, max_thresh))
+
+            fiter_array = np.logical_and(min_thresh < img_arr,
+                                         img_arr < max_thresh)
 
         g.close()
 
