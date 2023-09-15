@@ -344,17 +344,17 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
             index_peak_max = bins[peaks][index]
             print("Keeping lower than {} ".format(index_peak_max))
             f.write("Keeping lower than {}\n".format(index_peak_max))
-
             filter_arr = img_arr < index_peak_max
         else:
             print("Running Kmeans with lower\n")
             f.write("Running Kmeans with lower\n")
-            filter_arr = compute_Kmeans(img_arr, operation="lower", index=index)
-
+            filter_arr = compute_Kmeans(
+                img_arr, operation="lower", index=index)
 
     new_mask_data[filter_arr] = img_arr[filter_arr]
 
-    print(np.sum(new_mask_data))
+    print("Before filter: ", np.sum(img_arr != 0.0),
+          "After filter: ", np.sum(new_mask_data != 0.0))
 
     # saving mask as nii
 
