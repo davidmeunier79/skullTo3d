@@ -315,9 +315,10 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
             proceed = False
 
         if proceed:
-            index_peak_min = bins[peaks][index]
-            print("Keeping higher than {}".format(index_peak_min))
-            f.write("Keeping higher than {}\n".format(index_peak_min))
+            index_peak_max = bins[peaks][index]
+
+            f.write("Filtering with higher threshold {}\n".format(index_peak_max))
+            print("Filtering with higher threshold {}\n".format(index_peak_max))
 
             filter_arr = img_arr < index_peak_max
 
@@ -341,9 +342,10 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
             proceed = False
 
         if proceed:
-            index_peak_max = bins[peaks][index]
-            print("Keeping lower than {} ".format(index_peak_max))
-            f.write("Keeping lower than {}\n".format(index_peak_max))
+            index_peak_min = bins[peaks][index]
+
+            f.write("Filtering with lower threshold {}\n".format(index_peak_min))
+            print("Filtering with lower threshold {}\n".format(index_peak_min))
 
             filter_arr = index_peak_min < img_arr
         else:
