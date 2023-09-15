@@ -184,9 +184,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
 
         return fiter_array
 
-    path, fname, ext = split_f(img_file)
-
-    log_file = os.path.abspath(fname + ".log")
+    log_file = os.path.abspath("local_minima.log")
 
     f = open(log_file, "w+")
 
@@ -338,7 +336,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         else:
             print("Running Kmeans with lower\n")
             f.write("Running Kmeans with lower\n")
-            filter_arr = compute_Kmeans(img_arr, operation="lower",index = index)
+            filter_arr = compute_Kmeans(img_arr, operation="lower", index=index)
 
 
     new_mask_data[filter_arr] = img_arr[filter_arr]
@@ -346,6 +344,9 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
     print(np.sum(new_mask_data))
 
     # saving mask as nii
+
+    path, fname, ext = split_f(img_file)
+
     mask_img_file = os.path.abspath(fname + "_autothresh" + ext)
 
     mask_img = nib.Nifti1Image(dataobj=new_mask_data,
