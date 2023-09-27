@@ -28,6 +28,8 @@ from macapype.pipelines.prepare import _create_avg_reorient_pipeline
 
 from macapype.nodes.prepare import average_align
 
+from macapype.nodes.prepare import wrap_afni_IsoSurface
+
 from macapype.utils.misc import parse_key
 
 #################################################
@@ -331,7 +333,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     mesh_t1_skull_t1 = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
                                output_names=["stl_file"],
-                               function=wrap_nii2mesh),
+                               function=wrap_afni_IsoSurface,
         name="mesh_t1_skull_t1")
 
     skull_t1_pipe.connect(t1_skull_erode, "out_file",
