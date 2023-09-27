@@ -28,7 +28,7 @@ from macapype.pipelines.prepare import _create_avg_reorient_pipeline
 
 from macapype.nodes.prepare import average_align
 
-from macapype.nodes.prepare import wrap_afni_IsoSurface
+from macapype.nodes.surface import wrap_afni_IsoSurface
 
 from macapype.utils.misc import parse_key
 
