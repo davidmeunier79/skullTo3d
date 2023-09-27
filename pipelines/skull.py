@@ -333,7 +333,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     mesh_t1_skull_t1 = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
                                output_names=["stl_file"],
-                               function=wrap_afni_IsoSurface,
+                               function=wrap_afni_IsoSurface),
         name="mesh_t1_skull_t1")
 
     skull_t1_pipe.connect(t1_skull_erode, "out_file",
