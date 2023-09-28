@@ -892,7 +892,6 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
                                  outputnode, "robustpetra_skull_mask")
 
         skull_petra_pipe.connect(mesh_robustpetra_skull, "stl_file",
-                                outputnode, "robustpetra_skull_stl")
-
+                                 outputnode, "robustpetra_skull_stl")
 
     return skull_petra_pipe
