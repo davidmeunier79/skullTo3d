@@ -832,7 +832,8 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     mesh_petra_skull = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
                                output_names=["stl_file"],
-                               function=wrap_nii2mesh_old),
+                               # function=wrap_nii2mesh_old),
+                               function=wrap_afni_IsoSurface),
         name="mesh_petra_skull")
 
     skull_petra_pipe.connect(petra_skull_erode, "out_file",
