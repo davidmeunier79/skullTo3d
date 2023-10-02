@@ -168,13 +168,13 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         g.write("Cluster Mean : {}\n".format(
             " ".join(str(int(val)) for val in mean_sorted)))
 
-        print("Cluster Index = {}".format(
+        print("Cluster Indexes = {}".format(
             " ".join(str(int(val)) for val in index_sorted)))
-        g.write("Cluster Index = {}\n".format(
+        g.write("Cluster Indexes = {}\n".format(
             " ".join(str(int(val)) for val in index_sorted)))
 
-        print("Indexed cluster ({}): {}", index, index_sorted[index])
-        g.write("Indexed cluster ({}): {}", index, index_sorted[index])
+        print("Indexed cluster ({}): {}".format(index, index_sorted[index]))
+        g.write("Indexed cluster ({}): {}\n".format(index, index_sorted[index]))
 
         min_thresh = np.amin(groups[index_sorted[index]])
         max_thresh = np.amax(groups[index_sorted[index]])
