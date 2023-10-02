@@ -268,8 +268,8 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         "Error in operation {}".format(operation)
 
     if kmeans:
-        print("Skipping local minima")
-        f.write("Skipping local minima\n")
+        print("kmeans=True, Skipping local minima")
+        f.write("kmeans=True, Skipping local minima\n")
 
         proceed = False
     else:
