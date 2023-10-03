@@ -242,11 +242,11 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
     # Add labels and a legend
     plt.xlabel('Value')
     plt.ylabel('Probability')
-    plt.title('Histogram')
-    plt.legend()
 
     # Save the figure as a PNG file
     plt.savefig(os.path.abspath('histogram.png'))
+    plt.clf()
+
 
     # Find local minima in the histogram
     peaks, _ = find_peaks(-hist, distance = distance)  # Use negative histogram for minima
