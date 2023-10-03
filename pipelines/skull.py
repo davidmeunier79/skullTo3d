@@ -774,6 +774,10 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         skull_petra_pipe.connect(petra_head_erode, "out_file",
                                  petra_head_erode_skin, "in_file")
 
+        skull_petra_pipe.connect(
+            inputnode, ("indiv_params", parse_key, "petra_head_erode_skin"),
+            petra_head_erode_skin, "indiv_params")
+
         # ### Masking with petra_head mask
         # petra_hmasked ####### [okey]
         petra_skin_masked = pe.Node(interface=ApplyMask(),
