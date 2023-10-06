@@ -49,19 +49,6 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
                                       'native_to_stereo_trans']),
         name='inputnode')
 
-    ## align_on_stereo_native_T1
-    #align_on_stereo_native_T1 = pe.Node(interface=RegResample(pad_val=0.0),
-                                        #name="align_on_stereo_native_T1")
-
-    #skull_t1_pipe.connect(inputnode, 't1',
-                          #align_on_stereo_native_T1, "flo_file")
-
-    #skull_t1_pipe.connect(inputnode, 'native_to_stereo_trans',
-                          #align_on_stereo_native_T1, "trans_file")
-
-    #skull_t1_pipe.connect(inputnode, "stereo_native_T1",
-                          #align_on_stereo_native_T1, "ref_file")
-
     # ### head mask
     # headmask_threshold
     if "t1_head_mask_thr" in params.keys():
@@ -71,7 +58,6 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
             params=parse_key(params, 't1_head_mask_thr'),
             name="t1_head_mask_thr")
 
-        #skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
         skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_head_mask_thr, "in_file")
 
@@ -89,7 +75,6 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
                 params=parse_key(params, "t1_head_auto_mask"),
                 name="t1_head_auto_mask")
 
-        #skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
         skull_t1_pipe.connect(inputnode, "stereo_native_T1",
                               t1_head_auto_mask, "img_file")
 
@@ -131,6 +116,10 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     skull_t1_pipe.connect(keep_gcc_t1_head, "gcc_nii_file",
                           t1_head_dilate, "in_file")
 
+    skull_t1_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "t1_head_dilate"),
+        t1_head_dilate, "indiv_params")
+
     # t1_head_fill
     t1_head_fill = pe.Node(interface=UnaryMaths(),
                            name="t1_head_fill")
@@ -148,24 +137,19 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     skull_t1_pipe.connect(t1_head_fill, "out_file",
                           t1_head_erode, "in_file")
 
+    skull_t1_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "t1_head_erode"),
+        t1_head_erode, "indiv_params")
+
     # t1_hmasked
     t1_hmasked = pe.Node(interface=ApplyMask(),
                          name="t1_hmasked")
 
     skull_t1_pipe.connect(inputnode, "stereo_native_T1",
-    #skull_t1_pipe.connect(align_on_stereo_native_T1, "out_file",
                           t1_hmasked, "in_file")
 
     skull_t1_pipe.connect(t1_head_erode, "out_file",
                           t1_hmasked, "mask_file")
-
-    ## fast_t1
-    #t1_fast = NodeParams(interface=FAST(),
-                         #params=parse_key(params, "t1_fast"),
-                         #name="t1_fast")
-
-    #skull_t1_pipe.connect(t1_hmasked, "out_file",
-                          #t1_fast, "in_files")
 
     # N4 intensity normalization over T1
     t1_debias = NodeParams(N4BiasFieldCorrection(),
@@ -179,38 +163,6 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
         inputnode, ('indiv_params', parse_key, "t1_debias"),
         t1_debias, "indiv_params")
 
-    ## t1_hmasked_recip
-    #t1_hmasked_recip = pe.Node(
-         #interface=UnaryMaths(),
-         #name="t1_hmasked_recip")
-
-    #t1_hmasked_recip.inputs.operation = 'recip'
-
-    #skull_t1_pipe.connect(t1_fast, "restored_image",
-                          #t1_hmasked_recip, "in_file")
-
-    ## t1_hmasked_log
-    #t1_hmasked_log = pe.Node(
-        #interface=UnaryMaths(),
-        #name="t1_hmasked_log")
-
-    #t1_hmasked_log.inputs.operation = 'log'
-
-    #skull_t1_pipe.connect(t1_hmasked_recip, "out_file",
-                          #t1_hmasked_log, "in_file")
-
-    ## t1_hmasked_inv
-    #t1_hmasked_inv = pe.Node(
-        #interface=BinaryMaths(),
-        #name="t1_hmasked_inv")
-
-    #skull_t1_pipe.connect(t1_hmasked_log, "out_file",
-                          #t1_hmasked_inv, "in_file")
-
-    #t1_hmasked_inv.inputs.operation = 'mul'
-    #t1_hmasked_inv.inputs.operand_value = -1
-
-
     # ### skull mask
     # skullmask_threshold
     if "t1_skull_mask_thr" in params.keys():
@@ -220,8 +172,6 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
             params=parse_key(params, 't1_skull_mask_thr'),
             name="t1_skull_mask_thr")
 
-        #skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
-        #skull_t1_pipe.connect(t1_fast, "restored_image",
         skull_t1_pipe.connect(t1_debias, "output_image",
                               t1_skull_mask_thr, "in_file")
 
@@ -239,8 +189,6 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
                 params=parse_key(params, "t1_skull_auto_mask"),
                 name="t1_skull_auto_mask")
 
-        #skull_t1_pipe.connect(t1_hmasked_inv, "out_file",
-        #skull_t1_pipe.connect(t1_fast, "restored_image",
         skull_t1_pipe.connect(t1_debias, "output_image",
                               t1_skull_auto_mask, "img_file")
 
@@ -250,7 +198,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
 
     # t1_skull_mask_binary
     t1_skull_mask_binary = pe.Node(interface=UnaryMaths(),
-                                  name="t1_skull_mask_binary")
+                                   name="t1_skull_mask_binary")
 
     t1_skull_mask_binary.inputs.operation = 'bin'
     t1_skull_mask_binary.inputs.output_type = 'NIFTI_GZ'
@@ -657,6 +605,10 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_petra_pipe.connect(petra_head_gcc, "gcc_nii_file",
                              petra_head_dilate, "in_file")
 
+    skull_petra_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "petra_head_dilate"),
+        petra_head_dilate, "indiv_params")
+
     # petra_head_fill
     petra_head_fill = pe.Node(interface=UnaryMaths(),
                               name="petra_head_fill")
@@ -673,6 +625,10 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
     skull_petra_pipe.connect(petra_head_fill, "out_file",
                              petra_head_erode, "in_file")
+
+    skull_petra_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "petra_head_erode"),
+        petra_head_erode, "indiv_params")
 
     # ### Masking with head mask
     # petra_hmasked ####### [okey]
