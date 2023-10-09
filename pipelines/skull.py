@@ -185,7 +185,8 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
             params=parse_key(params, 't1_skull_mask_thr'),
             name="t1_skull_mask_thr")
 
-        skull_t1_pipe.connect(t1_debias, "output_image",
+        #skull_t1_pipe.connect(t1_debias, "output_image",
+        skull_t1_pipe.connect(t1_fast, "restored_image",
                               t1_skull_mask_thr, "in_file")
 
         skull_t1_pipe.connect(
@@ -202,7 +203,8 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
                 params=parse_key(params, "t1_skull_auto_mask"),
                 name="t1_skull_auto_mask")
 
-        skull_t1_pipe.connect(t1_debias, "output_image",
+        #skull_t1_pipe.connect(t1_debias, "output_image",
+        skull_t1_pipe.connect(t1_fast, "restored_image",
                               t1_skull_auto_mask, "img_file")
 
         skull_t1_pipe.connect(
@@ -224,7 +226,6 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
 
         skull_t1_pipe.connect(t1_skull_auto_mask, "mask_img_file",
                               t1_skull_mask_binary, "in_file")
-
 
     # t1_head_erode_skin
     if "t1_head_erode_skin" in params.keys():
