@@ -214,11 +214,11 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
 
         if "t1_fast" in params.keys():
             skull_t1_pipe.connect(t1_fast, "restored_image",
-                                  t1_skull_mask_thr, "in_file")
+                                  t1_skull_auto_mask, "in_file")
 
         elif "t1_debias" in params.keys():
             skull_t1_pipe.connect(t1_debias, "output_image",
-                                  t1_skull_mask_thr, "in_file")
+                                  t1_skull_auto_mask, "in_file")
 
         skull_t1_pipe.connect(
             inputnode, ('indiv_params', parse_key, "t1_skull_auto_mask"),
