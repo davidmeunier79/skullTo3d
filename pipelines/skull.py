@@ -715,11 +715,11 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
         if "petra_fast" in params.keys():
             skull_petra_pipe.connect(petra_fast, "restored_image",
-                                  petra_skull_mask_thr, "in_file")
+                                     petra_skull_mask_thr, "in_file")
 
         elif "petra_debias" in params.keys():
             skull_petra_pipe.connect(petra_debias, "output_image",
-                                  petra_skull_mask_thr, "in_file")
+                                     petra_skull_mask_thr, "in_file")
 
     else:
 
@@ -736,12 +736,11 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
         if "petra_fast" in params.keys():
             skull_petra_pipe.connect(petra_fast, "restored_image",
-                                  petra_skull_auto_mask, "img_file")
+                                     petra_skull_auto_mask, "img_file")
 
         elif "petra_debias" in params.keys():
             skull_petra_pipe.connect(petra_debias, "output_image",
-                                  petra_skull_auto_mask, "img_file")
-
+                                     petra_skull_auto_mask, "img_file")
 
         skull_petra_pipe.connect(
             inputnode, ("indiv_params", parse_key, "petra_skull_auto_mask"),
