@@ -30,7 +30,7 @@ from macapype.nodes.prepare import average_align
 from macapype.nodes.surface import (keep_gcc, wrap_nii2mesh,
                                     wrap_nii2mesh_old, wrap_afni_IsoSurface)
 
-from macapype.utils.misc import parse_key, get_first_elem
+from macapype.utils.misc import parse_key, get_elem
 
 #################################################
 # ####################  T1  #####################
@@ -769,7 +769,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     petra_skull_mask_binary.inputs.operation = 'bin'
     petra_skull_mask_binary.inputs.output_type = 'NIFTI_GZ'
 
-    skull_petra_pipe.connect(petra_fast, ("partial_volume_files", get_first_elem),
+    skull_petra_pipe.connect(petra_fast, ("partial_volume_files", get_elem, 0),
                              petra_skull_mask_binary, "in_file")
 
     # petra_skull_auto_thresh
