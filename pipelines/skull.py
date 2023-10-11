@@ -261,6 +261,10 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
         skull_t1_pipe.connect(t1_head_erode, "out_file",
                               t1_head_erode_skin, "in_file")
 
+        skull_t1_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "t1_head_erode_skin"),
+            t1_head_erode_skin, "indiv_params")
+
         # ### Masking with t1_head mask
         # t1_head_hmasked ####### [okey]
         t1_head_skin_masked = pe.Node(interface=ApplyMask(),
