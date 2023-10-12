@@ -151,20 +151,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     skull_t1_pipe.connect(t1_head_erode, "out_file",
                           t1_hmasked, "mask_file")
 
-    if "t1_fast" in params.keys():
-
-        t1_fast = NodeParams(interface=FAST(),
-                             params=parse_key(params, "t1_fast"),
-                             name="t1_fast")
-
-        skull_t1_pipe.connect(t1_hmasked, "out_file",
-                              t1_fast, "in_files")
-
-        skull_t1_pipe.connect(
-            inputnode, ('indiv_params', parse_key, "t1_fast"),
-            t1_fast, "indiv_params")
-
-    elif "t1_debias" in params.keys():
+    if "t1_debias" in params.keys():
 
         # N4 intensity normalization over T1
         t1_debias = NodeParams(N4BiasFieldCorrection(),
@@ -178,8 +165,20 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
             inputnode, ('indiv_params', parse_key, "t1_debias"),
             t1_debias, "indiv_params")
 
+    t1_fast = NodeParams(interface=FAST(),
+                         params=parse_key(params, "t1_fast"),
+                         name="t1_fast")
+
+    if "t1_debias" in params.keys():
+        skull_t1_pipe.connect(t1_debias, "output_image",
+                            t1_fast, "in_files")
     else:
-        print("Warning, no debias was defined")
+        skull_t1_pipe.connect(t1_hmasked, "out_file",
+                            t1_fast, "in_files")
+
+    skull_t1_pipe.connect(
+        inputnode, ('indiv_params', parse_key, "t1_fast"),
+        t1_fast, "indiv_params")
 
     # t1_skull_mask_binary
     t1_skull_mask_binary = pe.Node(interface=UnaryMaths(),
