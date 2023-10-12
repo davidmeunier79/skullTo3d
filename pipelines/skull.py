@@ -411,7 +411,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
         ct_skull_auto_mask = NodeParams(
                 interface=niu.Function(
                     input_names=["img_file", "operation",
-                                 "index", "sample_bins", "distance"],
+                                 "index", "sample_bins", "distance", "kmeans"],
                     output_names=["mask_img_file"],
                     function=mask_auto_img),
                 params=parse_key(params, "ct_skull_auto_mask"),
