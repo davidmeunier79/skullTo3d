@@ -135,7 +135,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         assert operation in avail_operations, "Error, \
             {} is not in {}".format(operation, avail_operations)
 
-        assert 0 <= index and index < num_clusters-1, "Error \
+        assert 0 <= index and index < num_clusters, "Error \
             with index {}".format(index)
 
         # We must define : the minimum of the second group for the headmask
