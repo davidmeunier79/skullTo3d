@@ -608,11 +608,8 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             params=parse_key(params, "skull_t1_pipe"))
 
         main_workflow.connect(segment_pnh_pipe,
-                              "outputnode.native_T1",
-                              skull_t1_pipe, 'inputnode.t1')
-
-        main_workflow.connect(segment_pnh_pipe,
-                              "outputnode.stereo_native_T1",
+                              "outputnode.stereo_debiased_T1",
+                              # "outputnode.stereo_native_T1",
                               skull_t1_pipe, 'inputnode.stereo_native_T1')
 
         main_workflow.connect(

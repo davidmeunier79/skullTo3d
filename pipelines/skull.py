@@ -44,9 +44,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
 
     # Creating input node
     inputnode = pe.Node(
-        niu.IdentityInterface(fields=['brainmask', 't1', 'debiased_T1',
-                                      'indiv_params', 'stereo_native_T1',
-                                      'native_to_stereo_trans']),
+        niu.IdentityInterface(fields=['indiv_params', 'stereo_native_T1']),
         name='inputnode')
 
     # ### head mask
