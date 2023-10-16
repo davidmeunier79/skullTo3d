@@ -607,7 +607,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         skull_t1_pipe = create_skull_t1_pipe(
             params=parse_key(params, "skull_t1_pipe"))
 
-        print("Species: " , species)
+        print("Species: ", species)
 
         if species == "marmo":
             main_workflow.connect(segment_pnh_pipe,
@@ -620,10 +620,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                                   skull_t1_pipe, 'inputnode.stereo_native_T1')
 
         else:
-
-            print("!! Error with Species: " , species)
-
+            print("!! Error with Species: ", species)
             exit(-1)
+
         main_workflow.connect(datasource, "indiv_params",
                               skull_t1_pipe, 'inputnode.indiv_params')
 
