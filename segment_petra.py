@@ -94,7 +94,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                          sessions, acquisitions, reconstructions,
                          params_file, indiv_params_file, mask_file,
                          template_path, template_files, nprocs, reorient,
-                         deriv, pad, wf_name="macapype"):
+                         deriv, pad, use_debiased_t1, wf_name="macapype"):
 
     # macapype_pipeline
     """ Set up the segmentatiopn pipeline based on ANTS
@@ -607,14 +607,17 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         skull_t1_pipe = create_skull_t1_pipe(
             params=parse_key(params, "skull_t1_pipe"))
 
-        print("Species: ", species)
+        if use_debiased_t1:
 
-        if species == "marmo":
+            print("Using debias T1 for skull_t1_pipe ")
+
             main_workflow.connect(segment_pnh_pipe,
                                   "outputnode.stereo_debiased_T1",
                                   skull_t1_pipe, 'inputnode.stereo_native_T1')
+        else:
 
-        elif species == "macaque":
+            print("Using native T1 for skull_t1_pipe ")
+
             main_workflow.connect(segment_pnh_pipe,
                                   "outputnode.stereo_native_T1",
                                   skull_t1_pipe, 'inputnode.stereo_native_T1')
@@ -810,6 +813,10 @@ def main():
                         help="output derivatives in BIDS orig directory",
                         required=False)
 
+    parser.add_argument("-use_debiased_t1", dest="use_debiased_t1", action='store_true',
+                        help="output derivatives in BIDS orig directory",
+                        required=False)
+
     parser.add_argument("-pad", dest="pad", action='store_true',
                         help="padding mask and seg_mask",
                         required=False)
@@ -836,6 +843,7 @@ def main():
         nprocs=args.nprocs,
         reorient=args.reorient,
         deriv=args.deriv,
+        use_debiased_t1=args.use_debiased_t1,
         pad=args.pad)
 
 if __name__ == '__main__':
