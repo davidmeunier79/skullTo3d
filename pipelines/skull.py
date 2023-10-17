@@ -209,16 +209,6 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
                               ("partial_volume_files", get_elem, 0),
                               t1_skull_mask_binary, "in_file")
 
-    # t1_skull_mask_binary
-    t1_skull_mask_binary = pe.Node(interface=UnaryMaths(),
-                                   name="t1_skull_mask_binary")
-
-    t1_skull_mask_binary.inputs.operation = 'bin'
-    t1_skull_mask_binary.inputs.output_type = 'NIFTI_GZ'
-
-    skull_t1_pipe.connect(t1_fast, ("partial_volume_files", get_elem, 0),
-                          t1_skull_mask_binary, "in_file")
-
     ## ### skull mask
     ## skullmask_threshold
     #if "t1_skull_mask_thr" in params.keys():
