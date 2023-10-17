@@ -609,22 +609,16 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
 
         if use_debiased_t1:
 
-            print("Using debias T1 for skull_t1_pipe ")
-
+            print("Using stereo debias T1 for skull_t1_pipe ")
             main_workflow.connect(segment_pnh_pipe,
                                   "outputnode.stereo_debiased_T1",
                                   skull_t1_pipe, 'inputnode.stereo_native_T1')
         else:
 
-            print("Using native T1 for skull_t1_pipe ")
-
+            print("Using stereo native T1 for skull_t1_pipe ")
             main_workflow.connect(segment_pnh_pipe,
                                   "outputnode.stereo_native_T1",
                                   skull_t1_pipe, 'inputnode.stereo_native_T1')
-
-        else:
-            print("!! Error with Species: ", species)
-            exit(-1)
 
         main_workflow.connect(datasource, "indiv_params",
                               skull_t1_pipe, 'inputnode.indiv_params')
