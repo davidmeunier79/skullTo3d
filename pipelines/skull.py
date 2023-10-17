@@ -773,7 +773,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         #skull_petra_pipe.connect(petra_skull_auto_mask, "mask_img_file",
                                  #petra_skull_mask_binary, "in_file")
 
-    if "petra_skull_auto_mask" in params.key():
+    if "petra_skull_auto_mask" in params.keys():
 
         #print("*** petra_skull_auto_mask ***")
 
