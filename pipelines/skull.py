@@ -178,6 +178,37 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
         inputnode, ('indiv_params', parse_key, "t1_fast"),
         t1_fast, "indiv_params")
 
+    if "t1_skull_auto_mask" in params.keys():
+
+        print("*** t1_skull_auto_mask ***")
+
+        t1_skull_auto_mask = NodeParams(
+                interface=niu.Function(
+                    input_names=["img_file", "operation",
+                                 "index", "sample_bins", "distance", "kmeans"],
+                    output_names=["mask_img_file"],
+                    function=mask_auto_img),
+                params=parse_key(params, "t1_skull_auto_mask"),
+                name="t1_skull_auto_mask")
+
+        skull_t1_pipe.connect(t1_fast, "restored_image",
+                              t1_skull_auto_mask, "img_file")
+
+    # t1_skull_mask_binary
+    t1_skull_mask_binary = pe.Node(interface=UnaryMaths(),
+                                   name="t1_skull_mask_binary")
+
+    t1_skull_mask_binary.inputs.operation = 'bin'
+    t1_skull_mask_binary.inputs.output_type = 'NIFTI_GZ'
+
+    if "t1_skull_auto_mask" in params.keys():
+        skull_t1_pipe.connect(t1_skull_auto_mask, "mask_img_file",
+                              t1_skull_mask_binary, "in_file")
+    else:
+        skull_t1_pipe.connect(t1_fast,
+                              ("partial_volume_files", get_elem, 0),
+                              t1_skull_mask_binary, "in_file")
+
     # t1_skull_mask_binary
     t1_skull_mask_binary = pe.Node(interface=UnaryMaths(),
                                    name="t1_skull_mask_binary")
