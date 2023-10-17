@@ -796,7 +796,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     petra_skull_mask_binary.inputs.operation = 'bin'
     petra_skull_mask_binary.inputs.output_type = 'NIFTI_GZ'
 
-    if "petra_skull_auto_mask" in params.key():
+    if "petra_skull_auto_mask" in params.keys():
         skull_petra_pipe.connect(petra_skull_auto_mask, "mask_img_file",
                                  petra_skull_mask_binary, "in_file")
     else:
