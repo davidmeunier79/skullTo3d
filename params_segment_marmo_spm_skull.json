@@ -8,12 +8,6 @@
     {
         "crop_aladin_T1":
         {
-            "nac_flag": true,
-            "rig_only_flag": true,
-            "nosym_flag": true,
-            "ln_val": 12,
-            "lp_val": 10,
-            "smoo_r_val": 1.0
         }
     },
     "debias":
@@ -132,6 +126,8 @@
     },
     "skull_t1_pipe":
     {
+        "use_debiased_t1":true,
+
         "t1_head_auto_mask":
         {
             "kmeans": true,

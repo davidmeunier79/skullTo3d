@@ -73,7 +73,7 @@ from macapype.utils.utils_params import update_params
 
 from macapype.utils.misc import show_files, get_first_elem, parse_key
 
-from macapype.pipelines.rename import rename_all_derivatives
+from macapype.pipelines.rename import rename_all_brain_derivatives
 
 from pipelines.skull import create_skull_petra_pipe
 
@@ -91,10 +91,11 @@ fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
 
 
 def create_main_workflow(data_dir, process_dir, soft, species, subjects,
-                         sessions, acquisitions, reconstructions,
-                         params_file, indiv_params_file, mask_file,
-                         template_path, template_files, nprocs, reorient,
-                         deriv, pad, use_debiased_t1, wf_name="macapype"):
+                         sessions, brain_dt, skull_dt, acquisitions,
+                         reconstructions, params_file, indiv_params_file,
+                         mask_file, template_path, template_files, nprocs,
+                         reorient, deriv, pad,
+                         wf_name="macapype"):
 
     # macapype_pipeline
     """ Set up the segmentatiopn pipeline based on ANTS
@@ -142,6 +143,13 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
 
     """
 
+    brain_dt = [dt.lower() for dt in brain_dt]
+
+    skull_dt = [dt.lower() for dt in skull_dt]
+
+    print("brain_dt: ", brain_dt)
+    print("skull_dt: ", skull_dt)
+
     soft = soft.lower()
 
     ssoft = soft.split("_")
@@ -157,15 +165,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
     if 'noseg' in ssoft:
         new_ssoft.remove('noseg')
 
-    if 't1' in ssoft:
-        new_ssoft.remove('t1')
-
-    if 'CT' in ssoft:
-        new_ssoft.remove('CT')
-
-    if 'petra' in ssoft:
-        new_ssoft.remove('petra')
-
     if 'native' in ssoft:
         new_ssoft.remove('native')
 
@@ -173,6 +172,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         new_ssoft.remove('template')
 
     soft = "_".join(new_ssoft)
+
+    print("soft: ", soft)
+    print("ssoft: ", ssoft)
 
     # formating args
     data_dir = op.abspath(data_dir)
@@ -185,7 +187,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
     except OSError:
         print("process_dir {} already exists".format(process_dir))
 
-    #params
+    # params
     if params_file is None:
 
         # species
@@ -193,7 +195,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
 
             species = species.lower()
 
-            rep_species = {"marmoset":"marmo", "marmouset":"marmo", "chimpanzee":"chimp"}
+            rep_species = {"marmoset": "marmo",
+                           "marmouset": "marmo",
+                           "chimpanzee": "chimp"}
 
             if species in list(rep_species.keys()):
                 species = rep_species[species]
@@ -270,8 +274,23 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
     # soft
     wf_name += "_{}".format(soft)
 
-    if 't1' in ssoft:
+    if 't1' in skull_dt:
         wf_name += "_t1"
+
+    if 'petra' in skull_dt:
+        wf_name += "_petra"
+
+    if 'ct' in skull_dt:
+        wf_name += "_CT"
+
+    if len(brain_dt) != 0:
+        wf_name += "_brain"
+
+    if 't1' in brain_dt:
+        wf_name += "_t1"
+
+    if 't2' in brain_dt:
+        wf_name += "_t2"
 
     if mask_file is not None:
         wf_name += "_mask"
@@ -368,10 +387,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         else:
             params_template_stereo = params_template
 
-
-
-
-
     print (params_template)
 
     # main_workflow
@@ -387,7 +402,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         else:
             space='template'
 
-        segment_pnh_pipe = create_full_spm_subpipes(
+        segment_brain_pipe = create_full_spm_subpipes(
             params_template=params_template,
             params_template_aladin=params_template_aladin,
             params_template_stereo=params_template_stereo,
@@ -400,44 +415,41 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         else:
             space="native"
 
-        if "t1" in ssoft:
-            segment_pnh_pipe = create_full_T1_ants_subpipes(
-                params_template=params_template,
-                params_template_aladin=params_template_aladin,
-                params_template_stereo=params_template_stereo,
-                params=params, space=space, pad=pad)
-        else:
-            segment_pnh_pipe = create_full_ants_subpipes(
+        if "t1" in brain_dt and 't2' in brain_dt:
+            segment_brain_pipe = create_full_ants_subpipes(
                 params_template=params_template,
                 params_template_aladin=params_template_aladin,
                 params_template_stereo=params_template_stereo,
                 params=params, mask_file=mask_file, space=space, pad=pad)
+
+        elif "t1" in brain_dt:
+            segment_brain_pipe = create_full_T1_ants_subpipes(
+                params_template=params_template,
+                params_template_aladin=params_template_aladin,
+                params_template_stereo=params_template_stereo,
+                params=params, space=space, pad=pad)
 
     # list of all required outputs
     output_query = {}
 
     # T1 (mandatory, always added)
     # T2 is optional, if "_T1" is added in the -soft arg
-    if 't1' in ssoft:
+    if 't1' in brain_dt or 't1' in skull_dt :
         output_query['T1'] = {
             "datatype": "anat", "suffix": "T1w",
             "extension": ["nii", ".nii.gz"]}
 
-    else:
-        output_query['T1'] = {
-            "datatype": "anat", "suffix": "T1w",
-            "extension": ["nii", ".nii.gz"]}
-
+    if 't2' in brain_dt:
         output_query['T2'] = {
             "datatype": "anat", "suffix": "T2w",
             "extension": ["nii", ".nii.gz"]}
 
-    if 'petra' in ssoft:
+    if 'petra' in skull_dt:
         output_query['PETRA'] = {
             "datatype": "anat", "suffix": "PDw",
             "extension": ["nii", ".nii.gz"]}
 
-    if 'ct' in ssoft:
+    if 'ct' in skull_dt:
         output_query['CT'] = {
             "datatype": "anat", "suffix": "T2star",
             "acquisition": "CT",
@@ -452,51 +464,51 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             acquisitions, reconstructions)
 
         main_workflow.connect(datasource, "indiv_params",
-                              segment_pnh_pipe, 'inputnode.indiv_params')
+                              segment_brain_pipe, 'inputnode.indiv_params')
     else:
         datasource = create_datasource(
             output_query, data_dir, subjects,  sessions, acquisitions,
             reconstructions)
 
-    main_workflow.connect(datasource, 'T1',
-                          segment_pnh_pipe, 'inputnode.list_T1')
+    if "t1" in brain_dt:
+        main_workflow.connect(datasource, 'T1',
+                              segment_brain_pipe, 'inputnode.list_T1')
 
-    if not "t1" in ssoft:
+    if "t2" in brain_dt:
         main_workflow.connect(datasource, 'T2',
-                              segment_pnh_pipe, 'inputnode.list_T2')
+                              segment_brain_pipe, 'inputnode.list_T2')
 
-    elif "t1" in ssoft and "spm" in ssoft:
+    elif "t1" in brain_dt and "spm" in ssoft:
         # cheating using T2 as T1
         main_workflow.connect(datasource, 'T1',
-                              segment_pnh_pipe, 'inputnode.list_T2')
+                              segment_brain_pipe, 'inputnode.list_T2')
 
-    if "petra" in ssoft and "skull_petra_pipe" in params.keys():
+    if "petra" in skull_dt and "skull_petra_pipe" in params.keys():
         print("Found skull_petra_pipe")
 
         skull_petra_pipe = create_skull_petra_pipe(
             params=parse_key(params, "skull_petra_pipe"))
 
-        if "t1" in ssoft:
-
-            main_workflow.connect(segment_pnh_pipe,
-                                  "outputnode.native_T1",
+        if "t1" in brain_dt and "t2" in brain_dt:
+            # optimal pipeline, use T2
+            main_workflow.connect(segment_brain_pipe,
+                                  "outputnode.native_T2",
                                   skull_petra_pipe, 'inputnode.native_img')
 
-        else:
-            main_workflow.connect(segment_pnh_pipe,
-                                  "outputnode.native_T2",
-                                  #"outputnode.native_T1",
+        elif "t1" in brain_dt:
+            main_workflow.connect(segment_brain_pipe,
+                                  "outputnode.native_T1",
                                   skull_petra_pipe, 'inputnode.native_img')
 
         # all remaining connection
         main_workflow.connect(datasource, ('PETRA', show_files),
                               skull_petra_pipe, 'inputnode.petra')
 
-        main_workflow.connect(segment_pnh_pipe,
+        main_workflow.connect(segment_brain_pipe,
                               "outputnode.stereo_native_T1",
                               skull_petra_pipe, 'inputnode.stereo_native_T1')
 
-        main_workflow.connect(segment_pnh_pipe,
+        main_workflow.connect(segment_brain_pipe,
                               "outputnode.native_to_stereo_trans",
                               skull_petra_pipe,
                               'inputnode.native_to_stereo_trans')
@@ -529,11 +541,12 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                         pad_petra_skull_mask, "flo_file")
 
                     main_workflow.connect(
-                        segment_pnh_pipe, "outputnode.native_T1",
+                        segment_brain_pipe, "outputnode.native_T1",
                         pad_petra_skull_mask, "ref_file")
 
                     main_workflow.connect(
-                        segment_pnh_pipe, "outputnode.cropped_to_native_trans",
+                        segment_brain_pipe,
+                        "outputnode.cropped_to_native_trans",
                         pad_petra_skull_mask, "trans_file")
 
                     print("Using reg_aladin transfo \
@@ -548,11 +561,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                                           "outputnode.petra_head_mask",
                                           pad_petra_head_mask, "flo_file")
 
-                    main_workflow.connect(segment_pnh_pipe,
+                    main_workflow.connect(segment_brain_pipe,
                                           "outputnode.native_T1",
                                           pad_petra_head_mask, "ref_file")
 
-                    main_workflow.connect(segment_pnh_pipe,
+                    main_workflow.connect(segment_brain_pipe,
                                           "outputnode.cropped_to_native_trans",
                                           pad_petra_head_mask, "trans_file")
 
@@ -567,11 +580,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                             pad_robustpetra_skull_mask, "flo_file")
 
                         main_workflow.connect(
-                            segment_pnh_pipe, "outputnode.native_T1",
+                            segment_brain_pipe, "outputnode.native_T1",
                             pad_robustpetra_skull_mask, "ref_file")
 
                         main_workflow.connect(
-                            segment_pnh_pipe,
+                            segment_brain_pipe,
                             "outputnode.cropped_to_native_trans",
                             pad_robustpetra_skull_mask, "trans_file")
 
@@ -579,7 +592,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                             pad_robustpetra_skull_mask, "out_file",
                             outputnode, "native_robustpetra_skull_mask")
 
-    if "ct" in ssoft and "skull_ct_pipe" in params.keys():
+    if "ct" in skull_dt and "skull_ct_pipe" in params.keys():
         print("Found skull_ct_pipe")
 
         skull_ct_pipe = create_skull_ct_pipe(
@@ -588,38 +601,39 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         main_workflow.connect(datasource, ('CT', get_first_elem),
                               skull_ct_pipe, 'inputnode.ct')
 
-        main_workflow.connect(segment_pnh_pipe,
+        main_workflow.connect(segment_brain_pipe,
                               "outputnode.native_T1",
                               skull_ct_pipe, 'inputnode.native_T1')
 
-        main_workflow.connect(segment_pnh_pipe,
+        main_workflow.connect(segment_brain_pipe,
                               "outputnode.native_T2",
                               skull_ct_pipe, 'inputnode.native_T2')
 
-        main_workflow.connect(segment_pnh_pipe,
+        main_workflow.connect(segment_brain_pipe,
                               "outputnode.stereo_native_T1",
                               skull_ct_pipe, 'inputnode.stereo_native_T1')
 
         main_workflow.connect(
-            segment_pnh_pipe, "outputnode.native_to_stereo_trans",
+            segment_brain_pipe, "outputnode.native_to_stereo_trans",
             skull_ct_pipe, 'inputnode.native_to_stereo_trans')
 
-    if "skull_t1_pipe" in params.keys():
+    if 't1' in skull_dt and "skull_t1_pipe" in params.keys():
         print("Found skull_t1_pipe")
 
         skull_t1_pipe = create_skull_t1_pipe(
             params=parse_key(params, "skull_t1_pipe"))
 
-        if use_debiased_t1:
+        print("Using stereo debias T1 for skull_t1_pipe ")
 
+        if "use_debiased_t1" in params["skull_t1_pipe"].keys():
             print("Using stereo debias T1 for skull_t1_pipe ")
-            main_workflow.connect(segment_pnh_pipe,
+            main_workflow.connect(segment_brain_pipe,
                                   "outputnode.stereo_debiased_T1",
                                   skull_t1_pipe, 'inputnode.stereo_native_T1')
         else:
 
             print("Using stereo native T1 for skull_t1_pipe ")
-            main_workflow.connect(segment_pnh_pipe,
+            main_workflow.connect(segment_brain_pipe,
                                   "outputnode.stereo_native_T1",
                                   skull_t1_pipe, 'inputnode.stereo_native_T1')
 
@@ -634,14 +648,14 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         if "regex_subs" in params.keys():
             params_regex_subs = params["regex_subs"]
         else:
-            params_regex_subs={}
+            params_regex_subs = {}
 
         if "subs" in params.keys():
             params_subs = params["rsubs"]
         else:
-            params_subs={}
+            params_subs = {}
 
-        print (datasource.iterables)
+        print(datasource.iterables)
 
         datasink = create_datasink(iterables=datasource.iterables,
                                    name=datasink_name,
@@ -657,19 +671,22 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             pref_deriv = "sub-%(sub)s_ses-%(ses)s"
             parse_str = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
 
-        rename_all_derivatives(params, main_workflow, segment_pnh_pipe,
-                               datasink, pref_deriv, parse_str, space, ssoft)
+        rename_all_brain_derivatives(
+            params, main_workflow, segment_brain_pipe,
+            datasink, pref_deriv, parse_str, space, ssoft,
+            brain_dt)
 
-        if "petra" in ssoft and "skull_petra_pipe" in params.keys():
+        if "petra" in skull_dt and "skull_petra_pipe" in params.keys():
             rename_all_skull_petra_derivatives(
-                params, main_workflow, segment_pnh_pipe, skull_petra_pipe,
-                datasink, pref_deriv, parse_str, space, pad, ssoft)
+                params, main_workflow, segment_brain_pipe, skull_petra_pipe,
+                datasink, pref_deriv, parse_str, space, pad)
 
             if pad and space == "native":
 
                 # rename petra_skull_mask
-                rename_petra_skull_mask = pe.Node(niu.Rename(),
-                                                  name="rename_petra_skull_mask")
+                rename_petra_skull_mask = pe.Node(
+                    niu.Rename(), name="rename_petra_skull_mask")
+
                 rename_petra_skull_mask.inputs.format_string = \
                     pref_deriv + "_space-{}_desc-petra_skullmask".format(space)
                 rename_petra_skull_mask.inputs.parse_string = parse_str
@@ -708,7 +725,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                         "_space-{}_desc-robustpetra_skullmask".format(
                             space)
 
-                    rename_robustpetra_skull_mask.inputs.parse_string = parse_str
+                    rename_robustpetra_skull_mask.inputs.parse_string = \
+                        parse_str
+
                     rename_robustpetra_skull_mask.inputs.keep_ext = True
 
                     main_workflow.connect(
@@ -719,15 +738,17 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                         rename_robustpetra_skull_mask, 'out_file',
                         datasink, '@robustpetra_skull_mask')
 
-        if "skull_t1_pipe" in params.keys():
-            rename_all_skull_t1_derivatives(
-                params, main_workflow, segment_pnh_pipe, skull_t1_pipe,
-                datasink, pref_deriv, parse_str, space, pad, ssoft)
+        if "ct" in skull_dt and "skull_ct_pipe" in params.keys():
+            print("rename ct skull pipe")
 
-        if "ct" in ssoft and "skull_ct_pipe" in params.keys():
             rename_all_skull_ct_derivatives(
-                params, main_workflow, segment_pnh_pipe, skull_ct_pipe,
-                datasink, pref_deriv, parse_str, space, pad, ssoft)
+                params, main_workflow, segment_brain_pipe, skull_ct_pipe,
+                datasink, pref_deriv, parse_str, space, pad)
+
+        if "t1" in skull_dt and "skull_t1_pipe" in params.keys():
+            rename_all_skull_t1_derivatives(
+                params, main_workflow, segment_brain_pipe, skull_t1_pipe,
+                datasink, pref_deriv, parse_str, space, pad)
 
     main_workflow.write_graph(graph2use="colored")
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
@@ -767,28 +788,49 @@ def main():
 
     parser.add_argument("-data", dest="data", type=str, required=True,
                         help="Directory containing MRI data (BIDS)")
-    parser.add_argument("-out", dest="out", type=str, #nargs='+',
+
+    parser.add_argument("-out", dest="out", type=str,
                         help="Output dir", required=True)
+
     parser.add_argument("-soft", dest="soft", type=str,
                         help="Sofware of analysis (SPM or ANTS are defined)",
                         required=True)
+
     parser.add_argument("-species", dest="species", type=str,
                         help="Type of PNH to process",
                         required=False)
+
     parser.add_argument("-subjects", "-sub", dest="sub",
                         type=str, nargs='+', help="Subjects", required=False)
+
     parser.add_argument("-sessions", "-ses", dest="ses",
                         type=str, nargs='+', help="Sessions", required=False)
+
+    parser.add_argument("-brain_datatypes", "-brain_dt", "-brain",
+                        dest="brain_dt", type=str,
+                        default=['T1'], nargs='+',
+                        help="MRI Brain Datatypes (T1, T2)",
+                        required=False)
+
+    parser.add_argument("-skull_datatypes", "-skull_dt", "-skull",
+                        dest="skull_dt", type=str,
+                        default=['T1'], nargs='+',
+                        help="MRI Brain Datatypes (T1, petra, CT)",
+                        required=False)
+
     parser.add_argument("-acquisitions", "-acq", dest="acq", type=str,
                         nargs='+', default=None, help="Acquisitions")
+
     parser.add_argument("-records", "-rec", dest="rec", type=str, nargs='+',
                         default=None, help="Records")
+
     parser.add_argument("-params", dest="params_file", type=str,
                         help="Parameters json file", required=False)
 
     parser.add_argument("-indiv_params", "-indiv", dest="indiv_params_file",
                         type=str, help="Individual parameters json file",
                         required=False)
+
     parser.add_argument("-mask", dest="mask_file", type=str,
                         help="precomputed mask file", required=False)
 
@@ -811,14 +853,9 @@ def main():
                         help="output derivatives in BIDS orig directory",
                         required=False)
 
-    parser.add_argument("-use_debiased_t1", dest="use_debiased_t1", action='store_true',
-                        help="output derivatives in BIDS orig directory",
-                        required=False)
-
     parser.add_argument("-pad", dest="pad", action='store_true',
                         help="padding mask and seg_mask",
                         required=False)
-
 
     args = parser.parse_args()
 
@@ -831,6 +868,8 @@ def main():
         species=args.species,
         subjects=args.sub,
         sessions=args.ses,
+        brain_dt=args.brain_dt,
+        skull_dt=args.skull_dt,
         acquisitions=args.acq,
         reconstructions=args.rec,
         params_file=args.params_file,
@@ -841,8 +880,8 @@ def main():
         nprocs=args.nprocs,
         reorient=args.reorient,
         deriv=args.deriv,
-        use_debiased_t1=args.use_debiased_t1,
         pad=args.pad)
+
 
 if __name__ == '__main__':
     main()

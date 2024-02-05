@@ -220,12 +220,17 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
     img_nii = nib.load(img_file)
     img_arr = np.array(img_nii.dataobj)
 
+    print("nb nan: ", np.sum(np.isnan(img_arr)))
+    img_arr[np.isnan(img_arr)] = 0
+
     # Reshape data to a 1D array (required by k-means)
     X = np.copy(img_arr).flatten().reshape(-1, 1)
 
+    print("X: ", X)
     print("X shape : ", X.shape)
+    print("X max : ", np.max(X))
 
-    print("X max : ", np.round(np.max(X)))
+    print("Round X max : ", np.round(np.max(X)))
     nb_bins = (np.rint(np.max(X)/sample_bins)).astype(int)
     print("Nb bins: ", nb_bins)
 
@@ -245,9 +250,9 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
     plt.savefig(os.path.abspath('histogram.png'))
     plt.clf()
 
-
     # Find local minima in the histogram
-    peaks, _ = find_peaks(-hist, distance = distance)  # Use negative histogram for minima
+    peaks, _ = find_peaks(-hist, distance=distance)
+    # Use negative histogram for minima
 
     print("peaks indexes :", peaks)
 
