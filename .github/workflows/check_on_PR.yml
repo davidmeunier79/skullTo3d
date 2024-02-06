@@ -28,7 +28,11 @@ jobs:
             sudo apt-get install build-essential  graphviz libgraphviz-dev
             pip install --upgrade pygraphviz graphviz
 
-            pip install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
+            # pip install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
+            git clone https://github.com/macatools/macapype.git
+
+            cd macapype
+            python setup.py develop
 
       - name: Test with pytest
         run:
