@@ -1,13 +1,10 @@
 
 def mask_auto_threshold(img_file, operation, index):
-    import os
     import numpy as np
     import nibabel as nib
-    import matplotlib.pyplot as plt
     from sklearn.cluster import KMeans
-    from nipype.utils.filemanip import split_filename as split_f
 
-    ## Mean function
+    # Mean function
     def calculate_mean(data):
         total = sum(data)
         count = len(data)
@@ -87,7 +84,8 @@ def mask_auto_threshold(img_file, operation, index):
     return mask_threshold
 
 
-def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
+def mask_auto_img(img_file, operation, index,
+                  sample_bins, distance, kmeans):
 
     import os
     import numpy as np
@@ -103,6 +101,7 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         import numpy as np
         from sklearn.cluster import KMeans
         # Mean function
+
         def calculate_mean(data):
             total = sum(data)
             count = len(data)
@@ -141,8 +140,10 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         minimums_array = np.array([np.amin(group) for group in groups])
         min_sorted = np.sort(minimums_array)
 
-        print("Cluster Min : {}".format(" ".join(str(val) for val in min_sorted)))
-        g.write("Cluster Min : {}\n".format(" ".join(str(val) for val in min_sorted)))
+        print("Cluster Min : {}".format(
+            " ".join(str(val) for val in min_sorted)))
+        g.write("Cluster Min : {}\n".format(
+            " ".join(str(val) for val in min_sorted)))
 
         # We must define : the maximum of the second group for the headmask
         # we create maximums array, we sort and then take the middle value
@@ -171,8 +172,10 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         g.write("Cluster Indexes = {}\n".format(
             " ".join(str(int(val)) for val in index_sorted)))
 
-        print("Indexed cluster ({}): {}".format(index, index_sorted[index]))
-        g.write("Indexed cluster ({}): {}\n".format(index, index_sorted[index]))
+        print("Indexed cluster ({}): {}".format(
+            index, index_sorted[index]))
+        g.write("Indexed cluster ({}): {}\n".format(
+            index, index_sorted[index]))
 
         min_thresh = np.amin(groups[index_sorted[index]])
         max_thresh = np.amax(groups[index_sorted[index]])
@@ -263,7 +266,6 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
     f.write("peak_hist : {}\n".format(hist[peaks]))
     f.write("peak_bins : {}\n".format(bins[peaks]))
 
-
     # filtering
     new_mask_data = np.zeros(img_arr.shape, dtype=img_arr.dtype)
 
@@ -303,21 +305,22 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
             index_peak_min = bins[peaks][index[0]]
             index_peak_max = bins[peaks][index[1]]
 
-            print("Keeping interval between {} and {}".format(index_peak_min,
-                                                          index_peak_max))
+            print("Keeping interval between {} and {}".format(
+                index_peak_min,
+                index_peak_max))
 
             f.write("Keeping interval between {} and {}\n".format(
                 index_peak_min, index_peak_max))
 
-            filter_arr = np.logical_and(index_peak_min < img_arr,
-                                    img_arr < index_peak_max)
+            filter_arr = np.logical_and(
+                index_peak_min < img_arr,
+                img_arr < index_peak_max)
 
         else:
 
             print("Running Kmeans with interval index {}\n".format(index))
             f.write("Running Kmeans with interval index {}\n".format(index))
             filter_arr = compute_Kmeans(img_arr, operation="interval", index=1)
-
 
     elif operation == "higher":
         if not isinstance(index, int):
@@ -333,8 +336,10 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         if proceed:
             index_peak_max = bins[peaks][index]
 
-            f.write("Filtering with higher threshold {}\n".format(index_peak_max))
-            print("Filtering with higher threshold {}\n".format(index_peak_max))
+            f.write("Filtering with higher threshold {}\n".format(
+                index_peak_max))
+            print("Filtering with higher threshold {}\n".format(
+                index_peak_max))
 
             filter_arr = img_arr < index_peak_max
 
@@ -359,8 +364,10 @@ def mask_auto_img(img_file, operation, index, sample_bins, distance, kmeans):
         if proceed:
             index_peak_min = bins[peaks][index]
 
-            f.write("Filtering with lower threshold {}\n".format(index_peak_min))
-            print("Filtering with lower threshold {}\n".format(index_peak_min))
+            f.write("Filtering with lower threshold {}\n".format(
+                index_peak_min))
+            print("Filtering with lower threshold {}\n".format(
+                index_peak_min))
 
             filter_arr = index_peak_min < img_arr
         else:
