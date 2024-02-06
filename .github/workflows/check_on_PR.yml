@@ -1,0 +1,46 @@
+
+name: Checking unit-tests, PEP8 and standard pipeline congruency
+
+on:
+
+  pull_request:
+    branches:
+      - master
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+
+      - name: Install dependencies
+        run: |
+            pip install codecov pytest pytest-cov
+            pip install -e .
+            pip install flake8
+            sudo apt-get install build-essential  graphviz libgraphviz-dev
+            pip install --upgrade pygraphviz graphviz
+
+      - name: Test with pytest
+        run:
+            py.test --cov skullTo3d
+
+      - name: Flake8
+        run:
+            flake8 --count skullTo3d
+
+      - name: Download dataset
+        run: |
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=swYxNZ3P6LjfqN4&download" -O skullTo3d_CI.zip
+            unzip -o skullTo3d_CI.zip -d skullTo3d_CI
+
+      - name: Running all test pipelines (macaque)
+        run: |
+            python segment_skull.py -data /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra -out /home/runner/work/skullTo3d/skullTo3d/macapype_CI/cenir-macaque-petra/results -soft ANTS_test_skull -species macaque -sub Magneto -brain_dt T1 T2 -skull_dt T1 petra
