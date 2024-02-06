@@ -28,6 +28,8 @@ jobs:
             sudo apt-get install build-essential  graphviz libgraphviz-dev
             pip install --upgrade pygraphviz graphviz
 
+            pip install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
+
       - name: Test with pytest
         run:
             py.test --cov skullTo3d
@@ -43,4 +45,4 @@ jobs:
 
       - name: Running all test pipelines (macaque)
         run: |
-            python segment_skull.py -data /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra -out /home/runner/work/skullTo3d/skullTo3d/macapype_CI/cenir-macaque-petra/results -soft ANTS_test_skull -species macaque -sub Magneto -brain_dt T1 T2 -skull_dt T1 petra
+            python segment_skull.py -data /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra -out /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results -soft ANTS_test_skull -species macaque -sub Magneto -brain_dt T1 T2 -skull_dt T1 petra
