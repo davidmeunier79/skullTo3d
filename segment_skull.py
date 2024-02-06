@@ -75,7 +75,7 @@ from macapype.utils.misc import show_files, get_first_elem, parse_key
 
 from macapype.pipelines.rename import rename_all_brain_derivatives
 
-from skullTo3d.pipelines.skull import (create_skull_petra_pipe,
+from skullTo3d.pipelines.skull_pipe import (create_skull_petra_pipe,
                                        create_skull_ct_pipe,
                                        create_skull_t1_pipe)
 
