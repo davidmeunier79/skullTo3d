@@ -93,18 +93,7 @@ jobs:
             ls skullTo3d_CI/cenir-macaque-petra/sub-Magneto/anat
 
             echo ""
-
-            ls skullTo3d_CI/cerimed-macaque-ct
-
-            ls skullTo3d_CI/cerimed-macaque-ct/sub-Marvin/sub-01/anat
-
-            echo ""
-
-            ls skullTo3d_CI/cerimed-marmo-petra
-
-            ls skullTo3d_CI/cerimed-marmo-petra/sub-Paolina/sub-01/anat
-
-            echo ""
+=
 
       - name: Running all test pipelines (ANTS cenir macaque petra)
         run: |
@@ -145,23 +134,12 @@ jobs:
             ls skullTo3d_CI
             echo ""
 
-            ls skullTo3d_CI/cenir-macaque-petra
-
-            ls skullTo3d_CI/cenir-macaque-petra/sub-Magneto/anat
-
-            echo ""
-
             ls skullTo3d_CI/cerimed-macaque-ct
 
-            ls skullTo3d_CI/cerimed-macaque-ct/sub-Marvin/sub-01/anat
+            ls skullTo3d_CI/cerimed-macaque-ct/sub-Marvin/ses-01/anat
 
             echo ""
 
-            ls skullTo3d_CI/cerimed-marmo-petra
-
-            ls skullTo3d_CI/cerimed-marmo-petra/sub-Paolina/sub-01/anat
-
-            echo ""
 
       - name: Running all test pipelines (ANTS cerimed macaque CT)
         run: |
@@ -171,7 +149,7 @@ jobs:
 
             ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives
 
-            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives/macapype_crop_aladin_ants_skull_t1_CT_brain_t1_t2/sub-Marvin/-ses-01/anat
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives/macapype_crop_aladin_ants_skull_t1_CT_brain_t1_t2/sub-Marvin/ses-01/anat
 
       - name: Cleaning dataset
         run:
@@ -203,21 +181,9 @@ jobs:
             ls skullTo3d_CI
             echo ""
 
-            ls skullTo3d_CI/cenir-macaque-petra
-
-            ls skullTo3d_CI/cenir-macaque-petra/sub-Magneto/anat
-
-            echo ""
-
-            ls skullTo3d_CI/cerimed-macaque-ct
-
-            ls skullTo3d_CI/cerimed-macaque-ct/sub-Marvin/sub-01/anat
-
-            echo ""
-
             ls skullTo3d_CI/cerimed-marmo-petra
 
-            ls skullTo3d_CI/cerimed-marmo-petra/sub-Paolina/sub-01/anat
+            ls skullTo3d_CI/cerimed-marmo-petra/sub-Paolina/ses-01/anat
 
             echo ""
 
@@ -232,7 +198,7 @@ jobs:
 
             ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives
 
-            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2/sub-Paolina/-ses-01/anat
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2/sub-Paolina/ses-01/anat
 
 
       - name: Cleaning dataset
