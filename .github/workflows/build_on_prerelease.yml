@@ -65,8 +65,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  run-pretest-spm-macaque:
-    name: Running all existing pipelines in skullTo3d_CI.zip (SPM_native macaque)
+  run-pretest-ants-macaque-petra:
+    name: Running all existing pipelines in skullTo3d_CI.zip (ANTS macaque petra)
     needs:  docker-build
     runs-on: ubuntu-latest
     timeout-minutes: 1440
@@ -74,7 +74,7 @@ jobs:
     steps:
       - name: Pull latest docker image
         run:
-            docker pull macatools/skullTo3d:latest
+            docker pull macatools/skullto3d:latest
 
       - name: Download dataset
         run: |
@@ -106,32 +106,138 @@ jobs:
 
             echo ""
 
-      - name: Running all test pipelines (ANTS deriv pad)
+      - name: Running all test pipelines (ANTS cenir macaque petra)
         run: |
             python segment_skull.py -data /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra -out /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results -soft ANTS_prep_skull -species macaque -sub Magneto -brain_dt T1 T2 -skull_dt T1 petra -deriv -pad
 
-            ls skullTo3d_CI/cenir-macaque-petra/results
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results
 
-            ls skullTo3d_CI/cenir-macaque-petra/results/derivatives
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results/derivatives
 
-            ls skullTo3d_CI/cenir-macaque-petra/results/derivatives/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2/sub-Magneto/anat
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results/derivatives/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2/sub-Magneto/anat
 
+      - name: Cleaning dataset
+        run:
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results/derivatives/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2
+
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/result/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2
+
+  run-pretest-ants-macaque-ct:
+    name: Running all existing pipelines in skullTo3d_CI.zip (ANTS macaque CT)
+    needs:  docker-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 1440
+
+    steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/skullto3d:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O skullTo3d_CI.zip
+            unzip -o skullTo3d_CI.zip -d skullTo3d_CI
+
+            pwd
+            echo ""
+
+            ls skullTo3d_CI
+            echo ""
+
+            ls skullTo3d_CI/cenir-macaque-petra
+
+            ls skullTo3d_CI/cenir-macaque-petra/sub-Magneto/anat
+
+            echo ""
+
+            ls skullTo3d_CI/cerimed-macaque-ct
+
+            ls skullTo3d_CI/cerimed-macaque-ct/sub-Marvin/sub-01/anat
+
+            echo ""
+
+            ls skullTo3d_CI/cerimed-marmo-petra
+
+            ls skullTo3d_CI/cerimed-marmo-petra/sub-Paolina/sub-01/anat
+
+            echo ""
+
+      - name: Running all test pipelines (ANTS cerimed macaque CT)
+        run: |
             python segment_skull.py -data /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct -out /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results -soft ANTS_prep_skull -species macaque -sub Marvin -ses 01 -brain_dt T1 T2 -skull_dt T1 CT -deriv -pad
 
-            ls skullTo3d_CI/cerimed-macaque-ct/results
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results
 
-            ls skullTo3d_CI/cerimed-macaque-ct/results/derivatives
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives
 
-            ls skullTo3d_CI/cerimed-macaque-ct/results/derivatives/macapype_crop_aladin_ants_skull_t1_CT_brain_t1_t2/sub-Marvin/-ses-01/anat
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives/macapype_crop_aladin_ants_skull_t1_CT_brain_t1_t2/sub-Marvin/-ses-01/anat
 
+      - name: Cleaning dataset
+        run:
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives/macapype_crop_aladin_ants_skull_t1_CT_brain_t1_t2
+
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/result/macapype_crop_aladin_ants_skull_t1_CT_brain_t1_t2
+
+
+  run-pretest-ants-marmo-petra:
+    name: Running all existing pipelines in skullTo3d_CI.zip (ANTS marmo petra)
+    needs:  docker-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 1440
+
+    steps:
+      - name: Pull latest docker image
+        run:
+            docker pull macatools/skullto3d:latest
+
+      - name: Download dataset
+        run: |
+
+            wget --no-check-certificate --content-disposition  "https://amubox.univ-amu.fr/public.php?service=files&t=KJ2L5j6L6orPXxM&download" -O skullTo3d_CI.zip
+            unzip -o skullTo3d_CI.zip -d skullTo3d_CI
+
+            pwd
+            echo ""
+
+            ls skullTo3d_CI
+            echo ""
+
+            ls skullTo3d_CI/cenir-macaque-petra
+
+            ls skullTo3d_CI/cenir-macaque-petra/sub-Magneto/anat
+
+            echo ""
+
+            ls skullTo3d_CI/cerimed-macaque-ct
+
+            ls skullTo3d_CI/cerimed-macaque-ct/sub-Marvin/sub-01/anat
+
+            echo ""
+
+            ls skullTo3d_CI/cerimed-marmo-petra
+
+            ls skullTo3d_CI/cerimed-marmo-petra/sub-Paolina/sub-01/anat
+
+            echo ""
+
+
+      - name: Running all test pipelines (ANTS cerimed macaque CT)
+        run: |
 
             python segment_skull.py -data /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra -out /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results -soft ANTS_noseg_skull -species marmo -sub Paolina -ses 01 -brain_dt T1 T2 -skull_dt T1 petra -deriv -pad
 
 
-            ls skullTo3d_CI/cerimed-marmo-petra/results
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results
 
-            ls skullTo3d_CI/cerimed-marmo-petra/results/derivatives
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives
 
-            ls skullTo3d_CI/cerimed-marmo-petra/results/derivatives/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2/sub-Paolina/-ses-01/anat
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2/sub-Paolina/-ses-01/anat
 
+
+      - name: Cleaning dataset
+        run:
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2
+
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/result/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2
 
