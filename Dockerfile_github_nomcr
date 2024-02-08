@@ -34,4 +34,3 @@ RUN python3 setup.py develop
 
 RUN python -c "import skullTo3d; print(skullTo3d.__version__)"
 
-RUN segment_skull
