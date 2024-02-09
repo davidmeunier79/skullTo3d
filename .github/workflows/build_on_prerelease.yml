@@ -68,7 +68,7 @@ jobs:
   run-pretest-ants-macaque-petra:
     name: Running all existing pipelines in skullTo3d_CI.zip (ANTS macaque petra)
     needs:  docker-build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 1440
 
     steps:
@@ -113,7 +113,7 @@ jobs:
   run-pretest-ants-macaque-ct:
     name: Running all existing pipelines in skullTo3d_CI.zip (ANTS macaque CT)
     needs:  docker-build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 1440
 
     steps:
@@ -161,7 +161,7 @@ jobs:
   run-pretest-ants-marmo-petra:
     name: Running all existing pipelines in skullTo3d_CI.zip (ANTS marmo petra)
     needs:  docker-build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 1440
 
     steps:
