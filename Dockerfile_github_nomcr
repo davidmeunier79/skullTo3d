@@ -19,7 +19,6 @@ MAINTAINER David Meunier "david.meunier@univ-amu.fr"
 
 ############################################# install skullTo3d
 
-ADD https://api.github.com/repos/macatools/skullTo3d/git/refs/heads/main version.json
 WORKDIR /opt/packages/
 
 RUN git clone https://github.com/macatools/skullTo3d.git
