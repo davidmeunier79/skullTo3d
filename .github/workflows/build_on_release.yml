@@ -100,13 +100,13 @@ jobs:
 
             ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results/derivatives
 
-            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results/derivatives/macapype_crop_aladin_ants_skull_petra_brain_t1_t2/sub-Magneto/anat
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results/derivatives/segment_petrape_crop_aladin_ants_skull_petra_brain_t1_t2/sub-Magneto/anat
 
       - name: Cleaning dataset
         run: |
-            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results/derivatives/macapype_crop_aladin_ants_skull_petra_brain_t1_t2
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/results/derivatives/segment_petrape_crop_aladin_ants_skull_petra_brain_t1_t2
 
-            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/result/macapype_crop_aladin_ants_skull_petra_brain_t1_t2
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cenir-macaque-petra/result/segment_petrape_crop_aladin_ants_skull_petra_brain_t1_t2
 
   run-pretest-ants-macaque-ct:
     name: Running all existing pipelines in skullTo3d_CI.zip (ANTS macaque CT)
@@ -146,13 +146,13 @@ jobs:
 
             ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives
 
-            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives/macapype_crop_aladin_ants_skull_CT_brain_t1_t2/sub-Marvin/ses-01/anat
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives/segment_petrape_crop_aladin_ants_skull_CT_brain_t1_t2/sub-Marvin/ses-01/anat
 
       - name: Cleaning dataset
         run: |
-            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives/macapype_crop_aladin_ants_skull_CT_brain_t1_t2
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/results/derivatives/segment_petrape_crop_aladin_ants_skull_CT_brain_t1_t2
 
-            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/result/macapype_crop_aladin_ants_skull_CT_brain_t1_t2
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-macaque-ct/result/segment_petrape_crop_aladin_ants_skull_CT_brain_t1_t2
 
   run-pretest-ants-marmo-petra:
     name: Running all existing pipelines in skullTo3d_CI.zip (ANTS marmo petra)
@@ -191,13 +191,13 @@ jobs:
 
             ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives
 
-            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2/sub-Paolina/ses-01/anat
+            ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives/segment_petrape_crop_aladin_ants_skull_t1_petra_brain_t1_t2/sub-Paolina/ses-01/anat
 
 
       - name: Cleaning dataset
         run: |
-            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/results/derivatives/segment_petrape_crop_aladin_ants_skull_t1_petra_brain_t1_t2
 
-            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/result/macapype_crop_aladin_ants_skull_t1_petra_brain_t1_t2
+            sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI/cerimed-marmo-petra/result/segment_petrape_crop_aladin_ants_skull_t1_petra_brain_t1_t2
 
 
