@@ -9,7 +9,7 @@
 #
 # Timestamp: 2020/12/02 18:33:44 UTC
 
-FROM macatools/macapype:v0.3.5
+FROM macatools/macapype:latest
 
 USER root
 
@@ -27,11 +27,3 @@ RUN python3 setup.py develop
 # RUN pip install --no-deps --index-url https://test.pypi.org/simple/ --pre skullTo3d
 
 RUN python -c "import skullTo3d; print(skullTo3d.__version__)"
-
-############################################# IsoSurface requires specifically libXp6
-#RUN echo 'deb http://security.ubuntu.com/ubuntu precise-security main' >> /etc/apt/sources.list
-#RUN apt update
-#RUN apt install libxp6
-
-RUN ls -l /usr/lib/x86_64-linux-gnu
-RUN ln -s /usr/lib/x86_64-linux-gnu/libXpm.so.4.11.0 /usr/lib/x86_64-linux-gnu/libXp.so.6
