@@ -34,11 +34,11 @@ jobs:
 
             cd macapype
             python setup.py develop
-            cd ../skullTo3d
-            pwd
 
             python -c "import macapype; print("macapype:" , macapype.__version__)"
 
+            cd ../skullTo3d
+            pwd
             pip install -e .
 
             python -c "import skullTo3d; print("skullTo3d: ", skullTo3d.__version__)"
