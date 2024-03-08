@@ -24,7 +24,6 @@
     {
         "segment":
         {
-
             "gm_output_type": [false, false, true],
             "wm_output_type": [false, false, true],
             "csf_output_type": [false, false, true]
