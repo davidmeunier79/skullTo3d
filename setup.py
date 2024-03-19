@@ -5,7 +5,9 @@ import re
 from setuptools import find_packages, setup
 
 required_packages = [
-    "macapype"]
+    "nipype", "nilearn", "networkx",
+    "pybids", "scikit-image", "nibabel==3.2.2",
+    "numpy==1.22", "brain-slam"]
 
 verstr = "unknown"
 try:
