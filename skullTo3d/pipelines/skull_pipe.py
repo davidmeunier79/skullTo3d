@@ -685,6 +685,21 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         skull_petra_pipe.connect(petra_fast, "restored_image",
                                  petra_skull_auto_mask, "img_file")
 
+    elif "petra_skull_mask_thr" in params.keys():
+
+        # petra_skull_mask_thr
+        petra_skull_mask_thr = NodeParams(
+            interface=Threshold(),
+            params=parse_key(params, 'petra_skull_mask_thr'),
+            name="petra_skull_mask_thr")
+
+        skull_petra_pipe.connect(petra_fast, "restored_image",
+                                 petra_skull_mask_thr, "in_file")
+
+        skull_petra_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "petra_skull_mask_thr"),
+            petra_skull_mask_thr, "indiv_params")
+
     # petra_skull_mask_binary
     petra_skull_mask_binary = pe.Node(interface=UnaryMaths(),
                                       name="petra_skull_mask_binary")
@@ -694,6 +709,9 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
     if "petra_skull_auto_mask" in params.keys():
         skull_petra_pipe.connect(petra_skull_auto_mask, "mask_img_file",
+                                 petra_skull_mask_binary, "in_file")
+    if "petra_skull_mask_thr" in params.keys():
+        skull_petra_pipe.connect(petra_skull_mask_thr, "out_file",
                                  petra_skull_mask_binary, "in_file")
     else:
         skull_petra_pipe.connect(petra_fast,
