@@ -286,20 +286,103 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     skull_t1_pipe.connect(t1_skull_erode, "out_file",
                           mesh_t1_skull_t1, "nii_file")
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if "t1_skull_fov" in params.keys():
+
+        # t1_skull_fov ####### [okey][json]
+
+        t1_skull_fov = NodeParams(
+            interface=RobustFOV(),
+            params=parse_key(params, "t1_skull_fov"),
+            name="t1_skull_fov")
+
+        skull_t1_pipe.connect(t1_skull_erode, "out_file",
+                                 t1_skull_fov, "in_file")
+
+        # t1_skull_clean ####### [okey]
+        t1_skull_clean = pe.Node(
+            interface=niu.Function(input_names=["nii_file"],
+                                   output_names=["gcc_nii_file"],
+                                   function=keep_gcc),
+            name="t1_skull_clean")
+
+        skull_t1_pipe.connect(t1_skull_fov, "out_roi",
+                                 t1_skull_clean, "nii_file")
+
+        # mesh_robustt1_skull #######
+        mesh_robustt1_skull = pe.Node(
+            interface=niu.Function(input_names=["nii_file"],
+                                   output_names=["stl_file"],
+                                   function=wrap_afni_IsoSurface),
+            name="mesh_robustt1_skull")
+
+        skull_t1_pipe.connect(t1_skull_clean, "gcc_nii_file",
+                                 mesh_robustt1_skull, "nii_file")
+
     # creating outputnode #######
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["t1_skull_mask", "t1_skull_stl", "t1_head_mask"]),
+            fields=["t1_skull_mask", "t1_skull_stl",
+                    "robustt1_skull_mask", "robustt1_skull_stl",
+                    "t1_head_mask"]),
         name='outputnode')
 
     skull_t1_pipe.connect(t1_head_erode, "out_file",
-                          outputnode, "t1_head_mask")
+                             outputnode, "t1_head_mask")
 
-    skull_t1_pipe.connect(mesh_t1_skull_t1, "stl_file",
-                          outputnode, "t1_skull_stl")
+    skull_t1_pipe.connect(mesh_t1_skull, "stl_file",
+                             outputnode, "t1_skull_stl")
 
     skull_t1_pipe.connect(t1_skull_erode, "out_file",
-                          outputnode, "t1_skull_mask")
+                             outputnode, "t1_skull_mask")
+
+    if "t1_skull_fov" in params.keys():
+        skull_t1_pipe.connect(t1_skull_fov, "out_roi",
+                                 outputnode, "robustt1_skull_mask")
+
+        skull_t1_pipe.connect(mesh_robustt1_skull, "stl_file",
+                                 outputnode, "robustt1_skull_stl")
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ## creating outputnode #######
+    #outputnode = pe.Node(
+        #niu.IdentityInterface(
+            #fields=["t1_skull_mask", "t1_skull_stl", "t1_head_mask"]),
+        #name='outputnode')
+
+    #skull_t1_pipe.connect(t1_head_erode, "out_file",
+                          #outputnode, "t1_head_mask")
+
+    #skull_t1_pipe.connect(mesh_t1_skull_t1, "stl_file",
+                          #outputnode, "t1_skull_stl")
+
+    #skull_t1_pipe.connect(t1_skull_erode, "out_file",
+                          #outputnode, "t1_skull_mask")
 
     return skull_t1_pipe
 
