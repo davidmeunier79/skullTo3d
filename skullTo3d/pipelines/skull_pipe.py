@@ -276,30 +276,15 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     skull_t1_pipe.connect(t1_skull_fill, "out_file",
                           t1_skull_erode, "in_file")
 
-    # mesh_t1_skull_t1 #######
-    mesh_t1_skull_t1 = pe.Node(
+    # mesh_t1_skull #######
+    mesh_t1_skull = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
                                output_names=["stl_file"],
                                function=wrap_afni_IsoSurface),
-        name="mesh_t1_skull_t1")
+        name="mesh_t1_skull")
 
     skull_t1_pipe.connect(t1_skull_erode, "out_file",
-                          mesh_t1_skull_t1, "nii_file")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                          mesh_t1_skull, "nii_file")
 
     if "t1_skull_fov" in params.keys():
 
