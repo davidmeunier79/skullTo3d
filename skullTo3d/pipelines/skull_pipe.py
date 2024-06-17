@@ -276,30 +276,79 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     skull_t1_pipe.connect(t1_skull_fill, "out_file",
                           t1_skull_erode, "in_file")
 
-    # mesh_t1_skull_t1 #######
-    mesh_t1_skull_t1 = pe.Node(
+    # mesh_t1_skull #######
+    mesh_t1_skull = pe.Node(
         interface=niu.Function(input_names=["nii_file"],
                                output_names=["stl_file"],
                                function=wrap_afni_IsoSurface),
-        name="mesh_t1_skull_t1")
+        name="mesh_t1_skull")
 
     skull_t1_pipe.connect(t1_skull_erode, "out_file",
-                          mesh_t1_skull_t1, "nii_file")
+                          mesh_t1_skull, "nii_file")
+
+    if "t1_skull_fov" in params.keys():
+
+        # t1_skull_fov ####### [okey][json]
+
+        t1_skull_fov = NodeParams(
+            interface=RobustFOV(),
+            params=parse_key(params, "t1_skull_fov"),
+            name="t1_skull_fov")
+
+        skull_t1_pipe.connect(
+            t1_skull_erode, "out_file",
+            t1_skull_fov, "in_file")
+
+        # t1_skull_clean ####### [okey]
+        t1_skull_clean = pe.Node(
+            interface=niu.Function(input_names=["nii_file"],
+                                   output_names=["gcc_nii_file"],
+                                   function=keep_gcc),
+            name="t1_skull_clean")
+
+        skull_t1_pipe.connect(
+            t1_skull_fov, "out_roi",
+            t1_skull_clean, "nii_file")
+
+        # mesh_robustt1_skull #######
+        mesh_robustt1_skull = pe.Node(
+            interface=niu.Function(input_names=["nii_file"],
+                                   output_names=["stl_file"],
+                                   function=wrap_afni_IsoSurface),
+            name="mesh_robustt1_skull")
+
+        skull_t1_pipe.connect(
+            t1_skull_clean, "gcc_nii_file",
+            mesh_robustt1_skull, "nii_file")
 
     # creating outputnode #######
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["t1_skull_mask", "t1_skull_stl", "t1_head_mask"]),
+            fields=["t1_skull_mask", "t1_skull_stl",
+                    "robustt1_skull_mask", "robustt1_skull_stl",
+                    "t1_head_mask"]),
         name='outputnode')
 
-    skull_t1_pipe.connect(t1_head_erode, "out_file",
-                          outputnode, "t1_head_mask")
+    skull_t1_pipe.connect(
+        t1_head_erode, "out_file",
+        outputnode, "t1_head_mask")
 
-    skull_t1_pipe.connect(mesh_t1_skull_t1, "stl_file",
-                          outputnode, "t1_skull_stl")
+    skull_t1_pipe.connect(
+        mesh_t1_skull, "stl_file",
+        outputnode, "t1_skull_stl")
 
-    skull_t1_pipe.connect(t1_skull_erode, "out_file",
-                          outputnode, "t1_skull_mask")
+    skull_t1_pipe.connect(
+        t1_skull_erode, "out_file",
+        outputnode, "t1_skull_mask")
+
+    if "t1_skull_fov" in params.keys():
+        skull_t1_pipe.connect(
+            t1_skull_fov, "out_roi",
+            outputnode, "robustt1_skull_mask")
+
+        skull_t1_pipe.connect(
+            mesh_robustt1_skull, "stl_file",
+            outputnode, "robustt1_skull_stl")
 
     return skull_t1_pipe
 
@@ -685,6 +734,21 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         skull_petra_pipe.connect(petra_fast, "restored_image",
                                  petra_skull_auto_mask, "img_file")
 
+    elif "petra_skull_mask_thr" in params.keys():
+
+        # petra_skull_mask_thr
+        petra_skull_mask_thr = NodeParams(
+            interface=Threshold(),
+            params=parse_key(params, 'petra_skull_mask_thr'),
+            name="petra_skull_mask_thr")
+
+        skull_petra_pipe.connect(petra_fast, "restored_image",
+                                 petra_skull_mask_thr, "in_file")
+
+        skull_petra_pipe.connect(
+            inputnode, ('indiv_params', parse_key, "petra_skull_mask_thr"),
+            petra_skull_mask_thr, "indiv_params")
+
     # petra_skull_mask_binary
     petra_skull_mask_binary = pe.Node(interface=UnaryMaths(),
                                       name="petra_skull_mask_binary")
@@ -694,6 +758,9 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
 
     if "petra_skull_auto_mask" in params.keys():
         skull_petra_pipe.connect(petra_skull_auto_mask, "mask_img_file",
+                                 petra_skull_mask_binary, "in_file")
+    if "petra_skull_mask_thr" in params.keys():
+        skull_petra_pipe.connect(petra_skull_mask_thr, "out_file",
                                  petra_skull_mask_binary, "in_file")
     else:
         skull_petra_pipe.connect(petra_fast,

@@ -27,7 +27,6 @@ jobs:
             sudo apt-get install build-essential  graphviz libgraphviz-dev
             pip install --upgrade pygraphviz graphviz
 
-
             # pip install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
 
             pip install -e .

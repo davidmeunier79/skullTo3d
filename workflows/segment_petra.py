@@ -172,6 +172,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
     if 'template' in ssoft:
         new_ssoft.remove('template')
 
+    if 'robustreg' in ssoft:
+        new_ssoft.remove('robustreg')
+
     soft = "_".join(new_ssoft)
 
     print("soft: ", soft)
@@ -285,7 +288,7 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
         wf_name += "_CT"
 
     if len(brain_dt) != 0:
-        wf_name += "_brain"
+        wf_name += "_segbrain"
 
     if 't1' in brain_dt:
         wf_name += "_t1"
