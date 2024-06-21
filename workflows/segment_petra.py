@@ -77,6 +77,9 @@ from macapype.utils.misc import show_files, get_first_elem, parse_key
 from macapype.pipelines.rename import rename_all_brain_derivatives
 
 
+from skullTo3d.pipelines.angio_pipe import (
+    create_angio_pipe, create_quick_angio_pipe)
+
 from skullTo3d.pipelines.skull_pipe import (
     create_skull_petra_pipe,
     create_skull_ct_pipe,
@@ -85,7 +88,7 @@ from skullTo3d.pipelines.skull_pipe import (
 from skullTo3d.pipelines.rename import (
     rename_all_skull_petra_derivatives,
     rename_all_skull_t1_derivatives,
-    rename_all_skull_ct_derivatives)
+    rename_all_skull_ct_derivatives, rename_all_angio_derivatives)
 
 
 fsl.FSLCommand.set_default_output_type('NIFTI_GZ')
@@ -284,6 +287,9 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
     if 'petra' in skull_dt:
         wf_name += "_petra"
 
+    if 'angio' in skull_dt:
+        wf_name += "_angio"
+
     if 'ct' in skull_dt:
         wf_name += "_CT"
 
@@ -444,6 +450,11 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
             "acquisition": "CT",
             "extension": ["nii", ".nii.gz"]}
 
+    if 'angio' in skull_dt:
+        output_query['ANGIO'] = {
+            "datatype": "anat", "suffix": "angio",
+            "extension": ["nii", ".nii.gz"]}
+
     # indiv_params
     if indiv_params:
         print("Using indiv params")
@@ -598,12 +609,58 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                               skull_ct_pipe, 'inputnode.native_T2')
 
         main_workflow.connect(segment_brain_pipe,
-                              "outputnode.stereo_T1",
+                              "outputnode.stereo_padded_T1",
                               skull_ct_pipe, 'inputnode.stereo_T1')
 
         main_workflow.connect(
             segment_brain_pipe, "outputnode.native_to_stereo_trans",
             skull_ct_pipe, 'inputnode.native_to_stereo_trans')
+
+    if "angio" in skull_dt and "angio_pipe" in params.keys():
+        print("Found angio_pipe")
+
+        angio_pipe = create_angio_pipe(
+            params=parse_key(params, "angio_pipe"))
+
+        main_workflow.connect(datasource, ('ANGIO', get_first_elem),
+                              angio_pipe, 'inputnode.angio')
+
+        main_workflow.connect(segment_brain_pipe,
+                              "outputnode.native_T1",
+                              angio_pipe, 'inputnode.native_T1')
+
+        main_workflow.connect(segment_brain_pipe,
+                              "outputnode.stereo_padded_T1",
+                              angio_pipe, 'inputnode.stereo_T1')
+
+        main_workflow.connect(segment_brain_pipe,
+                              "outputnode.stereo_padded_brain_mask",
+                              angio_pipe, 'inputnode.stereo_brain_mask')
+
+        main_workflow.connect(
+            segment_brain_pipe, "outputnode.native_to_stereo_trans",
+            angio_pipe, 'inputnode.native_to_stereo_trans')
+
+    if "angio" in skull_dt and "angio_quick_pipe" in params.keys():
+        print("Found angio_pipe")
+
+        angio_pipe = create_quick_angio_pipe(
+            params=parse_key(params, "angio_quick_pipe"))
+
+        main_workflow.connect(datasource, ('ANGIO', get_first_elem),
+                              angio_pipe, 'inputnode.angio')
+
+        main_workflow.connect(segment_brain_pipe,
+                              "outputnode.native_T1",
+                              angio_pipe, 'inputnode.native_T1')
+
+        main_workflow.connect(segment_brain_pipe,
+                              "outputnode.stereo_padded_T1",
+                              angio_pipe, 'inputnode.stereo_T1')
+
+        main_workflow.connect(
+            segment_brain_pipe, "outputnode.native_to_stereo_trans",
+            angio_pipe, 'inputnode.native_to_stereo_trans')
 
     if 't1' in skull_dt and "skull_t1_pipe" in params.keys():
         print("Found skull_t1_pipe")
@@ -757,13 +814,6 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                         rename_robustpetra_skull_mask, 'out_file',
                         datasink, '@robustpetra_skull_mask')
 
-        if "ct" in skull_dt and "skull_ct_pipe" in params.keys():
-            print("rename ct skull pipe")
-
-            rename_all_skull_ct_derivatives(
-                params, main_workflow, segment_brain_pipe, skull_ct_pipe,
-                datasink, pref_deriv, parse_str, space, pad)
-
         if "t1" in skull_dt and "skull_t1_pipe" in params.keys():
             rename_all_skull_t1_derivatives(
                 params, main_workflow, segment_brain_pipe, skull_t1_pipe,
@@ -787,6 +837,20 @@ def create_main_workflow(data_dir, process_dir, soft, species, subjects,
                 main_workflow.connect(
                     rename_native_t1_skull_mask, 'out_file',
                     datasink, '@t1_native_skull_mask')
+
+        if "ct" in skull_dt and "skull_ct_pipe" in params.keys():
+            print("rename ct skull pipe")
+
+            rename_all_skull_ct_derivatives(
+                params, main_workflow, segment_brain_pipe, skull_ct_pipe,
+                datasink, pref_deriv, parse_str, space, pad)
+
+        if "angio" in skull_dt and ("angio_pipe" in params.keys()
+                                    or "angio_quick_pipe" in params.keys()):
+
+            print("rename_all_angio_derivatives")
+            rename_all_angio_derivatives(params, main_workflow, angio_pipe,
+                                         datasink, pref_deriv, parse_str)
 
     main_workflow.write_graph(graph2use="colored")
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
