@@ -157,7 +157,7 @@
         "t1_head_erode_skin":
         {
             "kernel_shape": "boxv",
-            "kernel_size": 18.0
+            "kernel_size": 9.0
         },
         "t1_skull_dilate":
         {
@@ -179,11 +179,11 @@
     {
         "ct_skull_auto_mask":
         {
-            "kmeans": false,
+            "kmeans": true,
             "sample_bins": 30,
             "distance": 10,
-            "operation": "higher",
-            "index": 3
+            "operation": "lower",
+            "index": 2
         },
         "ct_skull_dilate":
         {

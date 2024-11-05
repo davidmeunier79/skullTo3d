@@ -374,6 +374,8 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     align_ct_on_T1 = pe.Node(interface=RegAladin(),
                              name="align_ct_on_T1")
 
+    align_ct_on_T1.inputs.rig_only_flag = True
+
     skull_ct_pipe.connect(inputnode, 'ct',
                           align_ct_on_T1, "flo_file")
 
@@ -411,7 +413,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
             inputnode, ("indiv_params", parse_key, "ct_skull_mask_thr"),
             ct_skull_mask_thr, "indiv_params")
 
-        skull_ct_pipe.connect(align_ct_on_stereo_T1, "out_file",
+        skull_ct_pipe.connect(align_ct_on_stereo_T1, 'out_file',
                               ct_skull_mask_thr, "in_file")
     else:
 
@@ -426,7 +428,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
                 params=parse_key(params, "ct_skull_auto_mask"),
                 name="ct_skull_auto_mask")
 
-        skull_ct_pipe.connect(align_ct_on_stereo_T1, "out_file",
+        skull_ct_pipe.connect(align_ct_on_stereo_T1, 'out_file',
                               ct_skull_auto_mask, "img_file")
 
         skull_ct_pipe.connect(
@@ -849,7 +851,6 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     if "petra_skull_fov" in params.keys():
 
         # petra_skull_fov ####### [okey][json]
-
         petra_skull_fov = NodeParams(
             interface=RobustFOV(),
             params=parse_key(params, "petra_skull_fov"),
