@@ -202,10 +202,10 @@
 </pre></div>
 </div>
 <p>For container (docker and singularity), here are some examples - add your proper bindings:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>binding_to_host:binding_guest<span class="w"> </span>macatools/skullTo3d:latest<span class="w"> </span>segment_petra
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-B<span class="w"> </span>binding_to_host:binding_guest<span class="w"> </span>macatools/skullto3d:latest<span class="w"> </span>segment_petra
 </pre></div>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span>binding_to_host:binding_guest<span class="w"> </span>/path_to_singularity_images/skullto3d_v0.0.4.1.sif<span class="w"> </span>segment_petra
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span>binding_to_host:binding_guest<span class="w"> </span>/path/to/containers/skullto3d_v0.0.4.1.sif<span class="w"> </span>segment_petra
 </pre></div>
 </div>
 </section>
@@ -227,11 +227,34 @@
 </section>
 <section id="the-following-parameters-are-mandatory">
 <h1>The following parameters are mandatory<a class="headerlink" href="#the-following-parameters-are-mandatory" title="Link to this heading">¶</a></h1>
-<ul class="simple">
-<li><p>-data is the path to your data dataset (existing BIDS format directory) <em>like in macapype</em></p></li>
-<li><p>-out is the path to the output results (an existing path)</p></li>
-<li><dl class="simple">
-<dt>-soft can be one of these<span class="classifier">SPM or ANTS:</span></dt><dd><ul>
+<ul>
+<li><dl class="option-list">
+<dt><kbd><span class="option">-d<var>ata</var></span></kbd></dt>
+<dd><p><em>like in macapype</em></p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>the path to your data dataset (existing BIDS format directory)</p>
+<ul>
+<li><dl class="option-list">
+<dt><kbd><span class="option">-o<var>ut</var></span></kbd></dt>
+<dd><p><em>like in macapype</em></p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>the path to the output results (an existing path)</p>
+<ul>
+<li><dl class="option-list">
+<dt><kbd><span class="option">-s<var>oft</var></span></kbd></dt>
+<dd><p><em>like in macapype</em></p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="simple">
+<dt>can be one of these<span class="classifier">SPM or ANTS</span></dt><dd><ul class="simple">
 <li><p>with _skull after SPM or ANTS if you want to process skull or angio <em>specific to skullTo3d</em>; otherwise the main pipelines of macapype will be launched (only brain segmentation will be performed)</p></li>
 <li><p>with _robustreg (at the end) to have a more robust registration (in two steps) <em>like in macapype</em></p></li>
 <li><p>with _test (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png) <em>like in macapype</em></p></li>
@@ -241,8 +264,6 @@
 </ul>
 </dd>
 </dl>
-</li>
-</ul>
 </section>
 <section id="the-following-parameters-are-exclusive">
 <h1>The following parameters are exclusive<a class="headerlink" href="#the-following-parameters-are-exclusive" title="Link to this heading">¶</a></h1>
@@ -250,38 +271,55 @@
 <ul>
 <li><dl class="option-list">
 <dt><kbd><span class="option">-p<var>arams</var></span></kbd></dt>
-<dd><p>(mandatory if -species is omitted) a json file specifiying the global parameters of the analysis. See <a class="reference internal" href="params.html#params"><span class="std std-ref">Parameters</span></a> for more details</p>
+<dd><p><em>(mandatory if -species is omitted)</em></p>
 </dd>
 </dl>
 </li>
-<li><p>-species (mandatory if -params is omitted) followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}</p></li>
 </ul>
+<p>a json file specifiying the global parameters of the analysis. See <a class="reference internal" href="params.html#params"><span class="std std-ref">Parameters</span></a> for more details</p>
+<ul>
+<li><dl class="option-list">
+<dt><kbd><span class="option">-s<var>pecies</var></span></kbd></dt>
+<dd><p><em>(mandatory if -params is omitted)</em></p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}</p>
 </section>
 <section id="the-following-parameters-are-optional">
 <h1>The following parameters are optional<a class="headerlink" href="#the-following-parameters-are-optional" title="Link to this heading">¶</a></h1>
-<p>(but highly recommanded):</p>
+<p><em>(but highly recommanded)</em></p>
 <ul>
 <li><dl class="option-list">
 <dt><kbd><span class="option">-b<var>rain_dt</var></span></kbd></dt>
-<dd><p><em>equivalent to -dt in macapype</em> : specifies the datatype available to perform brain segmentation (can be “T1”, or “T1 T2”).  <strong>Note</strong> : default is T1 if the attribute is omitted</p>
+<dd><p><em>equivalent to -dt in macapype</em></p>
 </dd>
 </dl>
 </li>
+</ul>
+<p>specifies the datatype available to perform brain segmentation (can be “T1”, or “T1 T2”).  <strong>Note</strong> : default is T1 if the attribute is omitted</p>
+<ul>
 <li><dl class="option-list">
 <dt><kbd><span class="option">-s<var>kull_dt</var></span></kbd></dt>
-<dd><p><em>specific to skullTo3d</em> : specifies the datatype available for skull segmentation (can be, “T1”, “petra”, “CT” or a combination of the latter (with space(s) in between). <strong>Note 1</strong> : default is T1 if the attribute is omitted.  <strong>Note 2</strong> : “angio” can also be specified</p>
+<dd><p><em>specific to skullTo3d</em></p>
 </dd>
 </dl>
 </li>
+</ul>
+<p>specifies the datatype available for skull segmentation (can be, “T1”, “petra”, “CT” or a combination of the latter (with space(s) in between).
+<strong>Note 1</strong> : default is T1 if the attribute is omitted.
+<strong>Note 2</strong> : “angio” can also be specified</p>
+<ul>
 <li><dl class="option-list">
 <dt><kbd><span class="option">-d<var>eriv</var></span></kbd></dt>
-<dd><p>: creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion</p>
+<dd><p>creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion</p>
 </dd>
 </dl>
 </li>
 <li><dl class="option-list">
 <dt><kbd><span class="option">-p<var>ad</var></span></kbd></dt>
-<dd><p>: exports (in derivatives) important files in native (original) space</p>
+<dd><p>exports (in derivatives) important files in native (original) space</p>
 </dd>
 </dl>
 </li>

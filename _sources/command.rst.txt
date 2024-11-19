@@ -2,11 +2,9 @@
 
 .. command:
 
-
 ----------------------
 Launching a processing
 ----------------------
-
 
 Commands
 ********
@@ -29,11 +27,11 @@ For container (docker and singularity), here are some examples - add your proper
 
 .. code:: bash
 
-    $ docker run -B binding_to_host:binding_guest macatools/skullTo3d:latest segment_petra
+    $ docker run -B binding_to_host:binding_guest macatools/skullto3d:latest segment_petra
 
 .. code:: bash
 
-    $ singularity run -v binding_to_host:binding_guest /path_to_singularity_images/skullto3d_v0.0.4.1.sif segment_petra
+    $ singularity run -v binding_to_host:binding_guest /path/to/containers/skullto3d_v0.0.4.1.sif segment_petra
 
 Expected input data
 *******************
@@ -58,11 +56,14 @@ Command line parameters
 The following parameters are mandatory
 --------------------------------------
 
-* -data is the path to your data dataset (existing BIDS format directory) *like in macapype*
+* -data  *like in macapype*
+the path to your data dataset (existing BIDS format directory)
 
-* -out is the path to the output results (an existing path)
+* -out  *like in macapype*
+the path to the output results (an existing path)
 
-* -soft can be one of these : SPM or ANTS:
+* -soft  *like in macapype*
+can be one of these : SPM or ANTS
     * with _skull after SPM or ANTS if you want to process skull or angio *specific to skullTo3d*; otherwise the main pipelines of macapype will be launched (only brain segmentation will be performed)
     * with _robustreg (at the end) to have a more robust registration (in two steps) *like in macapype*
     * with _test (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png) *like in macapype*
@@ -77,24 +78,29 @@ The following parameters are exclusive
 
 *(but one is mandatory)*
 
-* -params  (mandatory if -species is omitted) a json file specifiying the global parameters of the analysis. See :ref:`Parameters <params>` for more details
+* -params  *(mandatory if -species is omitted)*
+a json file specifiying the global parameters of the analysis. See :ref:`Parameters <params>` for more details
 
-* -species (mandatory if -params is omitted) followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}
+* -species  *(mandatory if -params is omitted)*
+followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}
 
 --------------------------------------
 The following parameters are optional
 --------------------------------------
 
-(but highly recommanded):
+*(but highly recommanded)*
 
-* -brain_dt  *equivalent to -dt in macapype* : specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2").  **Note** : default is T1 if the attribute is omitted
+* -brain_dt  *equivalent to -dt in macapype*
+specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2").  **Note** : default is T1 if the attribute is omitted
 
-* -skull_dt  *specific to skullTo3d* : specifies the datatype available for skull segmentation (can be, "T1", "petra", "CT" or a combination of the latter (with space(s) in between). **Note 1** : default is T1 if the attribute is omitted.  **Note 2** : "angio" can also be specified
+* -skull_dt  *specific to skullTo3d*
+specifies the datatype available for skull segmentation (can be, "T1", "petra", "CT" or a combination of the latter (with space(s) in between).
+**Note 1** : default is T1 if the attribute is omitted.
+**Note 2** : "angio" can also be specified
 
+* -deriv  creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
 
-* -deriv  : creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
-
-* -pad  : exports (in derivatives) important files in native (original) space
+* -pad  exports (in derivatives) important files in native (original) space
 
 --------------------------------------
 The following parameters are optional
