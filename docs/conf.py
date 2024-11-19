@@ -117,7 +117,7 @@ html_sidebars = {'**': ['localtoc.html'],
    'using/windows': ['windowssidebar.html']}
 
 html_theme_options = {
-    'navbar_title': 'Macapype',
+    'navbar_title': 'SkullTo3d',
     'bootswatch_theme': "flatly",
     'navbar_sidebarrel': False,
     'bootstrap_version': "3",
