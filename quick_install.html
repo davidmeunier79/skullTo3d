@@ -75,7 +75,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#from-pypi">from pypi</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-the-install">Testing the install</a></li>
@@ -136,7 +135,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#from-pypi">from pypi</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-the-install">Testing the install</a></li>
@@ -201,7 +199,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#from-pypi">from pypi</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#from-conda">From conda</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-the-install">Testing the install</a></li>
@@ -240,9 +237,9 @@
 <p>SkullTo3d relies on python packages. Here we provide installations using Anaconda</p>
 <section id="creating-environment-with-all-packages">
 <h4>Creating environment with all packages<a class="headerlink" href="#creating-environment-with-all-packages" title="Link to this heading">¶</a></h4>
-<p>In case you have access to a conda environment, here is the procedure to initialize your own environnment (called “skullTo3d”, but can be called the name you prefer):</p>
+<p>In case you have access to a conda environment, here is the procedure to initialize your own environnment (called “skullTo3d_env”, but can be called the name you prefer):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>init<span class="w"> </span>bash
-$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>skullTo3d_env<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
+$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>skullTo3d_env<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10
 $<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>skullTo3d_env
 </pre></div>
 </div>
@@ -275,16 +272,6 @@ $<span class="w"> </span>python<span class="w"> </span>setup.py<span class="w"> 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>skullTo3d
 </pre></div>
 </div>
-</section>
-<section id="from-conda">
-<h3>From conda<a class="headerlink" href="#from-conda" title="Link to this heading">¶</a></h3>
-<p>SkullTo3d is also available on <a class="reference external" href="https://anaconda.org/macatools/skullTo3d">Anaconda cloud</a>:</p>
-<p>If ‘conda’ (Anaconda, or miniconda) is installed on your system, you can type:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>macatools<span class="w"> </span>skullTo3d
-</pre></div>
-</div>
-<p>!!!! The lastest version of skullTo3d (0.2.1) is not available, due to the inclusion of packages that are not yet packaged in conda
-use “pip install skullTo3d” or “git clone <a class="reference external" href="https://github.com/Macatools/skullTo3d.git">https://github.com/Macatools/skullTo3d.git</a>” till further notice</p>
 </section>
 </section>
 <section id="testing-the-install">

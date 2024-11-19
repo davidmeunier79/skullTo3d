@@ -27,12 +27,12 @@ SkullTo3d relies on python packages. Here we provide installations using Anacond
 Creating environment with all packages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In case you have access to a conda environment, here is the procedure to initialize your own environnment (called "skullTo3d", but can be called the name you prefer):
+In case you have access to a conda environment, here is the procedure to initialize your own environnment (called "skullTo3d_env", but can be called the name you prefer):
 
 .. code-block:: bash
 
     $ conda init bash
-    $ conda create -n skullTo3d_env python=3.7
+    $ conda create -n skullTo3d_env python=3.10
     $ conda activate skullTo3d_env
 
 Install skullTo3d package
@@ -71,21 +71,6 @@ If 'pip' package is installed on your system, you can install the lastest stable
 .. code:: bash
 
     $ pip install skullTo3d
-
-
-From conda
------------
-
-SkullTo3d is also available on `Anaconda cloud <https://anaconda.org/macatools/skullTo3d>`_:
-
-If 'conda' (Anaconda, or miniconda) is installed on your system, you can type:
-
-.. code:: bash
-
-    $ conda install -c macatools skullTo3d
-
-!!!! The lastest version of skullTo3d (0.2.1) is not available, due to the inclusion of packages that are not yet packaged in conda
-use "pip install skullTo3d" or "git clone https://github.com/Macatools/skullTo3d.git" till further notice
 
 Testing the install
 ###################
