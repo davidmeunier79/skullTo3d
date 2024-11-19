@@ -14,7 +14,7 @@ Plot the results of a segmentation with ANTS-based pipeline in sphinx position
 import os
 import os.path as op
 
-from skullTo3d.pipelines import create_skull_t1_pipe
+from skullTo3d.pipelines.skull_pipe import create_skull_t1_pipe
 
 ##############################################################################
 # Testing plot in local
