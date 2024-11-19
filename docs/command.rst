@@ -75,7 +75,6 @@ can be one of these : SPM or ANTS
 --------------------------------------
 The following parameters are exclusive
 --------------------------------------
-
 *(but one is mandatory)*
 
 * -params  *(mandatory if -species is omitted)*
@@ -87,16 +86,15 @@ followed the NHP species corresponding to the image, e.g. {macaque | marmo | bab
 --------------------------------------
 The following parameters are optional
 --------------------------------------
-
 *(but highly recommanded)*
 
 * -brain_dt  *equivalent to -dt in macapype*
-specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2").  **Note** : default is T1 if the attribute is omitted
+specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2").
+**Note** : default is T1 if the attribute is omitted
 
 * -skull_dt  *specific to skullTo3d*
-specifies the datatype available for skull segmentation (can be, "T1", "petra", "CT" or a combination of the latter (with space(s) in between).
-**Note 1** : default is T1 if the attribute is omitted.
-**Note 2** : "angio" can also be specified
+specifies the datatype available for skull segmentation (can be, "T1", "petra", "CT", "angio" or a combination of the latter (with space(s) in between).
+**Note** : default is T1 if the attribute is omitted.
 
 * -deriv  creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
 
@@ -110,7 +108,7 @@ The following parameters are optional
 
 * -sub (-subjects), -ses (-sessions), -acq (-acquisions), -rec (-reconstructions) allows to specifiy a subset of the BIDS dataset respectively to a range of subjects, session, acquision types and reconstruction types. The arguments can be listed with space seperator. **Note** if not specified, the full BIDS dataset will be processed
 
-* -mask allows to specify a precomputed binary mask file (skipping brain extraction). The bets usage of this option if precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified.
+* -mask allows to specify a precomputed binary mask file (skipping brain extraction). The best usage of this option is: precomputing the pipeline till brain_extraction_pipe, modify by hand the mask and use the mask for segmentation. Better if only one subject*session is specified (one file is specified at a time...).
 
 **Warning: the mask should be in the same space as the data. And only works with -soft ANTS so far**
 
@@ -118,7 +116,6 @@ The following parameters are optional
     * typically equals to the number of subjects*session (i.e. iterables).
     * can be multiplied by 2 if T1*T2 pipelines are run (the first steps at least will benefit from it)
     * default = 4 if unspecified ; if is put to 0, then the sequential processing is used (equivalent to -soft with _seq, see before)
-
 
 ***********************
 Command line examples

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# macapype documentation build configuration file, created by
+# skullTo3d documentation build configuration file, created by
 # sphinx-quickstart on Tue Nov 27 18:47:41 2018.
 #
 # This file is execfile()d with the current directory set to its
@@ -126,7 +126,7 @@ html_theme_options = {
         #("API", "api"),
         #("Tutorial", "tutorial"),
         #("Installation", "install"),
-        #("Github", "https://github.com/macatools/macapype", True),
+        #("Github", "https://github.com/macatools/skullTo3d", True),
     #]
     'navbar_links': [
         ("Github", "https://github.com/davidmeunier79/skullTo3d", True),
@@ -142,7 +142,7 @@ html_theme_options = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'macapypedoc'
+htmlhelp_basename = 'skullTo3ddoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -180,7 +180,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'macapype.tex', 'macapype Documentation',
+    (master_doc, 'skullTo3d.tex', 'skullTo3d Documentation',
      'David Meunier', 'manual'),
 ]
 
@@ -190,7 +190,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'macapype', 'macapype Documentation',
+    (master_doc, 'skullTo3d', 'skullTo3d Documentation',
      [author], 1)
 ]
 
@@ -201,8 +201,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'macapype', 'macapype Documentation',
-     author, 'macapype', 'One line description of project.',
+    (master_doc, 'skullTo3d', 'skullTo3d Documentation',
+     author, 'skullTo3d', 'One line description of project.',
      'Miscellaneous'),
 ]
 
