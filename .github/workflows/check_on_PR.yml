@@ -22,14 +22,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-            pip install codecov pytest pytest-cov
-            pip install flake8
             sudo apt-get install build-essential  graphviz libgraphviz-dev
             pip install --upgrade pygraphviz graphviz
 
             # pip install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
 
-            pip install -e .
+            pip install -e .[test]
 
             python -c "import skullTo3d; print(skullTo3d.__version__)"
 
@@ -37,7 +35,7 @@ jobs:
             git clone https://github.com/macatools/macapype.git
 
             cd macapype
-            python setup.py develop
+            pip install -e .
 
             python -c "import macapype; print(macapype.__version__)"
 

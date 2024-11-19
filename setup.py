@@ -4,8 +4,22 @@
 import re
 from setuptools import find_packages, setup
 
-required_packages = ["macapype"]
+test_deps = ['codecov', 'pytest', 'pytest-cov']
 
+flake_deps = ['flake8']
+
+doc_deps = ['sphinx',
+            'sphinx-gallery',
+            'sphinx_bootstrap_theme',
+            'numpydoc',
+            'sphinxcontrib-fulltoc',
+            'matplotlib']
+
+# requirements
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
+
+# version
 verstr = "unknown"
 try:
     verstrline = open('skullTo3d/_version.py', "rt").read()
@@ -36,7 +50,10 @@ setup(
     long_description_content_type='text/markdown',
     license='BSD 3',
     entry_points={
-        'console_scripts': ['segment_petra = workflows.segment_petra:main']
+        'console_scripts': ['segment_petra = workflows.segment_petra:main']},
+    extras_require={
+        'test': test_deps + flake_deps,
+        'doc': flake_deps + test_deps + doc_deps
         },
-    install_requires=required_packages,
+    install_requires=requirements,
     include_package_data=True)
