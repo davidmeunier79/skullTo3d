@@ -77,7 +77,7 @@ The following parameters are exclusive
 
 *(but one is mandatory)*
 
-* -params: (mandatory if -species is omitted)a json file specifiying the global parameters of the analysis. See :ref:`Parameters <params>` for more details
+* -params  (mandatory if -species is omitted) a json file specifiying the global parameters of the analysis. See :ref:`Parameters <params>` for more details
 
 * -species (mandatory if -params is omitted) followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}
 
@@ -87,14 +87,14 @@ The following parameters are optional
 
 (but highly recommanded):
 
-* -brain_dt *equivalent to -dt in macapype* : specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2").  **Note** : default is T1 if the attribute is omitted
+* -brain_dt  *equivalent to -dt in macapype* : specifies the datatype available to perform brain segmentation (can be "T1", or "T1 T2").  **Note** : default is T1 if the attribute is omitted
 
-* -skull_dt  *specific to skullTo3d*: specifies the datatype available for skull segmentation (can be, "T1", "petra", "CT" or a combination of the latter (with space(s) in between). **Note 1** : default is T1 if the attribute is omitted.  **Note 2** : "angio" can also be specified
+* -skull_dt  *specific to skullTo3d* : specifies the datatype available for skull segmentation (can be, "T1", "petra", "CT" or a combination of the latter (with space(s) in between). **Note 1** : default is T1 if the attribute is omitted.  **Note 2** : "angio" can also be specified
 
 
-* -deriv : creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
+* -deriv  : creates a derivatives directory, with all important files, properly named following BIDS derivatives convertion
 
-* -pad : exports (in derivatives) important files in native (original) space
+* -pad  : exports (in derivatives) important files in native (original) space
 
 --------------------------------------
 The following parameters are optional
