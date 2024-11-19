@@ -2,13 +2,14 @@
 
 .. _docker_install:
 
-**************
+*****************
 Container install
-**************
+*****************
 
 Docker allows to provide all necessary softwares in extra to macapype packages. The Docker image we provide include ANTS 2.3.1, FSL 5.0.10 and AFNI (latest version). See at the bottom of this page for docker with SPM Stand-alone.
 
-Also note that the image is quite big (~5GB) so requires some space on your "/" partition.
+**Note 1** :the image is quite big (~5GB) so requires some space on your "/" partition.
+**Note 2** : due to standard naming format, the repository on DockerHub is called "skullto3d", not "skullTo3d" - please note the difference in uppercase lowercase "T"...
 
 Dockerfile
 -----------
@@ -26,23 +27,23 @@ Downloading Dockerfile and building an image:
 Docker image
 ------------
 
-A docker image can also be downloaded directly from `DockerHub repo <https://hub.docker.com/r/macatools/skullTo3d>`_ :
+A docker image can also be downloaded directly from `DockerHub repo <https://hub.docker.com/r/macatools/skullto3d>`_ :
 
 .. code:: bash
 
-    $ docker pull macatools/skullTo3d:latest
+    $ docker pull macatools/skullto3d:latest
 
 Starting from the release v0.2.1 on github, the docker images are tagged accordingly on Dockerhub:
 
 .. code:: bash
 
-    $ docker pull macatools/skullTo3d:version-0.2.1
+    $ docker pull macatools/skullto3d:version-0.2.1
 
 
 Note on Singularity
 -------------------
 
-It is possible (and recommanded) to use singularity version of container on shared computers/clusters. skullTo3d docker version has been tested and is compatible with versions of singularity higher than 0.3 ("sif" version)
+It is possible (and recommanded) to use singularity version of container on shared computers/clusters. skullto3d docker version has been tested and is compatible with versions of singularity higher than 0.3 ("sif" version)
 
 Here is an example of a command line to install and convert the docker image to singularity image :
 

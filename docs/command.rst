@@ -2,9 +2,14 @@
 
 .. command:
 
-*******************
-Executing a command
-*******************
+
+----------------------
+Launching a processing
+----------------------
+
+
+Commands
+********
 
 The main file is located in workflows and is called segment_petra.py and should be called like a python script:
 
@@ -20,17 +25,16 @@ The main file is located in workflows and is called segment_petra.py and should 
 
 
 
-For container (docker and singularity), here is an example - add your proper bindings:
-
-**N.B. if you have installed the pypi version (e.g. using pip install macapype) or a docker/singularity version, you can replace the previous command by the following command:**
+For container (docker and singularity), here are some examples - add your proper bindings:
 
 .. code:: bash
 
     $ docker run -B binding_to_host:binding_guest macatools/skullTo3d:latest segment_petra
 
+.. code:: bash
 
+    $ singularity run -v binding_to_host:binding_guest /path_to_singularity_images/skullto3d_v0.0.4.1.sif segment_petra
 
-*******************
 Expected input data
 *******************
 
@@ -47,7 +51,6 @@ In particular:
 * _angio extension is expected for angiography images
 
 
-***********************
 Command line parameters
 ***********************
 
