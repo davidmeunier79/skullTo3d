@@ -2,9 +2,9 @@
 
 .. command:
 
-************
-Command-line
-************
+*******************
+Executing a command
+*******************
 
 The main file is located in workflows and is called segment_petra.py and should be called like a python script:
 

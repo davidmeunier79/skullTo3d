@@ -57,12 +57,44 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="quick_install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quick_install.html#dependancies">Dependancies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#external-software-dependancies">External software dependancies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#python-packages-dependancies">Python packages dependancies</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="quick_install.html#creating-environment-with-all-packages">Creating environment with all packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quick_install.html#install-skullto3d-package">Install skullTo3d package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#from-github">from github</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="quick_install.html#using-git">Using git</a></li>
+<li class="toctree-l4"><a class="reference internal" href="quick_install.html#using-pip">Using pip</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#from-pypi">from pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_install.html#from-conda">From conda</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quick_install.html#testing-the-install">Testing the install</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#dockerfile">Dockerfile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#docker-image">Docker image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docker_install.html#note-on-singularity">Note on Singularity</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Executing a command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html#expected-input-data">Expected input data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html#command-line-parameters">Command line parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="command.html#the-following-parameters-are-mandatory">The following parameters are mandatory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command.html#the-following-parameters-are-exclusive">The following parameters are exclusive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command.html#the-following-parameters-are-optional">The following parameters are optional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command.html#id1">The following parameters are optional</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="command.html#command-line-examples">Command line examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="params.html#adding-params">Adding -params</a></li>
 <li class="toctree-l2"><a class="reference internal" href="params.html#advanced-parameters-settings">Advanced parameters settings</a></li>
@@ -86,7 +118,12 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Executing a command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html#expected-input-data">Expected input data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html#command-line-parameters">Command line parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html#command-line-examples">Command line examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 </ul>
@@ -124,7 +161,12 @@
   <div class="row">
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
-<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Docker install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker_install.html">Container install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html">Executing a command</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html#expected-input-data">Expected input data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html#command-line-parameters">Command line parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="command.html#command-line-examples">Command line examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="indiv_params.html">Individual Parameters</a></li>
 </ul>
@@ -135,7 +177,7 @@
       
   <section id="computation-times">
 <span id="sphx-glr-sg-execution-times"></span><h1>Computation times<a class="headerlink" href="#computation-times" title="Link to this heading">¶</a></h1>
-<p><strong>00:02.904</strong> total execution time for 1 file <strong>from all galleries</strong>:</p>
+<p><strong>00:00.799</strong> total execution time for 1 file <strong>from all galleries</strong>:</p>
 <div class="docutils container">
 <style scoped>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -157,7 +199,7 @@ $(document).ready( function () {
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference internal" href="auto_examples/plot_create_skull_t1_pipe.html#sphx-glr-auto-examples-plot-create-skull-t1-pipe-py"><span class="std std-ref">Plot the results of a segmentation with ANTS-based pipeline in sphinx position</span></a> (<code class="docutils literal notranslate"><span class="pre">../examples_doc/plot_create_skull_t1_pipe.py</span></code>)</p></td>
-<td><p>00:02.904</p></td>
+<td><p>00:00.799</p></td>
 <td><p>0.0</p></td>
 </tr>
 </tbody>

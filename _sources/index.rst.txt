@@ -47,8 +47,9 @@ Table of contents
 .. toctree::
     :maxdepth: 2
 
-    install
+    quick_install
     docker_install
+    command
     params
     indiv_params
 
