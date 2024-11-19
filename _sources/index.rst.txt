@@ -5,7 +5,7 @@ SkullTo3D
 *********
 ..
 .. .. _short_logo:
-.. .. |logo1| image:: ./img/logo/logo_skullTo3d_alpha.png
+.. .. |logo1| image:: ./img/logo/logo_skullTo3d_alpha.jpg
 ..     :scale: 100%
 ..
 .. .. table::
@@ -16,6 +16,41 @@ SkullTo3D
 ..    +---------+
 ..
 
-.. image:: ./img/logo/logo_skullTo3d_alpha.png
+
+_skullTo3d is an upper layer of `Macapype <https://macatools.github.io/skullTo3d>` project, adding to MRI anatomocal brain segmentation **skull** segmentation, either originating from CT scan , MRI petra or T1w sequence, as well as angio images segmentation
+
+.. image:: ./img/logo/logo_skullTo3d_alpha.jpg
     :width: 600
     :align: center
+
+
+Installation
+************
+
+See :ref:`Quick Installation <quick_install>` for installation on your local system if you have adequate softwares (i.e. FSL, AFNI, Ants, SPM) running on your machine/clusters
+
+See :ref:`Container installation <docker_install>` for fully compliant installation (no MRI softwares, or Windows / MacOS operating system)
+
+
+Command line parameters
+***********************
+
+SkullTo3D is fairly flexible, but requires to specify multiples parameters in command line
+
+See :ref:`Commands <command>` for a description on the avalaible command parameters
+
+
+
+Table of contents
+******************
+
+.. toctree::
+    :maxdepth: 2
+
+    install
+    docker_install
+    params
+    indiv_params
+
+
+
