@@ -5,7 +5,7 @@ SkullTo3D
 *********
 ..
 .. .. _short_logo:
-.. .. |logo1| image:: ./img/logo/logo_skullTo3d_alpha.jpg
+.. .. |logo1| image:: ./img/logo/logo_skullTo3d_0.1.jpg
 ..     :scale: 100%
 ..
 .. .. table::
@@ -19,7 +19,7 @@ SkullTo3D
 
 _skullTo3d is an upper layer of `Macapype <https://macatools.github.io/skullTo3d>` project, adding to MRI anatomocal brain segmentation **skull** segmentation, either originating from CT scan , MRI petra or T1w sequence, as well as angio images segmentation
 
-.. image:: ./img/logo/logo_skullTo3d_alpha.jpg
+.. image:: ./img/logo/logo_skullTo3d_0.1.jpg
     :width: 600
     :align: center
 
