@@ -1,6 +1,6 @@
 :orphan:
 
-.. command:
+.. _command:
 
 ~~~~~~~~~~~~~~~~~~~~~~
 Launching a processing
