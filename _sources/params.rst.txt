@@ -6,15 +6,27 @@ __________
 Adding -params
 **************
 
-All the params spefications are in each function of the API, as well the spefications available for :ref:`Individual Parameters <indiv_params>`.
+Definition of the sequence of nodes in processing pipelines, as well as general parameters, are specified by json file. When specifying a -species and -soft (see `Commands <command>`_), the corresponding default parameter file will be used; They are located in the *workflows* directory of the package.
 
-**N.B. in the newest version of macapype, the -params can be replaced the option -species followed by the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}, and a default parameter, tested for this species, will be used. It is however still possible to use the -params option and provide a params.json for advanced users**
+The original parameter file can be altered by some options in -soft (e.g. _robustreg, _prep, etc.; see `Commands <command>`_).
 
-Here is an example of the params.json corresponding to :class:`segment_pnh_spm_based pipeline <macapype.pipelines.full_pipelines.create_full_spm_subpipes>` for macaque:
+Here is an example of the params.json with parameters -soft ANTS_skull for -species macaque:
 
 .. include:: ../workflows/params_segment_macaque_ants_skull.json
    :literal:
 
+It is also possible to alter values of some nodes for individual sessions/subjects. See `individual parameter section <indiv_params>`_).
+
+**Note**: Individual parameter will not modify the pipeline sequence itself, a value specified in indiv_params for a node that do not exists in params will ignored
+
 Advanced parameters settings
 ****************************
-   TODO: all available nodes / pipelines
+
+For advanced user, it is however possible to pass the pipeline sequence as a params.json file. In this case all further alteration will be canceled.
+
+Here is json file with all possible nodes to be tuned; Some node are optional, some nodes are exclusive with each other (XOR). All parameters given here are give as examples and may vary
+
+.. include:: ../examples_doc/params_skull.json
+   :literal:
+
+**Note**: The json file provided here only pass the node available in pipelines specific to skullTo3d processing. A functionnal pipeline will also require some pipeline sequence from macapype itself, *a minima* the definition of a short_preparation_pipe sequence of nodes. See `macapype params page <https://macatools.github.io/macapype/params.html>`_ for more details.
