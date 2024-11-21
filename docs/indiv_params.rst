@@ -18,7 +18,7 @@ Advanced parameters settings
 
 Here is json file with all possible nodes to be tuned in indiv_params; In particular, the specifications of sub- and ses- are mandatory before the specification of nodes; Also note that, as for `macapype individual paramters <https://macatools.github.io/macapype/indiv_params.html>`_, the nodes are specified directly, without specifiying the sub-pipelines they belong to.
 
-Please refer to the `parameter page <params>` for more explanation on the possible structure of nodes.
+Please refer to the `parameter page <params>`_ for more explanation on the possible structure of nodes.
 
 .. include:: ../examples_doc/indiv_params_skull.json
    :literal:
