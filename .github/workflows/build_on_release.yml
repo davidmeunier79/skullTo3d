@@ -6,6 +6,59 @@ on:
 
 jobs:
 
+  build_doc:
+    name: Build documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@main
+      - name: Set up Python 3.10.5
+        uses: actions/setup-python@v2
+        with:
+            python-version: 3.10.5
+
+      - name: Install dependencies
+        run: |
+            sudo apt-get install build-essential  graphviz libgraphviz-dev
+            pip install --upgrade pygraphviz graphviz
+
+            # pip install --no-deps --index-url https://test.pypi.org/simple/ --pre macapype
+
+            pip install -e .[doc]
+
+            python -c "import skullTo3d; print(skullTo3d.__version__)"
+
+            cd ..
+            git clone https://github.com/macatools/macapype.git
+
+            cd macapype
+            pip install -e .
+
+            python -c "import macapype; print(macapype.__version__)"
+
+            cd ../skullTo3d
+            pwd
+
+
+      - name: Test with pytest
+        run:
+            py.test --cov skullTo3d
+
+      - name: Build the Doc 🔧
+        run: |
+          cd docs
+          make clean
+          make html
+          touch _build/html/.nojekyll
+
+      - name: Deploy Github Pages 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.4.3
+        with:
+          branch: gh-pages
+          folder: docs/_build/html/
+          clean: true
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+
   build-n-publish-pypi:
     name: Build and publish Python to PyPI
     runs-on: ubuntu-latest
