@@ -177,6 +177,9 @@
     },
     "skull_ct_pipe":
     {
+        "align_ct_on_T1_2":
+        {
+        },
         "ct_skull_auto_mask":
         {
             "kmeans": true,
