@@ -109,6 +109,14 @@
 
     "skull_ct_pipe":
     {
+        "align_ct_on_T1_2":
+        {
+
+            "comment": "OPTIONAL",
+            "comment": "Cannot be modified",
+            "params": "RegAladin (NiftyReg)"
+
+        },
         "ct_head_mask_thr":
         {
             "params": "Threshold (FSL)",
@@ -149,12 +157,18 @@
 
         "avg_reorient_pipe":
         {
-
             "comment": "OPTIONAL",
             "params": "see corresponding doc in short_preparation_pipe in macapype"
 
         },
 
+        "petra_itk_debias":
+        {
+            "comment": "OPTIONAL",
+            "params": "SimpleITK N4BiasFieldCorrectionImageFilter dirty wrap (defined in macapype.nodes.correc_bias)",
+            "comment": "Should be made a proper nipype node ",
+
+        },
 
         "petra_head_mask_thr":
         {
