@@ -68,14 +68,14 @@ Macaque CT
 
 .. code:: bash
 
-    $ singularity run -v /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_skull  -data /data/skullTo3d_CI/cerimed-macaque-ct -out /data/cerimed-macaque-ct/skullTo3d_CI/results -soft ANTS_prep_skull -species macaque -sub Marvin -ses 01 -brain_dt T1 T2 -skull_dt CT -deriv -pad
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_skull  -data /data/skullTo3d_CI/cerimed-macaque-ct -out /data/cerimed-macaque-ct/skullTo3d_CI/results -soft ANTS_prep_skull -species macaque -sub Marvin -ses 01 -brain_dt T1 T2 -skull_dt CT -deriv -pad
 
 Macaque petra
 ~~~~~~~~~~~~~
 
 .. code:: bash
 
-    $ singularity run -v /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_skull -data /data/skullTo3d_CI/cenir-macaque-petra -out /data/skullTo3d_CI/cenir-macaque-petra/results -soft ANTS_skull -species macaque -sub Magneto -brain_dt T1 T2 -skull_dt petra -deriv -pad
+    $ singularity run -B /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_skull -data /data/skullTo3d_CI/cenir-macaque-petra -out /data/skullTo3d_CI/cenir-macaque-petra/results -soft ANTS_skull -species macaque -sub Magneto -brain_dt T1 T2 -skull_dt petra -deriv -pad
 
 
 
