@@ -60,15 +60,18 @@ Testing the macaque datasets with CT and petra
 Two other dataset, corresponding to one macaque and one baboon, are available in the test dataset. Please not that due to higher image resolution, the preprocessing will take a longer time.
 
 
+Testing from Singularity image
+------------------------------
+
 Macaque CT
-**********
+~~~~~~~~~~
 
 .. code:: bash
 
     $ singularity run -v /path/to/data/:/data /path/to/containers/macapype_v0.5.sif segment_skull  -data /data/skullTo3d_CI/cerimed-macaque-ct -out /data/cerimed-macaque-ct/skullTo3d_CI/results -soft ANTS_prep_skull -species macaque -sub Marvin -ses 01 -brain_dt T1 T2 -skull_dt CT -deriv -pad
 
 Macaque petra
-*************
+~~~~~~~~~~~~~
 
 .. code:: bash
 

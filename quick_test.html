@@ -98,7 +98,14 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#testing-the-macaque-datasets-with-ct-and-petra">Testing the macaque datasets with CT and petra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-the-macaque-datasets-with-ct-and-petra">Testing the macaque datasets with CT and petra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Testing from Singularity image</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#macaque-ct">Macaque CT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#macaque-petra">Macaque petra</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a><ul>
@@ -153,7 +160,14 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#testing-the-macaque-datasets-with-ct-and-petra">Testing the macaque datasets with CT and petra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-the-macaque-datasets-with-ct-and-petra">Testing the macaque datasets with CT and petra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Testing from Singularity image</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#macaque-ct">Macaque CT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#macaque-petra">Macaque petra</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a></li>
@@ -208,7 +222,14 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#testing-the-macaque-datasets-with-ct-and-petra">Testing the macaque datasets with CT and petra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-the-macaque-datasets-with-ct-and-petra">Testing the macaque datasets with CT and petra</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Testing from Singularity image</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#macaque-ct">Macaque CT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#macaque-petra">Macaque petra</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="command.html">Launching a processing</a></li>
@@ -267,12 +288,21 @@ $<span class="w"> </span>unzip<span class="w"> </span>-o<span class="w"> </span>
 <section id="testing-the-macaque-datasets-with-ct-and-petra">
 <h2>Testing the macaque datasets with CT and petra<a class="headerlink" href="#testing-the-macaque-datasets-with-ct-and-petra" title="Link to this heading">¶</a></h2>
 <p>Two other dataset, corresponding to one macaque and one baboon, are available in the test dataset. Please not that due to higher image resolution, the preprocessing will take a longer time.</p>
+<section id="id2">
+<h3>Testing from Singularity image<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<section id="macaque-ct">
+<h4>Macaque CT<a class="headerlink" href="#macaque-ct" title="Link to this heading">¶</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.5.sif<span class="w"> </span>segment_skull<span class="w">  </span>-data<span class="w"> </span>/data/skullTo3d_CI/cerimed-macaque-ct<span class="w"> </span>-out<span class="w"> </span>/data/cerimed-macaque-ct/skullTo3d_CI/results<span class="w"> </span>-soft<span class="w"> </span>ANTS_prep_skull<span class="w"> </span>-species<span class="w"> </span>macaque<span class="w"> </span>-sub<span class="w"> </span>Marvin<span class="w"> </span>-ses<span class="w"> </span><span class="m">01</span><span class="w"> </span>-brain_dt<span class="w"> </span>T1<span class="w"> </span>T2<span class="w"> </span>-skull_dt<span class="w"> </span>CT<span class="w"> </span>-deriv<span class="w"> </span>-pad
 </pre></div>
 </div>
+</section>
+<section id="macaque-petra">
+<h4>Macaque petra<a class="headerlink" href="#macaque-petra" title="Link to this heading">¶</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>singularity<span class="w"> </span>run<span class="w"> </span>-v<span class="w"> </span>/path/to/data/:/data<span class="w"> </span>/path/to/containers/macapype_v0.5.sif<span class="w"> </span>segment_skull<span class="w"> </span>-data<span class="w"> </span>/data/skullTo3d_CI/cenir-macaque-petra<span class="w"> </span>-out<span class="w"> </span>/data/skullTo3d_CI/cenir-macaque-petra/results<span class="w"> </span>-soft<span class="w"> </span>ANTS_skull<span class="w"> </span>-species<span class="w"> </span>macaque<span class="w"> </span>-sub<span class="w"> </span>Magneto<span class="w"> </span>-brain_dt<span class="w"> </span>T1<span class="w"> </span>T2<span class="w"> </span>-skull_dt<span class="w"> </span>petra<span class="w"> </span>-deriv<span class="w"> </span>-pad
 </pre></div>
 </div>
+</section>
+</section>
 </section>
 </section>
 
