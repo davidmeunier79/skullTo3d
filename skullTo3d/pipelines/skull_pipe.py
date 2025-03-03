@@ -1066,7 +1066,7 @@ def create_autonomous_skull_petra_pipe(name="skull_petra_pipe", params={}):
     return skull_petra_pipe
 
 
-def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
+def create_skull_petra_pipe(name="skull_petra_pipe", params={}, manual_crop = False):
 
     # creating pipeline
     skull_petra_pipe = pe.Workflow(name=name)
@@ -1135,18 +1135,39 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         skull_petra_pipe.connect(inputnode, "native_img",
                                  align_petra_on_native_2, "ref_file")
 
+    if manual_crop:
+
+        # cropping
+        # Crop bounding box for T1
+        crop_petra = NodeParams(fsl.ExtractROI(),
+                                # params=parse_key(params, 'crop'),
+                                name='crop_petra')
+
+        if "align_petra_on_native_2" in params:
+            skull_petra_pipe.connect(align_petra_on_native_2, 'res_file',
+                                     crop_petra, 'in_file')
+
+        else:
+            skull_petra_pipe.connect(align_petra_on_native, 'res_file',
+                                     crop_petra, 'in_file')
+
     # align_petra_on_stereo
     align_petra_on_stereo = pe.Node(
         interface=RegResample(pad_val=0.0),
         name="align_petra_on_stereo")
 
-    if "align_petra_on_native_2" in params:
-        skull_petra_pipe.connect(align_petra_on_native_2, 'res_file',
+    if manual_crop:
+        skull_petra_pipe.connect(crop_petra, 'roi_file',
                                  align_petra_on_stereo, "flo_file")
-
     else:
-        skull_petra_pipe.connect(align_petra_on_native, 'res_file',
-                                 align_petra_on_stereo, "flo_file")
+
+        if "align_petra_on_native_2" in params:
+            skull_petra_pipe.connect(align_petra_on_native_2, 'res_file',
+                                     align_petra_on_stereo, "flo_file")
+
+        else:
+            skull_petra_pipe.connect(align_petra_on_native, 'res_file',
+                                     align_petra_on_stereo, "flo_file")
 
     skull_petra_pipe.connect(inputnode, 'native_to_stereo_trans',
                              align_petra_on_stereo, "trans_file")

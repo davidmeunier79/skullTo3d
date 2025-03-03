@@ -500,19 +500,25 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
 
         if len(brain_dt):
 
-            skull_petra_pipe = create_skull_petra_pipe(
-                params=parse_key(params, "skull_petra_pipe"))
+            if "crop_T1" in params["short_preparation_pipe"]:
+
+                skull_petra_pipe = create_skull_petra_pipe(
+                    params=parse_key(params, "skull_petra_pipe"), manual_crop = True)
+
+            else:
+                skull_petra_pipe = create_skull_petra_pipe(
+                    params=parse_key(params, "skull_petra_pipe"))
 
             if "t1" in brain_dt and "t2" in brain_dt:
                 # optimal pipeline, use T2
                 main_workflow.connect(segment_brain_pipe,
-                                      "outputnode.native_T2",
-                                      skull_petra_pipe, 'inputnode.native_img')
+                                    "outputnode.native_T2",
+                                    skull_petra_pipe, 'inputnode.native_img')
 
             elif "t1" in brain_dt:
                 main_workflow.connect(segment_brain_pipe,
-                                      "outputnode.native_T1",
-                                      skull_petra_pipe, 'inputnode.native_img')
+                                    "outputnode.native_T1",
+                                    skull_petra_pipe, 'inputnode.native_img')
 
             main_workflow.connect(segment_brain_pipe,
                                   "outputnode.stereo_padded_T1",
