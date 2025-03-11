@@ -1,4 +1,3 @@
-
 def mask_auto_threshold(img_file, operation, index):
     import numpy as np
     import nibabel as nib
