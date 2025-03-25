@@ -211,17 +211,21 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
             species = species.lower()
 
             rep_species = {"marmoset": "marmo",
-                           "marmouset": "marmo",
-                           "chimpanzee": "chimp"}
+                           "marmouset": "marmo"}
 
             if species in list(rep_species.keys()):
                 species = rep_species[species]
 
-            list_species = ["macaque", "marmo", "baboon", "chimp"]
+            list_species = ["macaque", "marmo",]
 
-            assert species in list_species, \
-                "Error, species {} should in the following list {}".format(
-                    species, list_species)
+            ok_species = False
+            for cur_species in list_species:
+                if species.startswith(cur_species):
+                    ok_species = True
+
+            if ok_species is False:
+                print(f"Error, species {species} not in list")
+                exit(-1)
 
             package_directory = op.dirname(op.abspath(__file__))
 
@@ -521,14 +525,8 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
 
         if len(brain_dt):
 
-            if "crop_T1" in params["short_preparation_pipe"]:
-
-                skull_petra_pipe = create_skull_petra_pipe(
-                    params=parse_key(params, "skull_petra_pipe"))
-
-            else:
-                skull_petra_pipe = create_skull_petra_pipe(
-                    params=parse_key(params, "skull_petra_pipe"))
+            skull_petra_pipe = create_skull_petra_pipe(
+                params=parse_key(params, "skull_petra_pipe"))
 
             if "t1" in brain_dt and "t2" in brain_dt:
                 # optimal pipeline, use T2
@@ -719,7 +717,7 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
                 params=parse_key(params, "angio_quick_pipe"))
 
             main_workflow.connect(datasource, ('ANGIO', get_first_elem),
-                                angio_pipe, 'inputnode.angio')
+                                  angio_pipe, 'inputnode.angio')
 
     if 't1' in skull_dt and "skull_t1_pipe" in params.keys():
         print("Found skull_t1_pipe")
