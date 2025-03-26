@@ -92,7 +92,7 @@ jobs:
 
             echo ""
 
-      - name: Running all test pipelines (ANTS cenir macaque petra)
+      - name: Running all test pipelines (ANTS cerimed macaque petra CT)
         run: |
             docker run -i -v /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2:/data macatools/skullto3d:latest segment_skull -data /data/cerimed_macaque -out /data/cerimed_macaque/results -soft ANTS_prep_skull -species macaque -sub Stevie -ses 01 -brain_dt T1 T2 -skull_dt petra t1 ct -deriv -pad -nprocs 1
 
@@ -136,9 +136,9 @@ jobs:
             echo ""
 
 
-      - name: Running all test pipelines (ANTS cerimed marmo petra)
+      - name: Running all test pipelines (ANTS cerimed marmo petra CT)
         run: |
-            docker run -i -v /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2:/data macatools/skullto3d:latest segment_skull -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_noseg_skull -species marmo -sub Tresor -ses 01 -brain_dt T1 T2 -skull_dt T1 petra -deriv -pad -nprocs 1
+            docker run -i -v /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2:/data macatools/skullto3d:latest segment_skull -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_noseg_skull -species marmo -sub Tresor -ses 01 -brain_dt T1 T2 -skull_dt T1 petra CT -deriv -pad -nprocs 1
 
             ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2/cerimed_marmo/results
 
