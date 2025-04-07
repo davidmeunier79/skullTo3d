@@ -48,13 +48,14 @@ RUN pip3 install xvfbwrapper \
     packaging \
     pytest
 
-RUN pip3 install install \
-    graphviz \
+RUN pip3 install graphviz \
     pybids \
     nipype \
     nilearn \
     scikit-image \
     brain-slam \
+
+RUN pip3 install SimpleITK
 
 ############################################# install macapype
 
