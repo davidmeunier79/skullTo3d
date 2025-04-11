@@ -565,6 +565,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
 
     skull_ct_pipe.connect(inputnode, "stereo_T1",
                           align_ct_on_stereo_T1, "ref_file")
+
     # skullmask_threshold
     if "ct_skull_mask_thr" in params.keys():
         # ct_skull_mask_thr
@@ -717,10 +718,13 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
     # creating outputnode #######
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["stereo_ct_skull_mask",
+            fields=["stereo_ct_skull_mask", "stereo_ct",
                     "robustct_skull_mask", "robustct_skull_stl",
                     "ct_skull_stl"]),
         name='outputnode')
+
+    skull_ct_pipe.connect(align_ct_on_stereo_T1, "out_file",
+                          outputnode, "stereo_ct")
 
     skull_ct_pipe.connect(mesh_ct_skull, "stl_file",
                           outputnode, "ct_skull_stl")
@@ -1720,10 +1724,13 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     # creating outputnode #######
     outputnode = pe.Node(
         niu.IdentityInterface(
-            fields=["petra_skull_mask", "petra_skull_stl",
+            fields=["petra_skull_mask", "petra_skull_stl", "stereo_petra",
                     "robustpetra_skull_mask", "robustpetra_skull_stl",
                     "petra_head_mask", "petra_head_stl"]),
         name='outputnode')
+
+    skull_petra_pipe.connect(align_petra_on_stereo, "out_file",
+                             outputnode, "stereo_petra")
 
     skull_petra_pipe.connect(petra_head_erode, "out_file",
                              outputnode, "petra_head_mask")

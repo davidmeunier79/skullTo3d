@@ -30,6 +30,23 @@ def rename_all_skull_petra_derivatives(params, main_workflow, segment_pnh_pipe,
             datasink, '@petra_skull_stl')
 
         # rename stereo_petra_skull_mask
+        rename_stereo_petra = pe.Node(
+            niu.Rename(), name="rename_stereo_petra")
+
+        rename_stereo_petra.inputs.format_string =\
+            pref_deriv + "_space-stereo_desc-petra_PDw"
+        rename_stereo_petra.inputs.parse_string = parse_str
+        rename_stereo_petra.inputs.keep_ext = True
+
+        main_workflow.connect(
+            skull_petra_pipe, 'outputnode.stereo_petra',
+            rename_stereo_petra, 'in_file')
+
+        main_workflow.connect(
+            rename_stereo_petra, 'out_file',
+            datasink, '@stereo_petra')
+
+        # rename stereo_petra_skull_mask
         rename_stereo_petra_skull_mask = pe.Node(
             niu.Rename(), name="rename_stereo_petra_skull_mask")
 
@@ -125,6 +142,22 @@ def rename_all_skull_ct_derivatives(params, main_workflow, segment_pnh_pipe,
 
     # Rename in skull_ct_pipe
     if "skull_ct_pipe" in params.keys():
+
+        # rename ct_skull_mask
+        rename_ct = pe.Node(niu.Rename(),
+                            name="rename_ct")
+        rename_ct.inputs.format_string = \
+            pref_deriv + "_space-stereo_desc-ct_T2star"
+        rename_ct.inputs.parse_string = parse_str
+        rename_ct.inputs.keep_ext = True
+
+        main_workflow.connect(
+                skull_ct_pipe, "outputnode.stereo_ct",
+                rename_ct, 'in_file')
+
+        main_workflow.connect(
+            rename_ct, 'out_file',
+            datasink, '@stereo_ct')
 
         # rename ct_skull_mask
         rename_ct_skull_mask = pe.Node(niu.Rename(),
