@@ -43,41 +43,6 @@ jobs:
       with:
         repository_url: https://test.pypi.org/legacy/
 
-  build-n-publish-pypi:
-    name: Build and publish Python to Test PyPI
-    runs-on: ubuntu-latest
-
-    permissions:
-      id-token: write
-
-    environment:
-      name: pypi
-      url: https://pypi.org/p/macapype
-
-    steps:
-    - uses: actions/checkout@master
-    - name: Set up Python 3.10.5
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.10.5
-    - name: Install pypa/build
-      run: >-
-        python -m
-        pip install
-        build
-        --user
-    - name: Build a binary wheel and a source tarball
-      run: >-
-        python -m
-        build
-        --sdist
-        --wheel
-        --outdir dist/
-
-    - name: Publish distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-
-
   docker-build:
     name: Build Docker image and Push to Docker Hub
     needs: build-n-publish-testpypi
@@ -108,7 +73,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   run-pretest-ants-macaque:
-    name: Running all existing pipelines in skullTo3d_CI_v2.zip (ANTS macaque)
+    name: Running all existing pipelines in skullTo3d_CI_v2.zip (ANTS macaque CT)
     needs:  docker-build
     runs-on: ubuntu-latest
     steps:
@@ -136,7 +101,7 @@ jobs:
 
       - name: Running all test pipelines (ANTS cerimed macaque petra CT)
         run: |
-            docker run -i -v /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2:/data macatools/skullto3d:latest segment_skull -data /data/cerimed_macaque -out /data/cerimed_macaque/results -soft ANTS_skull_robustreg_prep -species macaque -sub Stevie -ses 01 -brain_dt T1 T2 -skull_dt petra t1 ct -deriv -pad -nprocs 1
+            docker run -i -v /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2:/data macatools/skullto3d:latest segment_skull -data /data/cerimed_macaque -out /data/cerimed_macaque/results -soft ANTS_skull_robustreg_prep -species macaque -sub Stevie -ses 01 -brain_dt T1 T2 -skull_dt ct -deriv -pad -nprocs 1
 
             ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2/cerimed_macaque/results
 
@@ -150,7 +115,7 @@ jobs:
 
 
   run-pretest-ants-marmo:
-    name: Running all existing pipelines in skullTo3d_CI_v2.zip (ANTS marmo)
+    name: Running all existing pipelines in skullTo3d_CI_v2.zip (ANTS marmo CT)
     needs:  docker-build
     runs-on: ubuntu-latest
 
@@ -178,9 +143,9 @@ jobs:
             echo ""
 
 
-      - name: Running all test pipelines (ANTS cerimed marmo petra CT)
+      - name: Running all test pipelines (ANTS cerimed marmo CT)
         run: |
-            docker run -i -v /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2:/data macatools/skullto3d:latest segment_skull -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_skull_robustreg_noseg -species marmo -sub Tresor -ses 01 -brain_dt T1 T2 -skull_dt T1 petra CT -deriv -pad -nprocs 1
+            docker run -i -v /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2:/data macatools/skullto3d:latest segment_skull -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_skull_robustreg_prep -species marmo -sub Tresor -ses 01 -brain_dt T1 T2 -skull_dt CT -deriv -pad -nprocs 1
 
             ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2/cerimed_marmo/results
 
@@ -192,9 +157,8 @@ jobs:
         run: |
             sudo rm -rf /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2/cerimed_marmo/results
 
-
   run-pretest-ants-marmoT2:
-    name: Running all existing pipelines in skullTo3d_CI_v2.zip (ANTS marmoT2)
+    name: Running all existing pipelines in skullTo3d_CI_v2.zip (ANTS marmoT2 CT)
     needs:  docker-build
     runs-on: ubuntu-latest
 
@@ -222,9 +186,9 @@ jobs:
             echo ""
 
 
-      - name: Running all test pipelines (ANTS cerimed marmoT2 petra CT)
+      - name: Running all test pipelines (ANTS cerimed marmoT2 CT)
         run: |
-            docker run -i -v /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2:/data macatools/skullto3d:latest segment_skull -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_skull_robustreg_noseg -species marmoT2 -sub Tresor -ses 01 -brain_dt T1 T2 -skull_dt T1 petra CT -deriv -pad -nprocs 1
+            docker run -i -v /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2:/data macatools/skullto3d:latest segment_skull -data /data/cerimed_marmo -out /data/cerimed_marmo/results -soft ANTS_skull_robustreg_prep -species marmoT2 -sub Tresor -ses 01 -brain_dt T1 T2 -skull_dt CT -deriv -pad -nprocs 1
 
             ls /home/runner/work/skullTo3d/skullTo3d/skullTo3d_CI_v2/cerimed_marmo/results
 
