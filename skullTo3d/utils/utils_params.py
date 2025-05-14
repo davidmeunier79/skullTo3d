@@ -1,7 +1,47 @@
 
-def update_indiv_params(params=None, indiv_params=None,
-                        subjects=None, sessions=None,
-                        extra_wf_name=""):
+
+def update_skull_params(ssoft, params):
+
+    if "nohead" in ssoft:
+        print("Found nohead in soft")
+        if "skull_petra_pipe" in params:
+            spp = params["skull_petra_pipe"]
+
+            if "headmask_petra_pipe" in spp:
+                del spp["headmask_petra_pipe"]
+
+            if "skullmask_petra_pipe" in spp:
+                del spp["skullmask_petra_pipe"]
+
+        if "skull_t1_pipe" in params:
+            spp = params["skull_t1_pipe"]
+
+            if "headmask_t1_pipe" in spp:
+                del spp["headmask_t1_pipe"]
+
+            if "skullmask_t1_pipe" in spp:
+                del spp["skullmask_t1_pipe"]
+
+    elif "noskull" in ssoft:
+        print("Found noskull in soft")
+        if "skull_petra_pipe" in params:
+            spp = params["skull_petra_pipe"]
+
+            if "skullmask_petra_pipe" in spp:
+                del spp["skullmask_petra_pipe"]
+
+        if "skull_t1_pipe" in params:
+            spp = params["skull_t1_pipe"]
+
+            if "skullmask_t1_pipe" in spp:
+                del spp["skullmask_t1_pipe"]
+
+    return params
+
+
+def update_indiv_skull_params(params=None, indiv_params=None,
+                              subjects=None, sessions=None,
+                              extra_wf_name=""):
 
     print(indiv_params)
 
