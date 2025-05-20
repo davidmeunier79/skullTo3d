@@ -249,19 +249,6 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
 
         print("Using default params file:", params_file)
 
-        params, indiv_params, extra_wf_name = update_params(
-            ssoft=ssoft, subjects=subjects, sessions=sessions,
-            params_file=params_file, indiv_params_file=indiv_params_file)
-
-        params = update_skull_params(
-            ssoft=ssoft, params=params)
-
-        params, indiv_params, extra_wf_name = update_indiv_skull_params(
-            params, indiv_params,
-            subjects=subjects,
-            sessions=sessions,
-            extra_wf_name=extra_wf_name)
-
     else:
 
         # format for relative path
@@ -273,10 +260,7 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
 
         print("Using orig params file:", params_file)
 
-        params = json.load(open(params_file))
-
         extra_wf_name = "_orig"
-        indiv_params = {}
 
         # indiv_params
         if indiv_params_file is not None:
@@ -286,9 +270,19 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
 
             assert op.exists(indiv_params_file), "Error with file {}".format(
                 indiv_params_file)
-            indiv_params = json.load(open(indiv_params_file))
 
-        print("Using indiv_params:", indiv_params)
+    params, indiv_params, extra_wf_name = update_params(
+        ssoft=ssoft, subjects=subjects, sessions=sessions,
+        params_file=params_file, indiv_params_file=indiv_params_file)
+
+    params = update_skull_params(
+        ssoft=ssoft, params=params)
+
+    params, indiv_params, extra_wf_name = update_indiv_skull_params(
+        params, indiv_params,
+        subjects=subjects,
+        sessions=sessions,
+        extra_wf_name=extra_wf_name)
 
     # modifying if reorient
     if reorient is not None:
