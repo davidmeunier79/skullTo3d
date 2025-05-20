@@ -35,8 +35,8 @@
         "bet4animal":
         {
             "label": 3,
-            "f": 0.3,
-            "robust": false
+            "f": 0.25,
+            "robust": true
         }
     },
     "debias":
