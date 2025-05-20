@@ -63,35 +63,27 @@ Command line parameters
 The following parameters are mandatory
 --------------------------------------
 
-* -data  *like in macapype*
-the path to your data dataset (existing BIDS format directory)
+* -data : *like in macapype* the path to your data dataset (existing BIDS format directory)
 
-* -out  *like in macapype*
-the path to the output results (an existing path)
+* -out  *like in macapype* : the path to the output results (an existing path)
 
-* -soft  *like in macapype*
-can be one of these : SPM or ANTS (**NB** SPM requires a specific version of macapype/skullTo3d, not available by default)
+* -soft  *like in macapype*: can be one of these : SPM or ANTS (**NB** SPM requires a specific version of macapype/skullTo3d, not available by default)
 
-    In extra, all this option are available (to place after SPM or ANTS): *like in macapype*
+    In addition, all these option are available (to place after SPM or ANTS, e.g) and will change the brain extraction: *like in macapype*
+    * _4animal :  will use bet4animal (FSL) for brain extraction, for faster computation (by default atlas_brex is used)
+    * _quick : will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used) (**NB: ** hd-bet requires a specific version of macapype/skullTo3d, not available by default)
 
-    * _4animal will use bet4animal (FSL), for faster computation (by default atlas_brex is used)
-
-    * _quick will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used) (**NB** hd-bet requires a specific version of macapype/skullTo3d, not available by default)
-
-
-    * _test (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
-
+    This option should be used if the coregistration to template in preparation is not performed correctly:
     * _robustreg (at the end) to have a more robust registration (in two steps)
 
+
+    Finally, these option are available (to place after SPM or ANTS) and will modify the parameters but can be launched in sequence:
+    * _test : (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
     * _prep (at the end) will perform data preparation (no brain extraction and segmentation)
     * _noseg (at the end) will perform data preparation and brain extraction (no segmentation)
-    * _seq (at the end) to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 1)
 
-    In addition some options are specific to skullTo3d:
-
-    *  _skull after SPM or ANTS if you want to process skull or angio *specific to skullTo3d*; otherwise the main pipelines of macapype will be launched (only brain segmentation will be performed) **NB** : *_skullnoisypetra instead of _skull available for macaque with issues on petra*
-
-
+    Some options are specific to skullTo3d:
+    *  _skull after SPM or ANTS if you want to process skull or angio *specific to skullTo3d*; otherwise the main pipelines of macapype will be launched (only brain segmentation will be performed) **NB : ** *_skullnoisypetra instead of _skull available for macaque with issues on petra*
     * _noskullmask (at the end) will perform realignement to stereo and headmask (only realignement for CT)
     * _noheadmask (at the end) will perform only realignement to stereo
 
