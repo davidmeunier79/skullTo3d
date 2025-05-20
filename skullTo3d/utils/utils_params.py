@@ -22,10 +22,18 @@ def update_skull_params(ssoft, params):
             if "skullmask_t1_pipe" in spp:
                 del spp["skullmask_t1_pipe"]
 
+        if "skull_ct_pipe" in params:
+            spp = params["skull_ct_pipe"]
+
+            if "skullmask_petra_pipe" in spp:
+                del spp["skullmask_petra_pipe"]
+
     elif "noskullmask" in ssoft:
+
         print("Found noskull in soft")
-        if "skull_petra_pipe" in params:
-            spp = params["skull_petra_pipe"]
+
+        if "skull_ct_pipe" in params:
+            spp = params["skull_ct_pipe"]
 
             if "skullmask_petra_pipe" in spp:
                 del spp["skullmask_petra_pipe"]
@@ -35,6 +43,12 @@ def update_skull_params(ssoft, params):
 
             if "skullmask_t1_pipe" in spp:
                 del spp["skullmask_t1_pipe"]
+
+        if "skullmask_ct_pipe" in params:
+            spp = params["skull_t1_pipe"]
+
+            if "skullmask_ct_pipe" in spp:
+                del spp["skullmask_ct_pipe"]
 
     return params
 
