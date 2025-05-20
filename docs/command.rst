@@ -70,16 +70,32 @@ the path to your data dataset (existing BIDS format directory)
 the path to the output results (an existing path)
 
 * -soft  *like in macapype*
-can be one of these : SPM or ANTS
-    * with _skull after SPM or ANTS if you want to process skull or angio *specific to skullTo3d*; otherwise the main pipelines of macapype will be launched (only brain segmentation will be performed)
-    * with _robustreg (at the end) to have a more robust registration (in two steps) *like in macapype*
-    * with _test (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png) *like in macapype*
-    * with _prep (at the end) will perform data preparation (no brain extraction and segmentation) *like in macapype*
-    * with _noseg (at the end) will perform data preparation and brain extraction (no segmentation) *like in macapype*
-    * with _seq (at the end) to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 1) *like in macapype*
+can be one of these : SPM or ANTS (**NB** SPM requires a specific version of macapype/skullTo3d, not available by default)
+
+    In extra, all this option are available (to place after SPM or ANTS): *like in macapype*
+
+    * _4animal will use bet4animal (FSL), for faster computation (by default atlas_brex is used)
+
+    * _quick will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used) (**NB** hd-bet requires a specific version of macapype/skullTo3d, not available by default)
 
 
-**Note** : _skullnoisypetra instead of _skull available for macaque with issues on petra
+    * _test (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
+
+    * _robustreg (at the end) to have a more robust registration (in two steps)
+
+    * _prep (at the end) will perform data preparation (no brain extraction and segmentation)
+    * _noseg (at the end) will perform data preparation and brain extraction (no segmentation)
+    * _seq (at the end) to run in sequential mode (all iterables will be processed one after the other; equivalent to -nprocs 1)
+
+    In addition some options are specific to skullTo3d:
+
+    *  _skull after SPM or ANTS if you want to process skull or angio *specific to skullTo3d*; otherwise the main pipelines of macapype will be launched (only brain segmentation will be performed) **NB** : *_skullnoisypetra instead of _skull available for macaque with issues on petra*
+
+
+    * _noskullmask (at the end) will perform realignement to stereo and headmask (only realignement for CT)
+    * _noheadmask (at the end) will perform only realignement to stereo
+
+
 
 --------------------------------------
 The following parameters are exclusive
@@ -90,9 +106,11 @@ The following parameters are exclusive
 a json file specifiying the global parameters of the analysis. See :ref:`Parameters <params>` for more details
 
 * -species  *(mandatory if -params is omitted)*
-followed the NHP species corresponding to the image, e.g. {macaque | marmo | baboon | chimp}
+followed the NHP species corresponding to the image, e.g. {macaque | marmo}
 
-In extra, marmoT2 can be used for segmenting from the T2w image (by default, T1w is used)
+**NB** marmoT2 can be used for segmenting from the T2w image (by default, T1w is used)
+**NB** macaque_0p5 is available to use downsampled template (faster results)
+
 --------------------------------------
 The following parameters are optional
 --------------------------------------
