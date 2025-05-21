@@ -234,51 +234,60 @@
 </section>
 <section id="data-preparation-padded-files">
 <h2>Data Preparation (Padded files)<a class="headerlink" href="#data-preparation-padded-files" title="Link to this heading">¶</a></h2>
-<p>If pad_template is defined in params (normalily used to coregister stereo to petra, T1w and CT):
-<em>sub-Stevie_ses-01_space-stereo_desc-pad_T1w.nii.gz</em>
-<em>sub-Stevie_ses-01_space-stereo_desc-pad_T2w.nii.gz</em></p>
-<p>Some files computed with macapype are put in the same space after pad:
-<em>sub-Stevie_ses-01_space-stereo_desc-pad_desc-brain_mask.nii.gz</em>
-<em>sub-Stevie_ses-01_space-stereo_desc-pad_desc-brain_dseg.nii.gz</em></p>
-<p>If -pad is defined in command line (See <cite>Commands &lt;commands&gt;</cite>):</p>
-<p><em>sub-Stevie_ses-01_space-native_desc-pad_T1w.nii.gz</em>
-<em>sub-Stevie_ses-01_space-native_desc-pad_T2w.nii.gz</em></p>
+<p>If pad_template is defined in params (normalily used to coregister stereo to petra, T1w and CT):</p>
+<p><em>sub-Stevie_ses-01_space-stereo_desc-pad_T1w.nii.gz</em></p>
+<p><em>sub-Stevie_ses-01_space-stereo_desc-pad_T2w.nii.gz</em>
+|
+Some files computed with macapype are put in the same space after pad:</p>
+<p><em>sub-Stevie_ses-01_space-stereo_desc-pad_desc-brain_mask.nii.gz</em></p>
+<p><em>sub-Stevie_ses-01_space-stereo_desc-pad_desc-brain_dseg.nii.gz</em>
+|
+If -pad is defined in command line (See <cite>Commands &lt;commands&gt;</cite>):</p>
+<p><em>sub-Stevie_ses-01_space-native_desc-pad_T1w.nii.gz</em></p>
+<p><em>sub-Stevie_ses-01_space-native_desc-pad_T2w.nii.gz</em></p>
 </section>
 <section id="petra-skull-extraction">
 <h2>Petra Skull extraction<a class="headerlink" href="#petra-skull-extraction" title="Link to this heading">¶</a></h2>
-<p>Petra in stereo space:
-<em>sub-Stevie_ses-01_space-stereo_desc-petra_PDw.nii.gz</em></p>
-<p>Headmask in stereo and native (normally corresponding to native T1w) spaces:
-<em>sub-Stevie_ses-01_space-stereo_desc-petra_headmask.nii.gz</em>
-<em>sub-Stevie_ses-01_space-native_desc-petra_headmask.nii.gz</em></p>
-<p>Skullmask in stereo and native (normally corresponding to native T1w) spaces:
-<em>sub-Stevie_ses-01_space-stereo_desc-petra_skullmask.nii.gz</em>
-<em>sub-Stevie_ses-01_space-native_desc-petra_skullmask.nii.gz</em></p>
-<p>Meshes of head and skull:
-<em>sub-Stevie_ses-01_desc-petra_skullmask.stl</em>
-<em>sub-Stevie_ses-01_desc-petra_headmask.stl</em></p>
+<p>Petra in stereo space:</p>
+<p><em>sub-Stevie_ses-01_space-stereo_desc-petra_PDw.nii.gz</em>
+|
+Headmask in stereo and native (normally corresponding to native T1w) spaces:</p>
+<p><em>sub-Stevie_ses-01_space-stereo_desc-petra_headmask.nii.gz</em></p>
+<p><em>sub-Stevie_ses-01_space-native_desc-petra_headmask.nii.gz</em>
+|
+Skullmask in stereo and native (normally corresponding to native T1w) spaces:</p>
+<p><em>sub-Stevie_ses-01_space-stereo_desc-petra_skullmask.nii.gz</em></p>
+<p><em>sub-Stevie_ses-01_space-native_desc-petra_skullmask.nii.gz</em>
+|
+Meshes of head and skull:</p>
+<p><em>sub-Stevie_ses-01_desc-petra_skullmask.stl</em></p>
+<p><em>sub-Stevie_ses-01_desc-petra_headmask.stl</em></p>
 </section>
 <section id="t1w-skull-extraction">
 <h2>T1w Skull extraction<a class="headerlink" href="#t1w-skull-extraction" title="Link to this heading">¶</a></h2>
-<p>Headmask in stereo and native spaces:
-<em>sub-Stevie_ses-01_space-stereo_desc-t1_headmask.nii.gz</em>
-<em>sub-Stevie_ses-01_space-native_desc-t1_headmask.nii.gz</em></p>
-<p>Skullmask in stereo and native spaces:
-<em>sub-Stevie_ses-01_space-stereo_desc-t1_skullmask.nii.gz</em>
-<em>sub-Stevie_ses-01_space-native_desc-t1_skullmask.nii.gz</em></p>
-<p>Meshes of head and skull:
-<em>sub-Stevie_ses-01_desc-t1_skullmask.stl</em>
-<em>sub-Stevie_ses-01_desc-t1_headmask.stl</em> (is missing so far)</p>
+<p>Headmask in stereo and native spaces:</p>
+<p><em>sub-Stevie_ses-01_space-stereo_desc-t1_headmask.nii.gz</em></p>
+<p><em>sub-Stevie_ses-01_space-native_desc-t1_headmask.nii.gz</em>
+|
+Skullmask in stereo and native spaces:</p>
+<p><em>sub-Stevie_ses-01_space-stereo_desc-t1_skullmask.nii.gz</em></p>
+<p><em>sub-Stevie_ses-01_space-native_desc-t1_skullmask.nii.gz</em>
+|
+Meshes of head and skull:</p>
+<p><em>sub-Stevie_ses-01_desc-t1_skullmask.stl</em></p>
+<p><em>sub-Stevie_ses-01_desc-t1_headmask.stl</em> (is missing so far)</p>
 </section>
 <section id="ct-skull-extraction">
 <h2>CT Skull extraction<a class="headerlink" href="#ct-skull-extraction" title="Link to this heading">¶</a></h2>
-<p>CT file in stereo space:
-<em>sub-Stevie_ses-01_space-stereo_desc-ct_T2star.nii.gz</em></p>
-<p>Skullmask in stereo and native spaces:
-<em>sub-Stevie_ses-01_space-stereo-ct_skullmask.nii.gz</em>
-<em>sub-Stevie_ses-01_space-native_desc-ct_skullmask.nii.gz</em></p>
-<p>Mesh of skull:
-<em>sub-Stevie_ses-01_desc-ct_skullmask.stl</em></p>
+<p>CT file in stereo space:</p>
+<p><em>sub-Stevie_ses-01_space-stereo_desc-ct_T2star.nii.gz</em>
+|
+Skullmask in stereo and native spaces:</p>
+<p><em>sub-Stevie_ses-01_space-stereo-ct_skullmask.nii.gz</em></p>
+<p><em>sub-Stevie_ses-01_space-native_desc-ct_skullmask.nii.gz</em>
+|
+Mesh of skull:</p>
+<p><em>sub-Stevie_ses-01_desc-ct_skullmask.stl</em></p>
 <p><strong>NB</strong> if pad_template is defined (as normally is by default in all skullTo3d parameter files…) , stereo corresponds to desc-pad files for macapype processing.</p>
 </section>
 </section>
