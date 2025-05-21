@@ -19,6 +19,7 @@ For all files provided by macapype, see `Derivatives <https://macatools.github.i
 
 
 Data Preparation (Padded files)
+*******************************
 
 If pad_template is defined in params (normalily used to coregister stereo to petra, T1w and CT):
 *sub-Stevie_ses-01_space-stereo_desc-pad_T1w.nii.gz*
