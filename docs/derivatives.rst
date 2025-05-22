@@ -57,7 +57,9 @@ Headmask in stereo and native (normally corresponding to native T1w) spaces:
 *sub-Stevie_ses-01_space-stereo_desc-petra_headmask.nii.gz*
 
 *sub-Stevie_ses-01_space-native_desc-petra_headmask.nii.gz*
+
 |
+
 Skullmask in stereo and native (normally corresponding to native T1w) spaces:
 
 *sub-Stevie_ses-01_space-stereo_desc-petra_skullmask.nii.gz*
