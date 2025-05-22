@@ -1,106 +1,154 @@
 {
     "skull_t1_pipe":
     {
-        "t1_head_mask_thr":
+        "comment": "will be removed if option _noheadmask or _noskullmask is provided in -soft)",
+        "headmask_t1_pipe":
         {
-            "params": "Threshold (FSL)",
+            "comment": "the following nodes are mutually exclusive, but are mandatory if headmask_t1_pipe is defined",
+            "t1_head_li_mask":
+            {
+                "comment": "DEFAULT (do not need to be specied in params)",
+                "params": "Uses threshold_li from skimage.filters (from macapype, also used in remove_capsule_pipe)",
 
-            "thr": "300"
+                "comment": "No argument"
 
-        },
-        "comment": "OR",
-        "t1_head_auto_mask":
-        {
-            "params": "mask_auto_img (python)",
+            },
+            "comment": "OR",
+            "t1_head_mask_thr":
+            {
+                "comment": "OPTIONAL",
+                "params": "Threshold (FSL)",
 
-            "kmeans": true,
-            "operation": "lower",
-            "index": 2
-        },
+                "thr": "300"
 
-        "t1_head_dilate":
-        {
+            },
+            "comment": "OR",
+            "t1_head_auto_mask":
+            {
+                "comment": "OPTIONAL",
+                "params": "mask_auto_img (python)",
 
-            "params": "DilateImage (FSL)",
+                "kmeans": true,
+                "operation": "lower",
+                "index": 2
+            },
 
-            "operation" : "modal",
-            "kernel_shape" : "boxv",
-            "kernel_size" : 13.0
-        },
-        "t1_head_erode":
-        {
+            "comment": "The following 2 nodes are OPTIONAL either have to be both defined or none of them",
+            "comment": "allows to cut some elements before gcc is applied",
+            "comment": "are used in -soft _skullnoisypetra",
+            "t1_head_gcc_erode":
+            {
+                "kernel_shape": "boxv",
+                "kernel_size": 3.0
+            },
+            "t1_head_gcc_dilate":
+            {
+                "operation": "modal",
+                "kernel_shape": "boxv",
+                "kernel_size": 3.0
+            },
 
-            "params": "ErodeImage (FSL)",
+            "t1_head_dilate":
+            {
 
-            "kernel_shape" : "boxv",
-            "kernel_size" : 13.0
-        },
+                "params": "DilateImage (FSL)",
 
-        "t1_debias":
-        {
-            "comment": "OPTIONAL",
-            "params": "N4BiasFieldCorrection (ANTS)"
+                "operation" : "modal",
+                "kernel_shape" : "boxv",
+                "kernel_size" : 13.0
+            },
+            "t1_head_erode":
+            {
 
-        },
+                "params": "ErodeImage (FSL)",
 
-        "t1_fast":
-        {
-            "params": "FAST (FSL)",
-        },
-
-
-        "t1_skull_auto_mask":
-        {
-            "comment": "OPTIONAL",
-            "params": "mask_auto_img (python)",
-
-            "kmeans": true,
-            "operation": "lower",
-            "index": 2
-        },
-        "comment": "OR",
-        "t1_skull_mask_thr":
-        {
-            "comment": "OPTIONAL",
-            "params": "Threshold (FSL)",
-
-            "thr": "300"
-
-        },
-
-        "t1_head_erode_skin":
-        {
-
-            "comment": "OPTIONAL",
-            "params": "ErodeImage (FSL)",
-
-            "kernel_shape" : "boxv",
-            "kernel_size" : 14.0
+                "kernel_shape" : "boxv",
+                "kernel_size" : 13.0
+            }
         },
 
-
-        "t1_skull_dilate":
+        "comment": "will be removed if option _noskullmask is provided in -soft)",
+        "skullmask_t1_pipe":
         {
-            "params": "DilateImage (FSL)",
 
-            "operation" : "modal",
-            "kernel_shape" : "boxv",
-            "kernel_size" : 13.0
-        },
-        "t1_skull_erode":
-        {
-            "params": "ErodeImage (FSL)",
+            "t1_fast":
+            {
+                "params": "FAST (FSL)",
+            },
 
-            "kernel_shape" : "boxv",
-            "kernel_size" : 13.0
-        },
 
-        "t1_skull_fov":
-        {
-            "comment": "OPTIONAL",
-            "params": "RobustFOV (FSL)",
+            "comment": "The following 2 nodes are OPTIONAL and mutually exclusive",
+            "comment": "If not defined fast pve_0 is used as mask for skull",
+            "t1_skull_auto_mask":
+            {
+                "comment": "OPTIONAL",
+                "params": "mask_auto_img (python)",
 
-            "brainsize" : "45",
+                "kmeans": true,
+                "operation": "lower",
+                "index": 2
+            },
+            "comment": "OR",
+            "t1_skull_mask_thr":
+            {
+                "comment": "OPTIONAL",
+                "params": "Threshold (FSL)",
+
+                "thr": "300"
+
+            },
+
+            "t1_head_erode_skin":
+            {
+
+                "comment": "OPTIONAL",
+                "params": "ErodeImage (FSL)",
+
+                "kernel_shape" : "boxv",
+                "kernel_size" : 14.0
+            },
+
+
+            "comment": "The following 2 nodes are OPTIONAL either have to be both defined or none of them",
+            "comment": "allows to cut some elements before gcc is applied",
+            "comment": "are used in -soft _skullnoisypetra",
+            "t1_skull_gcc_erode":
+            {
+                "kernel_shape": "boxv",
+                "kernel_size": 3.0
+            },
+            "t1_skull_gcc_dilate":
+            {
+                "operation": "modal",
+                "kernel_shape": "boxv",
+                "kernel_size": 3.0
+            },
+
+
+
+            "t1_skull_dilate":
+            {
+                "params": "DilateImage (FSL)",
+
+                "operation" : "modal",
+                "kernel_shape" : "boxv",
+                "kernel_size" : 13.0
+            },
+            "t1_skull_erode":
+            {
+                "params": "ErodeImage (FSL)",
+
+                "kernel_shape" : "boxv",
+                "kernel_size" : 13.0
+            },
+
+            "t1_skull_fov":
+            {
+                "comment": "OPTIONAL",
+                "params": "RobustFOV (FSL)",
+
+                "brainsize" : "45",
+            }
         },
 
     },
@@ -117,39 +165,44 @@
             "params": "RegAladin (NiftyReg)"
 
         },
-        "ct_head_mask_thr":
+
+        "comment": "will be removed if option _noheadmask or _noskullmask is provided in -soft)",
+        "skullmask_ct_pipe":
         {
-            "params": "Threshold (FSL)",
+            "comment": "the following nodes are mutually exclusive, but are mandatory if skullmask_ct_pipe is defined ",
 
-            "thr": "300"
+            "ct_head_mask_thr":
+            {
+                "params": "Threshold (FSL)",
 
-        },
-        "comment": "OR",
-        "ct_head_auto_mask":
-        {
-            "params": "mask_auto_img (python)",
+                "thr": "300"
 
-            "kmeans": true,
-            "operation": "lower",
-            "index": 2
-        },
+            },
+            "comment": "OR",
+            "ct_head_auto_mask":
+            {
+                "params": "mask_auto_img (python)",
 
+                "kmeans": true,
+                "operation": "lower",
+                "index": 2
+            },
 
-        "ct_skull_dilate":
-        {
-            "params": "DilateImage (FSL)",
+            "ct_skull_dilate":
+            {
+                "params": "DilateImage (FSL)",
 
-            "operation" : "modal",
-            "kernel_shape" : "boxv",
-            "kernel_size" : 13.0
-        },
-        "ct_skull_erode":
-        {
-            "params": "ErodeImage (FSL)",
+                "operation" : "modal",
+                "kernel_shape" : "boxv",
+                "kernel_size" : 13.0
+            },
+            "ct_skull_erode":
+            {
+                "params": "ErodeImage (FSL)",
 
-            "kernel_shape" : "boxv",
-            "kernel_size" : 13.0
-        }
+                "kernel_shape" : "boxv",
+                "kernel_size" : 13.0
+            }
     },
 
     "skull_petra_pipe":
@@ -162,116 +215,163 @@
 
         },
 
-        "petra_itk_debias":
-        {
-            "comment": "OPTIONAL",
-            "params": "SimpleITK N4BiasFieldCorrectionImageFilter dirty wrap (defined in macapype.nodes.correc_bias)",
-            "comment": "Should be made a proper nipype node ",
-
-        },
-
-        "petra_head_mask_thr":
-        {
-            "params": "Threshold (FSL)",
-            "thr": "300"
-        },
-        "comment": "OR",
-        "petra_head_auto_mask":
-        {
-            "params": "mask_auto_img (python)",
-
-            "kmeans": true,
-            "operation": "lower",
-            "index": 2
-        },
-
-
-        "petra_head_dilate":
+        "comment": "will be removed if option _noheadmask or _noskullmask is provided in -soft)",
+        "headmask_petra_pipe":
         {
 
-            "params": "DilateImage (FSL)",
+            "petra_itk_debias":
+            {
+                "comment": "OPTIONAL",
+                "params": "SimpleITK N4BiasFieldCorrectionImageFilter dirty wrap (defined in macapype.nodes.correc_bias)",
+                "comment": "TODO: Should be made a proper nipype node",
 
-            "operation" : "modal",
-            "kernel_shape" : "boxv",
-            "kernel_size" : 13.0
+            },
+
+
+            "comment": "the following nodes are mutually exclusive, but are mandatory if headmask_t1_pipe is defined",
+            "petra_head_li_mask":
+            {
+                "comment": "DEFAULT (do not need to be specied in params)",
+                "params": "Uses threshold_li from skimage.filters (from macapype, also used in remove_capsule_pipe)",
+
+                "comment": "No argument"
+
+            },
+            "comment": "OR",
+            "petra_head_mask_thr":
+            {
+                "params": "Threshold (FSL)",
+                "thr": "300"
+            },
+            "comment": "OR",
+            "petra_head_auto_mask":
+            {
+                "params": "mask_auto_img (python)",
+
+                "kmeans": true,
+                "operation": "lower",
+                "index": 2
+            },
+
+
+            "comment": "The following 2 nodes are OPTIONAL either have to be both defined or none of them",
+            "comment": "allows to cut some elements before gcc is applied",
+            "comment": "are used in -soft _skullnoisypetra",
+            "petra_head_gcc_erode":
+            {
+                "kernel_shape": "boxv",
+                "kernel_size": 3.0
+            },
+            "petra_head_gcc_dilate":
+            {
+                "operation": "modal",
+                "kernel_shape": "boxv",
+                "kernel_size": 3.0
+            },
+
+            "petra_head_dilate":
+            {
+
+                "params": "DilateImage (FSL)",
+
+                "operation" : "modal",
+                "kernel_shape" : "boxv",
+                "kernel_size" : 13.0
+            },
+            "petra_head_erode":
+            {
+
+                "params": "ErodeImage (FSL)",
+
+                "kernel_shape" : "boxv",
+                "kernel_size" : 13.0
+            }
         },
-        "petra_head_erode":
+
+        "comment": "will be removed if option _noskullmask is provided in -soft)",
+        "skullmask_petra_pipe":
         {
 
-            "params": "ErodeImage (FSL)",
-
-            "kernel_shape" : "boxv",
-            "kernel_size" : 13.0
-        },
-
-
-        "petra_debias":
-        {
-            "comment": "OPTIONAL",
-            "params": "N4BiasFieldCorrection (ANTS)"
-
-        },
-
-        "petra_fast":
-        {
-            "params": "FAST (FSL)",
-        },
+            "petra_fast":
+            {
+                "params": "FAST (FSL)",
+            },
 
 
-        "petra_skull_auto_mask":
-        {
-            "comment": "OPTIONAL",
-            "params": "mask_auto_img (python)",
+            "comment": "The following 2 nodes are OPTIONAL and mutually exclusive",
+            "comment": "If not defined fast pve_0 is used as mask for skull",
+            "petra_skull_auto_mask":
+            {
+                "comment": "OPTIONAL",
+                "params": "mask_auto_img (python)",
 
-            "kmeans": true,
-            "operation": "lower",
-            "index": 2
-        },
-        "comment": "OR",
-        "petra_skull_mask_thr":
-        {
-            "comment": "OPTIONAL",
-            "params": "Threshold (FSL)",
+                "kmeans": true,
+                "operation": "lower",
+                "index": 2
+            },
+            "comment": "OR",
+            "petra_skull_mask_thr":
+            {
+                "comment": "OPTIONAL",
+                "params": "Threshold (FSL)",
 
-            "thr": "300"
+                "thr": "300"
 
-        },
+            },
 
-        "petra_head_erode_skin":
-        {
+            "comment": "The following 2 nodes are OPTIONAL either have to be both defined or none of them",
+            "comment": "allows to cut some elements before gcc is applied",
+            "comment": "are used in -soft _skullnoisypetra",
+            "petra_skull_gcc_erode":
+            {
+                "kernel_shape": "boxv",
+                "kernel_size": 3.0
+            },
+            "petra_skull_gcc_dilate":
+            {
+                "operation": "modal",
+                "kernel_shape": "boxv",
+                "kernel_size": 3.0
+            },
 
-            "comment": "OPTIONAL",
-            "params": "ErodeImage (FSL)",
+            "petra_head_erode_skin":
+            {
 
-            "kernel_shape" : "boxv",
-            "kernel_size" : 14.0
-        },
+                "comment": "OPTIONAL",
+                "params": "ErodeImage (FSL)",
+
+                "kernel_shape" : "boxv",
+                "kernel_size" : 14.0
+            },
 
 
-        "petra_skull_dilate":
-        {
-            "params": "DilateImage (FSL)",
+            "petra_skull_dilate":
+            {
+                "params": "DilateImage (FSL)",
 
-            "operation" : "modal",
-            "kernel_shape" : "boxv",
-            "kernel_size" : 13.0
-        },
-        "petra_skull_erode":
-        {
-            "params": "ErodeImage (FSL)",
+                "operation" : "modal",
+                "kernel_shape" : "boxv",
+                "kernel_size" : 13.0
+            },
+            "petra_skull_erode":
+            {
+                "params": "ErodeImage (FSL)",
 
-            "kernel_shape" : "boxv",
-            "kernel_size" : 13.0
-        },
+                "kernel_shape" : "boxv",
+                "kernel_size" : 13.0
+            },
 
-        "petra_skull_fov":
-        {
-            "comment": "OPTIONAL",
-            "params": "RobustFOV (FSL)",
+            "petra_skull_fov":
+            {
+                "comment": "OPTIONAL",
+                "params": "RobustFOV (FSL)",
 
-            "brainsize" : "45",
-        },
+                "brainsize" : "45",
+            },
     },
+
+
+    "comment": "Still optional, should be used with caution",
     "angio_pipe":
     {
 
