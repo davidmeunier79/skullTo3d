@@ -77,15 +77,21 @@ mandatory parameters
 
   **NB:** hd-bet requires a specific version of macapype/skullTo3d, not available by default
 
+|
+
   This option should be used if the coregistration to template in preparation is not performed correctly:
 
   * ``_robustreg`` (at the end) to have a more robust registration (in two steps)
+
+|
 
   Finally, these option are available (to place after SPM or ANTS) and will modify the parameters but can be launched in sequence:
 
   * ``_test`` : (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
   * ``_prep`` (at the end) will perform data preparation (no brain extraction and segmentation)
   * ``_noseg`` (at the end) will perform data preparation and brain extraction (no segmentation)
+
+|
 
   **Some options are specific to skullTo3d:**
 
