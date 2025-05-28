@@ -93,7 +93,7 @@ mandatory parameters
 
   **NB :** ``_skullnoisypetra`` instead of ``_skull`` available for macaque with issues on petra
 
-  **NB :** ``-soft skull`` without processing brain is possible, but is still experimental. It only works if ``-skull_dt CT petra`` and -deriv -padback are NOT defined
+  **NB :** ``-soft skull`` without processing brain is possible, but is still experimental. It only works if ``-skull_dt CT petra`` and ``-deriv`` and ``-padback`` are NOT defined
 
   * ``_noskullmask`` (at the end) will perform realignement to stereo and headmask (only realignement for CT)
   * ``_noheadmask`` (at the end) will perform only realignement to stereo
