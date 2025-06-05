@@ -222,6 +222,15 @@ def _create_headmask_t1_pipe(name="headmask_t1_pipe", params={}):
         inputnode, ('indiv_params', parse_key, "t1_head_erode"),
         t1_head_erode, "indiv_params")
 
+    # mesh_t1_skull #######
+    mesh_t1_head = pe.Node(
+        IsoSurface(),
+        name="mesh_t1_head")
+
+    headmask_t1_pipe.connect(
+        t1_head_erode, "out_file",
+        mesh_t1_head, "nii_file")
+
     # t1_hmasked
     t1_hmasked = pe.Node(interface=ApplyMask(),
                          name="t1_hmasked")
@@ -324,6 +333,26 @@ def _create_skullmask_t1_pipe(name="skullmask_t1_pipe", params={}):
         skullmask_t1_pipe.connect(
             t1_head_erode_skin, "out_file",
             t1_head_skin_masked, "mask_file")
+
+        # mesh_t1_rawskull #######
+        mesh_t1_rawskull = pe.Node(
+            IsoSurface(),
+            name="mesh_t1_rawskull")
+
+        skullmask_t1_pipe.connect(
+            t1_head_skin_masked, "out_file",
+            mesh_t1_rawskull, "nii_file")
+
+    else:
+
+        # mesh_t1_rawskull #######
+        mesh_t1_rawskull = pe.Node(
+            IsoSurface(),
+            name="mesh_t1_rawskull")
+
+        skullmask_t1_pipe.connect(
+            t1_skull_mask_binary, "out_file",
+            mesh_t1_rawskull, "nii_file")
 
     if "t1_skull_gcc_erode" in params and \
             "t1_skull_gcc_dilate" in params:
@@ -497,8 +526,9 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     outputnode = pe.Node(
         niu.IdentityInterface(
             fields=["t1_skull_mask", "t1_skull_stl",
+                    "t1_rawskull_mask", "t1_rawskull_stl",
                     "robustt1_skull_mask", "robustt1_skull_stl",
-                    "t1_head_mask"]),
+                    "t1_head_mask", "t1_head_stl",]),
         name='outputnode')
 
     # Creating headmask_t1_pipe
@@ -528,6 +558,10 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
         headmask_t1_pipe, "t1_head_erode.out_file",
         outputnode, "t1_head_mask")
 
+    skull_t1_pipe.connect(
+        headmask_t1_pipe, "mesh_t1_head.stl_file",
+        outputnode, "t1_head_stl")
+
     # Creating skullmask_t1_pipe
     if "skullmask_t1_pipe" in params:
         skullmask_t1_pipe = _create_skullmask_t1_pipe(
@@ -544,13 +578,29 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     else:
         return skull_t1_pipe
 
+    # outputnode
     skull_t1_pipe.connect(
         skullmask_t1_pipe, "mesh_t1_skull.stl_file",
         outputnode, "t1_skull_stl")
 
     skull_t1_pipe.connect(
-        skullmask_t1_pipe, "t1_skull_erode.out_file",
+        skullmask_t1_pipe, "t1_skull_mask_binary.out_file",
         outputnode, "t1_skull_mask")
+
+    # rawskull t1
+    skull_t1_pipe.connect(
+        skullmask_t1_pipe, "mesh_t1_rawskull.stl_file",
+        outputnode, "t1_rawskull_stl")
+
+    if "t1_head_erode_skin" in params.keys():
+        skull_t1_pipe.connect(
+            skullmask_t1_pipe, "t1_head_skin_masked.out_file",
+            outputnode, "t1_rawskull_mask")
+
+    else:
+        skull_t1_pipe.connect(
+            skullmask_t1_pipe, "t1_skull_mask_binary.out_file",
+            outputnode, "t1_rawskull_mask")
 
     if "t1_skull_fov" in params.keys():
         skull_t1_pipe.connect(
