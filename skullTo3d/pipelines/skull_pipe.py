@@ -592,7 +592,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
         skullmask_t1_pipe, "mesh_t1_rawskull.stl_file",
         outputnode, "t1_rawskull_stl")
 
-    if "t1_head_erode_skin" in params.keys():
+    if "t1_head_erode_skin" in params['skullmask_t1_pipe']:
         skull_t1_pipe.connect(
             skullmask_t1_pipe, "t1_head_skin_masked.out_file",
             outputnode, "t1_rawskull_mask")
@@ -602,7 +602,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
             skullmask_t1_pipe, "t1_skull_mask_binary.out_file",
             outputnode, "t1_rawskull_mask")
 
-    if "t1_skull_fov" in params.keys():
+    if "t1_skull_fov" in params['skullmask_t1_pipe']:
         skull_t1_pipe.connect(
             skullmask_t1_pipe, "t1_skull_fov.out_roi",
             outputnode, "robustt1_skull_mask")
