@@ -357,7 +357,7 @@ def _create_skullmask_t1_pipe(name="skullmask_t1_pipe", params={}):
     if "t1_skull_gcc_erode" in params and \
             "t1_skull_gcc_dilate" in params:
 
-        # t1_skull_erode ####### [okey][json]
+        # t1_skull_gcc_erode ####### [okey][json]
         t1_skull_gcc_erode = NodeParams(
             interface=ErodeImage(),
             params=parse_key(params, "t1_skull_gcc_erode"),
@@ -597,10 +597,18 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
             skullmask_t1_pipe, "t1_head_skin_masked.out_file",
             outputnode, "t1_rawskull_mask")
 
+        skull_t1_pipe.connect(
+            skullmask_t1_pipe, "t1_head_skin_masked.out_file",
+            outputnode, "t1_skull_mask")
     else:
         skull_t1_pipe.connect(
             skullmask_t1_pipe, "t1_skull_mask_binary.out_file",
             outputnode, "t1_rawskull_mask")
+
+        skull_t1_pipe.connect(
+            skullmask_t1_pipe, "t1_skull_mask_binary.out_file",
+            outputnode, "t1_skull_mask")
+
 
     if "t1_skull_fov" in params['skullmask_t1_pipe']:
         skull_t1_pipe.connect(
