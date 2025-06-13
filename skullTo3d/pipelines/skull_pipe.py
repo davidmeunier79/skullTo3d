@@ -534,7 +534,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     # Creating headmask_t1_pipe
     if "headmask_t1_pipe" in params:
         headmask_t1_pipe = _create_headmask_t1_pipe(
-            name="headmask_t1_pipe", params=params["headmask_t1_pipe"])
+            params=params["headmask_t1_pipe"])
 
         skull_t1_pipe.connect(inputnode, "stereo_T1",
                               headmask_t1_pipe, "inputnode.stereo_T1")
@@ -565,7 +565,7 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     # Creating skullmask_t1_pipe
     if "skullmask_t1_pipe" in params:
         skullmask_t1_pipe = _create_skullmask_t1_pipe(
-            name="skullmask_t1_pipe", params=params["skullmask_t1_pipe"])
+            params=params["skullmask_t1_pipe"])
 
         skull_t1_pipe.connect(headmask_t1_pipe, "t1_hmasked.out_file",
                               skullmask_t1_pipe, "inputnode.headmasked_T1")
