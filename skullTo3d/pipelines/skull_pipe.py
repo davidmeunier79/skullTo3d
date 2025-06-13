@@ -582,10 +582,10 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
     skull_t1_pipe.connect(
         skullmask_t1_pipe, "mesh_t1_skull.stl_file",
         outputnode, "t1_skull_stl")
-    #
-    # skull_t1_pipe.connect(
-    #     skullmask_t1_pipe, " t1_skull_erode.out_file",
-    #     outputnode, "t1_skull_mask")
+
+    skull_t1_pipe.connect(
+        skullmask_t1_pipe, " t1_skull_erode.out_file",
+        outputnode, "t1_skull_mask")
 
     # rawskull t1
     skull_t1_pipe.connect(
@@ -596,18 +596,18 @@ def create_skull_t1_pipe(name="skull_t1_pipe", params={}):
         skull_t1_pipe.connect(
             skullmask_t1_pipe, "t1_head_skin_masked.out_file",
             outputnode, "t1_rawskull_mask")
-
-        skull_t1_pipe.connect(
-            skullmask_t1_pipe, "t1_head_skin_masked.out_file",
-            outputnode, "t1_skull_mask")
+        #
+        # skull_t1_pipe.connect(
+        #     skullmask_t1_pipe, "t1_head_skin_masked.out_file",
+        #     outputnode, "t1_skull_mask")
     else:
         skull_t1_pipe.connect(
             skullmask_t1_pipe, "t1_skull_mask_binary.out_file",
             outputnode, "t1_rawskull_mask")
-
-        skull_t1_pipe.connect(
-            skullmask_t1_pipe, "t1_skull_mask_binary.out_file",
-            outputnode, "t1_skull_mask")
+        #
+        # skull_t1_pipe.connect(
+        #     skullmask_t1_pipe, "t1_skull_mask_binary.out_file",
+        #     outputnode, "t1_skull_mask")
 
 
     if "t1_skull_fov" in params['skullmask_t1_pipe']:
