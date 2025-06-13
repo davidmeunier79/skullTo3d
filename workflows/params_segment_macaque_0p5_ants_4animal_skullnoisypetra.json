@@ -88,10 +88,6 @@
     {
         "headmask_t1_pipe":
         {
-            "t1_head_mask_thr":
-            {
-                "thresh" : 250
-            },
             "t1_head_dilate":
             {
                 "operation": "modal",
@@ -116,7 +112,7 @@
             "t1_head_erode_skin":
             {
                 "kernel_shape": "boxv",
-                "kernel_size": 17.0
+                "kernel_size": 9.0
             },
             "t1_skull_gcc_erode":
             {
