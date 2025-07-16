@@ -1,56 +1,50 @@
 {
     "general":
     {
-        "template_name": "NMT_v2.0_asym"
+        "template_name": "MBM_v3.0.1_6seg_stereoINT"
     },
     "short_preparation_pipe":
     {
-        "aladin_T2_on_T1":{},
-    	"crop_aladin_pipe":
-    	{
+        "aladin_T2_on_T1": {},
+        "crop_aladin_pipe":
+        {
             "reg_T1_on_template":
             {
-                "rig_only_flag" : true
+                "rig_only_flag":true
             },
             "reg_T1_on_template2":
             {
                 "rig_only_flag":true
             }
-    	},
+        },
         "pad_template":
         {
             "operation" : "PadImage",
-            "op2" : "70"
+            "op2" : "90"
         },
         "denoise":
         {
-            "shrink_factor": 2
         },
-        "N4debias":
+        "fast":
         {
-            "dimension": 3,
-            "bspline_fitting_distance": 200,
-            "n_iterations": [50, 50, 40, 30],
-            "convergence_threshold": 1e-08,
-            "shrink_factor": 2,
-            "args": "-r 0 --verbose 1"
+            "args": "-l 3"
         }
     },
     "extract_pipe":
     {
         "atlas_brex":
         {
-            "f": 0.5,
+            "f": 0.62,
             "reg": 1,
-            "wrp": "10,10,10",
-            "msk": "a,0,0",
-            "dil": 2,
-            "nrm": 1
+            "msk": "b,0.5,0,0",
+            "wrp": "5,5,5",
+            "dil": 4,
+            "vox": 1
         }
     },
     "debias":
     {
-        "s": 2
+        "s": 4
     },
     "brain_segment_pipe":
     {
@@ -62,25 +56,29 @@
         },
         "segment_atropos_pipe":
         {
-            "use_priors": 0.0,
+            "use_priors":0.0,
+
             "Atropos":
             {
                 "dimension": 3
             },
+
             "tissue_dict":
             {
-                "gm": [2, 3],
-                "wm": 4,
-                "csf": [1, 5]
+                "gm": [1,2],
+                "wm": 3,
+                "csf": 4
             }
         }
     },
-    "export_5tt_pipe": {},
+    "export_5tt_pipe":
+    {
+    },
     "IsoSurface_brain_pipe":
     {
         "merge_brain_tissues":
         {
-            "keep_indexes": [2, 3, 4]
+            "keep_indexes": [1,2,3]
         }
     },
     "IsoSurface_tissues_pipe":
@@ -107,24 +105,12 @@
         {
             "t1_fast":
             {
-                "args": "-l 10",
-                "img_type": 1,
+                "args": "-l 4 -O 4 -t 1",
                 "output_biascorrected": true,
                 "output_biasfield": true
             },
             "t1_head_erode_skin":
             {
-                "kernel_shape": "boxv",
-                "kernel_size": 9.0
-            },
-            "t1_skull_gcc_erode":
-            {
-                "kernel_shape": "boxv",
-                "kernel_size": 6.0
-            },
-            "t1_skull_gcc_dilate":
-            {
-                "operation": "modal",
                 "kernel_shape": "boxv",
                 "kernel_size": 6.0
             },
@@ -138,10 +124,6 @@
             {
                 "kernel_shape": "boxv",
                 "kernel_size": 4.0
-            },
-            "t1_skull_fov":
-            {
-                "brainsize": 45
             }
         }
     },
@@ -150,6 +132,10 @@
     {
         "headmask_petra_pipe":
         {
+
+            "petra_itk_debias":
+            {
+            },
             "petra_head_gcc_erode":
             {
                 "kernel_shape": "boxv",
@@ -176,56 +162,51 @@
         },
         "skullmask_petra_pipe":
         {
-
             "petra_fast":
             {
-                "bias_lowpass": 10,
+                "bias_lowpass": 4,
+                "iters_afterbias": 4,
                 "img_type": 3,
+
                 "output_biascorrected": true,
                 "output_biasfield": true
             },
             "petra_head_erode_skin":
             {
                 "kernel_shape": "boxv",
-                "kernel_size": 12.0
+                "kernel_size": 8.0
             },
+
 
             "petra_skull_gcc_erode":
             {
                 "kernel_shape": "boxv",
-                "kernel_size": 1.0
+                "kernel_size": 3.0
             },
             "petra_skull_gcc_dilate":
             {
                 "operation": "modal",
                 "kernel_shape": "boxv",
-                "kernel_size": 1.0
+                "kernel_size": 3.0
             },
+
 
             "petra_skull_dilate":
             {
                 "operation": "modal",
                 "kernel_shape": "boxv",
-                "kernel_size": 3.0
+                "kernel_size": 7.0
             },
             "petra_skull_erode":
             {
                 "kernel_shape": "boxv",
-                "kernel_size": 3.0
-            },
-
-            "petra_skull_fov":
-            {
-                "brainsize": 45
+                "kernel_size": 7.0
             }
         }
     },
+
     "skull_ct_pipe":
     {
-        "align_ct_on_T1_2":
-        {
-        },
-
         "skullmask_ct_pipe":
         {
             "ct_skull_auto_mask":
@@ -251,20 +232,6 @@
             {
                 "brainsize" : 45
             }
-        }
-    },
-    "angio_pipe":
-    {
-        "angio_denoise":
-        {
-            "shrink_factor": 1
-        },
-        "angio_fast":
-        {
-            "args": " -l 10",
-            "img_type": 3,
-            "output_biascorrected": true,
-            "output_biasfield": true
         }
     }
 }
