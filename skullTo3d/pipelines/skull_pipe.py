@@ -992,7 +992,7 @@ def _create_petra_head_mask(name="headmask_petra_pipe", params={}):
             name="petra_head_gcc_erode")
 
         headmask_petra_pipe.connect(
-            petra_head_mask_binary, "out_file",
+            petra_skull_inv, "out_file",
             petra_head_gcc_erode, "in_file")
 
         headmask_petra_pipe.connect(
@@ -1033,7 +1033,7 @@ def _create_petra_head_mask(name="headmask_petra_pipe", params={}):
         petra_head_fill.inputs.operation = 'fillh'
 
         headmask_petra_pipe.connect(
-            petra_head_dilate, "out_file",
+            petra_head_gcc_dilate, "out_file",
             petra_head_fill, "in_file")
 
     return headmask_petra_pipe
