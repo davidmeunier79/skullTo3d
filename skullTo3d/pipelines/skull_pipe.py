@@ -2164,6 +2164,7 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
         name='outputnode')
 
     if "crop_CT" in params:
+
         print('crop_CT is in params')
 
         assert "args" in params["crop_CT"].keys(), \
@@ -2182,59 +2183,115 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
         skull_ct_pipe.connect(inputnode, 'ct',
                               crop_CT, 'in_file')
 
-    # align_ct_on_T1
-    align_ct_on_T1 = pe.Node(interface=RegAladin(),
-                             name="align_ct_on_T1")
+        align_ct_on_T1 = pe.Node(fsl.FLIRT(), name="align_ct_on_T1")
+        align_ct_on_T1.inputs.dof = 6
 
-    align_ct_on_T1.inputs.rig_only_flag = True
+        align_ct_on_T1.inputs.cost = 'normmi'
 
-    if "crop_CT" in params:
         skull_ct_pipe.connect(
             crop_CT, "roi_file",
-            align_ct_on_T1, "flo_file")
-    else:
+            align_ct_on_T1, 'in_file')
+
         skull_ct_pipe.connect(
-            inputnode, 'ct',
-            align_ct_on_T1, "flo_file")
+            inputnode, "stereo_T1",
+            align_ct_on_T1, 'reference')
 
-    skull_ct_pipe.connect(inputnode, "native_T1",
-                          align_ct_on_T1, "ref_file")
+        if "align_ct_on_T1_2" in params:
 
-    if "align_ct_on_T1_2" in params:
+            align_ct_on_T1_2 = pe.Node(fsl.FLIRT(), name="align_ct_on_T1_2")
+            align_ct_on_T1_2.inputs.dof = 6
+
+            align_ct_on_T1_2.inputs.cost = 'normmi'
+
+            skull_ct_pipe.connect(
+                crop_CT, "roi_file",
+                align_ct_on_T1_2, 'in_file')
+
+            skull_ct_pipe.connect(
+                inputnode, "stereo_T1",
+                align_ct_on_T1_2, 'reference')
+
+            # initial matrix
+            skull_ct_pipe.connect(
+                align_ct_on_T1, "out_matrix_file",
+                align_ct_on_T1_2, 'in_matrix_file')
+
+        if "align_ct_on_T1_2" in params:
+            skull_ct_pipe.connect(
+                align_ct_on_T1_2, 'out_file',
+                outputnode, "stereo_ct")
+
+        else:
+            skull_ct_pipe.connect(
+                align_ct_on_T1, 'out_file',
+                outputnode, "stereo_ct")
+
+    else:
 
         # align_ct_on_T1
-        align_ct_on_T1_2 = pe.Node(interface=RegAladin(),
-                                   name="align_ct_on_T1_2")
+        align_ct_on_T1 = pe.Node(
+            interface=RegAladin(),
+            name="align_ct_on_T1")
 
-        align_ct_on_T1_2.inputs.rig_only_flag = True
+        align_ct_on_T1.inputs.rig_only_flag = True
 
-        skull_ct_pipe.connect(align_ct_on_T1, 'res_file',
-                              align_ct_on_T1_2, "flo_file")
+        if "crop_CT" in params:
+            skull_ct_pipe.connect(
+                crop_CT, "roi_file",
+                align_ct_on_T1, "flo_file")
+        else:
+            skull_ct_pipe.connect(
+                inputnode, 'ct',
+                align_ct_on_T1, "flo_file")
 
-        skull_ct_pipe.connect(inputnode, "native_T1",
-                              align_ct_on_T1_2, "ref_file")
+        skull_ct_pipe.connect(
+            inputnode, "native_T1",
+            align_ct_on_T1, "ref_file")
 
-    # align_ct_on_stereo_T1
-    align_ct_on_stereo_T1 = pe.Node(
-        interface=RegResample(pad_val=0.0),
-        name="align_ct_on_stereo_T1")
+        if "align_ct_on_T1_2" in params:
 
-    if "align_ct_on_T1_2" in params:
-        skull_ct_pipe.connect(align_ct_on_T1_2, 'res_file',
-                              align_ct_on_stereo_T1, "flo_file")
+            # align_ct_on_T1
+            align_ct_on_T1_2 = pe.Node(
+                interface=RegAladin(),
+                name="align_ct_on_T1_2")
 
-    else:
-        skull_ct_pipe.connect(align_ct_on_T1, 'res_file',
-                              align_ct_on_stereo_T1, "flo_file")
+            align_ct_on_T1_2.inputs.rig_only_flag = True
 
-    skull_ct_pipe.connect(inputnode, 'native_to_stereo_trans',
-                          align_ct_on_stereo_T1, "trans_file")
+            skull_ct_pipe.connect(
+                align_ct_on_T1, 'res_file',
+                align_ct_on_T1_2, "flo_file")
 
-    skull_ct_pipe.connect(inputnode, "stereo_T1",
-                          align_ct_on_stereo_T1, "ref_file")
-    # output node
-    skull_ct_pipe.connect(align_ct_on_stereo_T1, "out_file",
-                          outputnode, "stereo_ct")
+            skull_ct_pipe.connect(
+                inputnode, "native_T1",
+                align_ct_on_T1_2, "ref_file")
+
+        # align_ct_on_stereo_T1
+        align_ct_on_stereo_T1 = pe.Node(
+            interface=RegResample(pad_val=0.0),
+            name="align_ct_on_stereo_T1")
+
+        if "align_ct_on_T1_2" in params:
+            skull_ct_pipe.connect(
+                align_ct_on_T1_2, 'res_file',
+                align_ct_on_stereo_T1, "flo_file")
+
+        else:
+            skull_ct_pipe.connect(
+                align_ct_on_T1, 'res_file',
+                align_ct_on_stereo_T1, "flo_file")
+
+        skull_ct_pipe.connect(
+            inputnode, 'native_to_stereo_trans',
+            align_ct_on_stereo_T1, "trans_file")
+
+        skull_ct_pipe.connect(
+            inputnode, "stereo_T1",
+            align_ct_on_stereo_T1, "ref_file")
+
+        # output node
+        skull_ct_pipe.connect(
+            align_ct_on_stereo_T1, "out_file",
+            outputnode, "stereo_ct")
 
     if "skullmask_ct_pipe" in params:
 
@@ -2242,8 +2299,21 @@ def create_skull_ct_pipe(name="skull_ct_pipe", params={}):
             name="skullmask_ct_pipe",
             params=params["skullmask_ct_pipe"])
 
-        skull_ct_pipe.connect(align_ct_on_stereo_T1, "out_file",
-                              skullmask_ct_pipe, "inputnode.realigned_ct")
+        if "crop_CT" in params:
+
+            if "align_ct_on_T1_2" in params:
+                skull_ct_pipe.connect(
+                    align_ct_on_T1_2, 'out_file',
+                    skullmask_ct_pipe, "inputnode.realigned_ct")
+
+            else:
+                skull_ct_pipe.connect(
+                    align_ct_on_T1, 'out_file',
+                    skullmask_ct_pipe, "inputnode.realigned_ct")
+        else:
+
+            skull_ct_pipe.connect(align_ct_on_stereo_T1, "out_file",
+                                  skullmask_ct_pipe, "inputnode.realigned_ct")
 
         skull_ct_pipe.connect(inputnode, "indiv_params",
                               skullmask_ct_pipe, "inputnode.indiv_params")
