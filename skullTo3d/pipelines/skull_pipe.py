@@ -963,7 +963,7 @@ def _create_petra_head_mask(name="headmask_petra_pipe", params={}):
             name="petra_head_gcc")
 
         headmask_petra_pipe.connect(
-            petra_head_gcc_erode, "out_file",
+            petra_head_gcc_dilate, "out_file",
             petra_head_gcc, "nii_file")
 
         # petra_head_gcc_erode
