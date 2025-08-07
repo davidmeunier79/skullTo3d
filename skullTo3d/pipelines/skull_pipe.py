@@ -936,19 +936,23 @@ def _create_petra_head_mask(name="headmask_petra_pipe", params={}):
     if "petra_head_gcc_erode" in params and "petra_head_gcc_dilate" in params:
 
         # #### gcc erode gcc and dilate back
-        # petra_head_gcc_erode
-        petra_head_gcc_erode = NodeParams(
-            interface=ErodeImage(),
-            params=parse_key(params, "petra_head_gcc_erode"),
-            name="petra_head_gcc_erode")
+
+        # petra_head_gcc_dilate
+        petra_head_gcc_dilate = NodeParams(
+            interface=DilateImage(),
+            params=parse_key(params, "petra_head_gcc_dilate"),
+            name="petra_head_gcc_dilate")
 
         headmask_petra_pipe.connect(
             petra_skull_inv, "out_file",
-            petra_head_gcc_erode, "in_file")
+            petra_head_gcc_dilate, "in_file")
 
         headmask_petra_pipe.connect(
-                inputnode, ('indiv_params', parse_key, "petra_head_gcc_erode"),
-                petra_head_gcc_erode, "indiv_params")
+                inputnode, ('indiv_params',
+                            parse_key, "petra_head_gcc_dilate"),
+                petra_head_gcc_dilate, "indiv_params")
+
+
 
         # petra_head_mask_binary_clean1
         petra_head_gcc = pe.Node(
@@ -962,20 +966,63 @@ def _create_petra_head_mask(name="headmask_petra_pipe", params={}):
             petra_head_gcc_erode, "out_file",
             petra_head_gcc, "nii_file")
 
-        # petra_head_gcc_dilate
-        petra_head_gcc_dilate = NodeParams(
-            interface=DilateImage(),
-            params=parse_key(params, "petra_head_gcc_dilate"),
-            name="petra_head_gcc_dilate")
+        # petra_head_gcc_erode
+        petra_head_gcc_erode = NodeParams(
+            interface=ErodeImage(),
+            params=parse_key(params, "petra_head_gcc_erode"),
+            name="petra_head_gcc_erode")
 
         headmask_petra_pipe.connect(
+
             petra_head_gcc, "gcc_nii_file",
-            petra_head_gcc_dilate, "in_file")
+            petra_head_gcc_erode, "in_file")
 
         headmask_petra_pipe.connect(
-                inputnode, ('indiv_params',
-                            parse_key, "petra_head_gcc_dilate"),
-                petra_head_gcc_dilate, "indiv_params")
+                inputnode, ('indiv_params', parse_key, "petra_head_gcc_erode"),
+                petra_head_gcc_erode, "indiv_params")
+
+        #
+        # # #### gcc erode gcc and dilate back
+        # # petra_head_gcc_erode
+        # petra_head_gcc_erode = NodeParams(
+        #     interface=ErodeImage(),
+        #     params=parse_key(params, "petra_head_gcc_erode"),
+        #     name="petra_head_gcc_erode")
+        #
+        # headmask_petra_pipe.connect(
+        #     petra_skull_inv, "out_file",
+        #     petra_head_gcc_erode, "in_file")
+        #
+        # headmask_petra_pipe.connect(
+        #         inputnode, ('indiv_params', parse_key, "petra_head_gcc_erode"),
+        #         petra_head_gcc_erode, "indiv_params")
+        #
+        # # petra_head_mask_binary_clean1
+        # petra_head_gcc = pe.Node(
+        #     interface=niu.Function(
+        #         input_names=["nii_file"],
+        #         output_names=["gcc_nii_file"],
+        #         function=keep_gcc),
+        #     name="petra_head_gcc")
+        #
+        # headmask_petra_pipe.connect(
+        #     petra_head_gcc_erode, "out_file",
+        #     petra_head_gcc, "nii_file")
+        #
+        # # petra_head_gcc_dilate
+        # petra_head_gcc_dilate = NodeParams(
+        #     interface=DilateImage(),
+        #     params=parse_key(params, "petra_head_gcc_dilate"),
+        #     name="petra_head_gcc_dilate")
+        #
+        # headmask_petra_pipe.connect(
+        #     petra_head_gcc, "gcc_nii_file",
+        #     petra_head_gcc_dilate, "in_file")
+        #
+        # headmask_petra_pipe.connect(
+        #         inputnode, ('indiv_params',
+        #                     parse_key, "petra_head_gcc_dilate"),
+        #         petra_head_gcc_dilate, "indiv_params")
 
     else:
 
@@ -1001,7 +1048,8 @@ def _create_petra_head_mask(name="headmask_petra_pipe", params={}):
     if "petra_head_gcc_erode" in params and "petra_head_gcc_dilate" in params:
 
         headmask_petra_pipe.connect(
-            petra_head_gcc_dilate, "out_file",
+            #petra_head_gcc_dilate, "out_file",
+            petra_head_gcc_erode, "out_file",
             petra_head_fill, "in_file")
 
     else:
