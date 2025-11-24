@@ -2,7 +2,7 @@
 def update_skull_params(ssoft, params):
 
     if "noheadmask" in ssoft:
-        print("Found nohead in soft")
+        print("Found noheadmask in soft")
 
         if "skull_petra_pipe" in params:
             spp = params["skull_petra_pipe"]
@@ -62,7 +62,7 @@ def update_skull_params(ssoft, params):
 
     elif "noskullmask" in ssoft:
 
-        print("Found noskull in soft")
+        print("Found noskullmask in soft")
 
         if "skull_petra_pipe" in params:
             spp = params["skull_petra_pipe"]
@@ -104,6 +104,31 @@ def update_skull_params(ssoft, params):
             if "skullmask_ct_pipe" in spp:
                 print('deleting skullmask_ct_pipe')
                 del spp["skullmask_ct_pipe"]
+
+    elif "nofullskullmask" in ssoft:
+
+        print("Found nofullskullmask in soft")
+
+        if "skull_petra_pipe" in params:
+            spp = params["skull_petra_pipe"]
+
+            if "fullskullmask_petra_pipe" in spp:
+                print('deleting fullskullmask_petra_pipe')
+                del spp["fullskullmask_petra_pipe"]
+
+        if "skull_megre_pipe" in params:
+            smp = params["skull_megre_pipe"]
+
+            if "fullskullmask_megre_pipe" in smp:
+                print('deleting fullskullmask_megre_pipe')
+                del smp["fullskullmask_megre_pipe"]
+
+        if "skull_t1_pipe" in params:
+            spp = params["skull_t1_pipe"]
+
+            if "fullskullmask_t1_pipe" in spp:
+                print('deleting fullskullmask_t1_pipe')
+                del spp["fullskullmask_t1_pipe"]
 
     # if no brain seg mask, removed fullskullmask
     if "noseg" in ssoft or "prep" in ssoft:
