@@ -720,9 +720,9 @@ def _create_skullmask_megre(name="skullmask_pipe", params={}, prefix=""):
                 function=keep_gcc),
             name=prefix + "skull_gcc")
 
-            skullmask_pipe.connect(
-                skull_mask_binary, "out_file",
-                skull_gcc, "nii_file")
+        skullmask_pipe.connect(
+            skull_mask_binary, "out_file",
+            skull_gcc, "nii_file")
 
     # skull_dilate ####### [okey][json]
     skull_dilate = NodeParams(
