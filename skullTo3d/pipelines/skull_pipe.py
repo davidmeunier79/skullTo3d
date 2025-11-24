@@ -675,14 +675,9 @@ def _create_skullmask_megre(name="skullmask_pipe", params={}, prefix=""):
             params=parse_key(params, prefix + "skull_gcc_erode"),
             name=prefix + "skull_gcc_erode")
 
-        if prefix + "head_erode_skin" in params.keys():
-            skullmask_pipe.connect(
-                skin_masked, "out_file",
-                skull_gcc_erode, "in_file")
-        else:
-            skullmask_pipe.connect(
-                skull_mask_binary, "out_file",
-                skull_gcc_erode, "in_file")
+        skullmask_pipe.connect(
+            skull_mask_binary, "out_file",
+            skull_gcc_erode, "in_file")
 
         skullmask_pipe.connect(
             inputnode, ('indiv_params', parse_key, prefix + "skull_gcc_erode"),
@@ -725,11 +720,6 @@ def _create_skullmask_megre(name="skullmask_pipe", params={}, prefix=""):
                 function=keep_gcc),
             name=prefix + "skull_gcc")
 
-        if prefix + "head_erode_skin" in params.keys():
-            skullmask_pipe.connect(
-                skin_masked, "out_file",
-                skull_gcc, "nii_file")
-        else:
             skullmask_pipe.connect(
                 skull_mask_binary, "out_file",
                 skull_gcc, "nii_file")
