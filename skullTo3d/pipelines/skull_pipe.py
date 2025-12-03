@@ -133,7 +133,7 @@ def _create_head_mask(name="headmask_pipe", params={}, prefix=""):
 
             headmask_pipe.connect(
                 fast_debias, "restored_image",
-                head_mask_thr, "in_file")
+                head_auto_mask, "img_file")
         else:
 
             headmask_pipe.connect(
@@ -163,7 +163,7 @@ def _create_head_mask(name="headmask_pipe", params={}, prefix=""):
 
             headmask_pipe.connect(
                 fast_debias, "restored_image",
-                head_mask_thr, "in_file")
+                head_li_mask, "orig_img_file")
         else:
 
             headmask_pipe.connect(
