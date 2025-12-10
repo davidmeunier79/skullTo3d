@@ -75,7 +75,7 @@ mandatory parameters
   * ``_4animal`` :  will use bet4animal (FSL) for brain extraction, for faster computation (by default atlas_brex is used)
   * ``_quick`` : will use hd-bet (Deep Learning) for brain extraction, for faster computation (by default atlas_brex is used)
 
-  **NB:** hd-bet requires a specific version of macapype/skullTo3d, not available by default
+**NB:** hd-bet requires a specific version of macapype/skullTo3d, not available by default
 
   This option should be used if the coregistration to template in preparation is not performed correctly:
 
