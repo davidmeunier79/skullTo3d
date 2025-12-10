@@ -81,9 +81,12 @@ mandatory parameters
   * ``_test`` : (at the end) to check if the full pipeline is coherent (will only generate the graph.dot and graph.png)
   * ``_prep`` (at the end) will perform data preparation (no brain extraction and segmentation)
   * ``_noseg`` (at the end) will perform data preparation and brain extraction (no segmentation)
+
   *  ``_skull`` after SPM or ANTS if you want to process skull or angio *specific to skullTo3d*; otherwise the main pipelines of macapype will be launched (only brain segmentation will be performed) **NB:** ``_skullnoisypetra`` instead of ``_skull`` available for macaque with issues on petra **NB:** ``-soft skull`` without processing brain is possible, but is still experimental. It only works if ``-skull_dt CT petra`` and -deriv -padback are NOT defined
-  * ``_noskullmask`` (at the end) will perform realignement to stereo and headmask (only realignement for CT)
+
   * ``_noheadmask`` (at the end) will perform only realignement to stereo
+  * ``_noskullmask`` (at the end) will perform realignement to stereo and compute headmask (only realignement for CT)
+  * ``_nofullskullmask`` (at the end) will not perform fullskullmask (only realignement for CT)
 
 --------------------
 exclusive parameters
