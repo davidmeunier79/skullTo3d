@@ -67,6 +67,22 @@ def _create_head_mask(name="headmask_pipe", params={}, prefix=""):
             inputnode, "stereo_img",
             itkdebias, "img_file")
 
+    elif prefix + "fast_debias" in params.keys():
+
+        # fast over T1
+        fast_debias = NodeParams(
+            fsl.FAST(),
+            params=parse_key(params, "fast_debias"),
+            name='fast_debias')
+
+        fast_debias.inputs.output_biascorrected = True
+        fast_debias.inputs.output_biasfield = True
+        fast_debias.inputs.img_type = 3
+
+        headmask_pipe.connect(
+            inputnode, "stereo_img",
+            fast_debias, "in_files")
+
     # ### head mask
     # headmask_threshold
     if prefix + "head_mask_thr" in params.keys():
@@ -80,6 +96,11 @@ def _create_head_mask(name="headmask_pipe", params={}, prefix=""):
 
             headmask_pipe.connect(
                 itkdebias, "cor_img_file",
+                head_mask_thr, "in_file")
+        elif prefix + "fast_debias" in params.keys():
+
+            headmask_pipe.connect(
+                fast_debias, "restored_image",
                 head_mask_thr, "in_file")
         else:
 
@@ -107,6 +128,11 @@ def _create_head_mask(name="headmask_pipe", params={}, prefix=""):
             headmask_pipe.connect(
                 itkdebias, "cor_img_file",
                 head_auto_mask, "img_file")
+        elif prefix + "fast_debias" in params.keys():
+
+            headmask_pipe.connect(
+                fast_debias, "restored_image",
+                head_auto_mask, "img_file")
         else:
 
             headmask_pipe.connect(
@@ -130,6 +156,12 @@ def _create_head_mask(name="headmask_pipe", params={}, prefix=""):
 
             headmask_pipe.connect(
                 itkdebias, "cor_img_file",
+                head_li_mask, "orig_img_file")
+
+        elif prefix + "fast_debias" in params.keys():
+
+            headmask_pipe.connect(
+                fast_debias, "restored_image",
                 head_li_mask, "orig_img_file")
         else:
 
