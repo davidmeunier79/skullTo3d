@@ -845,6 +845,10 @@ def _create_fullskull_mask(name="fullskull_pipe", params={}, prefix=""):
         brainmask_binary, "out_file",
         brainmask_expand, "in_file")
 
+    skullmask_ct_pipe.connect(
+        inputnode, ('indiv_params', parse_key, prefix + "brainmask_expand"),
+        brainmask_expand, "indiv_params")
+
     # add masks
     fullskull_mask_add = pe.Node(
         interface=BinaryMaths(),
