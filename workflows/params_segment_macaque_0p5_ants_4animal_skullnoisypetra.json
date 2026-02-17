@@ -225,7 +225,7 @@
             {
                 "operation": "modal",
                 "kernel_shape": "boxv",
-                "kernel_size": 7.0
+                "kernel_size": 9.0
             },
             "petra_skull_erode":
             {
