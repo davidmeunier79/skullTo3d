@@ -930,11 +930,11 @@ def _create_fullskull_mask(name="fullskull_pipe", params={}, prefix=""):
             params=parse_key(params, prefix + "fullskull_fov"),
             name=prefix + "fullskull_fov")
 
-        fullskullmask_pipe.connect(
+        fullskull_pipe.connect(
             fullskull_erode, "out_file",
             fullskull_fov, "in_file")
 
-        fullskullmask_pipe.connect(
+        fullskull_pipe.connect(
             inputnode, ('indiv_params', parse_key, prefix + "fullskull_fov"),
             fullskull_fov, "indiv_params")
 
@@ -945,7 +945,7 @@ def _create_fullskull_mask(name="fullskull_pipe", params={}, prefix=""):
                                    function=keep_gcc),
             name=prefix + "fullskull_clean")
 
-        fullskullmask_pipe.connect(
+        fullskull_pipe.connect(
             fullskull_fov, "out_roi",
             fullskull_clean, "nii_file")
 
@@ -954,7 +954,7 @@ def _create_fullskull_mask(name="fullskull_pipe", params={}, prefix=""):
             interface=IsoSurface(KPB = 0.0001, NITER = 1000),
             name=prefix + "mesh_robustfullskull")
 
-        fullskullmask_pipe.connect(
+        fullskull_pipe.connect(
             fullskull_clean, "gcc_nii_file",
             mesh_robustfullskull, "nii_file")
 
