@@ -1288,6 +1288,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         niu.IdentityInterface(
             fields=["petra_skull_mask", "petra_skull_stl", "stereo_petra",
                     "robustpetra_skull_mask", "robustpetra_skull_stl",
+                    "robustpetra_fullskull_mask", "robustpetra_fullskull_stl",
                     "petra_head_mask", "petra_head_stl",
                     "petra_fullskull_stl",
                     "petra_fullskull_mask",
