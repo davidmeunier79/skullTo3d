@@ -1483,7 +1483,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
             outputnode, "robustpetra_fullskull_mask")
 
         skull_petra_pipe.connect(
-            fullskullmask_pipe, "petra_mesh_robustskull.stl_file",
+            fullskullmask_pipe, "petra_mesh_robustfullskull.stl_file",
             outputnode, "robustpetra_fullskull_stl")
 
     return skull_petra_pipe
