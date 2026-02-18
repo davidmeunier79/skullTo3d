@@ -438,7 +438,7 @@ def rename_all_skull_petra_derivatives(params, main_workflow,
                     niu.Rename(), name="rename_robustpetra_fullskull_stl")
 
                 rename_robustpetra_fullskull_stl.inputs.format_string = \
-                    pref_deriv + "_desc-robustpetra_skullmask"
+                    pref_deriv + "_desc-robustpetra_fullskullmask"
                 rename_robustpetra_fullskull_stl.inputs.parse_string = parse_str
                 rename_robustpetra_fullskull_stl.inputs.keep_ext = True
 
