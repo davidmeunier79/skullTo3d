@@ -443,7 +443,7 @@ def rename_all_skull_petra_derivatives(params, main_workflow,
                 rename_robustpetra_fullskull_stl.inputs.keep_ext = True
 
                 main_workflow.connect(
-                    fullskull_petra_pipe, 'outputnode.robustpetra_fullskull_stl',
+                    skull_petra_pipe, 'outputnode.robustpetra_fullskull_stl',
                     rename_robustpetra_fullskull_stl, 'in_file')
 
                 main_workflow.connect(
@@ -463,7 +463,7 @@ def rename_all_skull_petra_derivatives(params, main_workflow,
                 rename_stereo_robustpetra_fullskull_mask.inputs.keep_ext = True
 
                 main_workflow.connect(
-                    fullskull_petra_pipe, 'outputnode.robustpetra_fullskull_mask',
+                    skull_petra_pipe, 'outputnode.robustpetra_fullskull_mask',
                     rename_stereo_robustpetra_fullskull_mask, 'in_file')
 
                 main_workflow.connect(
