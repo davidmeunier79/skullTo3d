@@ -249,6 +249,10 @@
             {
                 "kernel_shape": "boxv",
                 "kernel_size": 7.0
+            },
+            "petra_fullskull_fov":
+            {
+                "brainsize": 90
             }
         }
     },

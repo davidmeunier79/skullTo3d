@@ -922,6 +922,42 @@ def _create_fullskull_mask(name="fullskull_pipe", params={}, prefix=""):
         fullskull_crop, "out_file",
         mesh_fullskull_crop, "nii_file")
 
+    if prefix + "fullskull_fov" in params.keys():
+
+        # skull_fov ####### [okey][json]
+        fullskull_fov = NodeParams(
+            interface=RobustFOV(),
+            params=parse_key(params, prefix + "fullskull_fov"),
+            name=prefix + "fullskull_fov")
+
+        fullskullmask_pipe.connect(
+            fullskull_erode, "out_file",
+            fullskull_fov, "in_file")
+
+        fullskullmask_pipe.connect(
+            inputnode, ('indiv_params', parse_key, prefix + "fullskull_fov"),
+            fullskull_fov, "indiv_params")
+
+        # fullskull_clean ####### [okey]
+        fullskull_clean = pe.Node(
+            interface=niu.Function(input_names=["nii_file"],
+                                   output_names=["gcc_nii_file"],
+                                   function=keep_gcc),
+            name=prefix + "fullskull_clean")
+
+        fullskullmask_pipe.connect(
+            fullskull_fov, "out_roi",
+            fullskull_clean, "nii_file")
+
+        # mesh_robustfullskull #######
+        mesh_robustfullskull = pe.Node(
+            interface=IsoSurface(KPB = 0.0001, NITER = 1000),
+            name=prefix + "mesh_robustfullskull")
+
+        fullskullmask_pipe.connect(
+            fullskull_clean, "gcc_nii_file",
+            mesh_robustfullskull, "nii_file")
+
     return fullskull_pipe
 
 ##############################################################################
@@ -1439,6 +1475,16 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_petra_pipe.connect(fullskullmask_pipe,
                              "petra_mesh_fullskull_crop.stl_file",
                              outputnode, "petra_fullskull_crop_stl")
+
+    if "petra_fullskull_fov" in params["fullskullmask_petra_pipe"].keys():
+
+        skull_petra_pipe.connect(
+            fullskullmask_pipe, "petra_fullskull_fov.out_roi",
+            outputnode, "robustpetra_fullskull_mask")
+
+        skull_petra_pipe.connect(
+            fullskullmask_pipe, "petra_mesh_robustskull.stl_file",
+            outputnode, "robustpetra_fullskull_stl")
 
     return skull_petra_pipe
 
