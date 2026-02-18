@@ -317,7 +317,7 @@ def rename_all_skull_petra_derivatives(params, main_workflow,
                 rename_stereo_petra_skull_mask, 'out_file',
                 datasink, '@stereo_petra_skull_mask')
 
-            if "petra_skull_fov" in pspp:
+            if "petra_skull_fov" in pspp["skullmask_petra_pipe"]:
 
                 # rename robustpetra_skull_stl
                 rename_robustpetra_skull_stl = pe.Node(
