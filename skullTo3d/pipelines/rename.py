@@ -468,7 +468,7 @@ def rename_all_skull_petra_derivatives(params, main_workflow,
 
                 main_workflow.connect(
                     rename_stereo_robustpetra_fullskull_mask, 'out_file',
-                    datasink, '@stereo_robustpetra_skullmask')
+                    datasink, '@stereo_robustpetra_fullskullmask')
 
 
 def rename_all_skull_ct_derivatives(params, main_workflow,
