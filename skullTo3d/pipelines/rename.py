@@ -452,10 +452,10 @@ def rename_all_skull_petra_derivatives(params, main_workflow,
 
                 # rename stereo_robustpetra_fullskull_mask
                 rename_stereo_robustpetra_fullskull_mask = pe.Node(
-                    niu.Rename(), name="rename_stereo_robustpetra_skullmask")
+                    niu.Rename(), name="rename_stereo_robustpetra_fullskullmask")
 
                 rename_stereo_robustpetra_fullskull_mask.inputs.format_string = \
-                    pref_deriv + "_space-stereo_desc-robustpetra_skullmask"
+                    pref_deriv + "_space-stereo_desc-robustpetra_fullskullmask"
 
                 rename_stereo_robustpetra_fullskull_mask.inputs.parse_string = \
                     parse_str
