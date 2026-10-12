@@ -298,7 +298,7 @@ def _create_head_mask(name="headmask_pipe", params={}, prefix=""):
     # mask_head
     # mesh_head #######
     mesh_head = pe.Node(
-        interface=IsoSurface(),
+        interface=IsoSurface(KPB=0.0001, NITER=1000),
         name=prefix + "mesh_head")
 
     headmask_pipe.connect(
@@ -459,7 +459,7 @@ def _create_skull_mask(name="skullmask_pipe", params={}, prefix=""):
 
         # mesh_awskull #######
         mesh_rawskull = pe.Node(
-            IsoSurface(),
+            interface=IsoSurface(KPB=0.0001, NITER=1000),
             name=prefix+"mesh_rawskull")
 
         skullmask_pipe.connect(
@@ -581,7 +581,7 @@ def _create_skull_mask(name="skullmask_pipe", params={}, prefix=""):
 
     # mesh_skull #######
     mesh_skull = pe.Node(
-        interface=IsoSurface(),
+        interface=IsoSurface(KPB=0.0001, NITER=1000),
         name=prefix + "mesh_skull")
 
     skullmask_pipe.connect(
@@ -617,7 +617,7 @@ def _create_skull_mask(name="skullmask_pipe", params={}, prefix=""):
 
         # mesh_robustskull #######
         mesh_robustskull = pe.Node(
-            interface=IsoSurface(),
+            interface=IsoSurface(KPB=0.0001, NITER=1000),
             name=prefix + "mesh_robustskull")
 
         skullmask_pipe.connect(
@@ -756,11 +756,8 @@ def _create_skullmask_ct_pipe(name="skullmask_ct_pipe", params={}):
 
     # mesh_ct_skull #######
     mesh_ct_skull = pe.Node(
-        interface=IsoSurface(),
+        interface=IsoSurface(KPB=0.0001, NITER=1000),
         name="mesh_ct_skull")
-
-    mesh_ct_skull.inputs.KPB = 0.0001
-    mesh_ct_skull.inputs.NITER = 1000
 
     skullmask_ct_pipe.connect(
         ct_skull_erode, "out_file",
@@ -795,11 +792,8 @@ def _create_skullmask_ct_pipe(name="skullmask_ct_pipe", params={}):
 
         # mesh_robustct_skull #######
         mesh_robustct_skull = pe.Node(
-            interface=IsoSurface(),
+            interface=IsoSurface(KPB=0.0001, NITER=1000),
             name="mesh_robustct_skull")
-
-        mesh_robustct_skull.inputs.KPB = 0.0001
-        mesh_robustct_skull.inputs.NITER = 1000
 
         skullmask_ct_pipe.connect(
             ct_skull_clean, "gcc_nii_file",
@@ -897,11 +891,8 @@ def _create_fullskull_mask(name="fullskull_pipe", params={}, prefix=""):
 
     # mesh_fullskull #######
     mesh_fullskull = pe.Node(
-        interface=IsoSurface(),
+        interface=IsoSurface(KPB=0.0001, NITER=1000),
         name=prefix + "mesh_fullskull")
-
-    mesh_fullskull.inputs.KPB = 0.0001
-    mesh_fullskull.inputs.NITER = 1000
 
     fullskull_pipe.connect(
         fullskull_erode, "out_file",
@@ -923,15 +914,48 @@ def _create_fullskull_mask(name="fullskull_pipe", params={}, prefix=""):
 
     # mesh_fullskull_crop #######
     mesh_fullskull_crop = pe.Node(
-        interface=IsoSurface(),
+        interface=IsoSurface(KPB=0.0001, NITER=1000),
         name=prefix + "mesh_fullskull_crop")
-
-    mesh_fullskull_crop.inputs.KPB = 0.0001
-    mesh_fullskull_crop.inputs.NITER = 1000
 
     fullskull_pipe.connect(
         fullskull_crop, "out_file",
         mesh_fullskull_crop, "nii_file")
+
+    if prefix + "fullskull_fov" in params.keys():
+
+        # skull_fov ####### [okey][json]
+        fullskull_fov = NodeParams(
+            interface=RobustFOV(),
+            params=parse_key(params, prefix + "fullskull_fov"),
+            name=prefix + "fullskull_fov")
+
+        fullskull_pipe.connect(
+            fullskull_erode, "out_file",
+            fullskull_fov, "in_file")
+
+        fullskull_pipe.connect(
+            inputnode, ('indiv_params', parse_key, prefix + "fullskull_fov"),
+            fullskull_fov, "indiv_params")
+
+        # fullskull_clean ####### [okey]
+        fullskull_clean = pe.Node(
+            interface=niu.Function(input_names=["nii_file"],
+                                   output_names=["gcc_nii_file"],
+                                   function=keep_gcc),
+            name=prefix + "fullskull_clean")
+
+        fullskull_pipe.connect(
+            fullskull_fov, "out_roi",
+            fullskull_clean, "nii_file")
+
+        # mesh_robustfullskull #######
+        mesh_robustfullskull = pe.Node(
+            interface=IsoSurface(KPB=0.0001, NITER=1000),
+            name=prefix + "mesh_robustfullskull")
+
+        fullskull_pipe.connect(
+            fullskull_clean, "gcc_nii_file",
+            mesh_robustfullskull, "nii_file")
 
     return fullskull_pipe
 
@@ -1263,6 +1287,7 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
         niu.IdentityInterface(
             fields=["petra_skull_mask", "petra_skull_stl", "stereo_petra",
                     "robustpetra_skull_mask", "robustpetra_skull_stl",
+                    "robustpetra_fullskull_mask", "robustpetra_fullskull_stl",
                     "petra_head_mask", "petra_head_stl",
                     "petra_fullskull_stl",
                     "petra_fullskull_mask",
@@ -1450,6 +1475,16 @@ def create_skull_petra_pipe(name="skull_petra_pipe", params={}):
     skull_petra_pipe.connect(fullskullmask_pipe,
                              "petra_mesh_fullskull_crop.stl_file",
                              outputnode, "petra_fullskull_crop_stl")
+
+    if "petra_fullskull_fov" in params["fullskullmask_petra_pipe"].keys():
+
+        skull_petra_pipe.connect(
+            fullskullmask_pipe, "petra_fullskull_fov.out_roi",
+            outputnode, "robustpetra_fullskull_mask")
+
+        skull_petra_pipe.connect(
+            fullskullmask_pipe, "petra_mesh_robustfullskull.stl_file",
+            outputnode, "robustpetra_fullskull_stl")
 
     return skull_petra_pipe
 
