@@ -662,46 +662,19 @@ def _create_li_skull_mask(name="li_skullmask_pipe", params={}, prefix=""):
     skullmask_pipe.connect(
         skull_li_mask, "lithr_img_file",
         skull_inv, "in_file")
-    #
-    # # skull_auto_thresh
-    # if prefix + "head_erode_skin" in params.keys():
-    #
-    #     head_erode_skin = NodeParams(
-    #         interface=ErodeImage(),
-    #         params=parse_key(params, prefix + "head_erode_skin"),
-    #         name=prefix + "head_erode_skin")
-    #
-    #     skullmask_pipe.connect(
-    #         inputnode, "headmask",
-    #         head_erode_skin, "in_file")
-    #
-    #     skullmask_pipe.connect(
-    #         inputnode, ("indiv_params", parse_key, prefix + "head_erode_skin"),
-    #         head_erode_skin, "indiv_params")
-    #
-    # # ### Masking with head mask or skin_erode_head_mask
-    # # skin_masked ####### [okey]
-    # skin_masked = pe.Node(interface=ApplyMask(),
-    #                       name=prefix + "skin_masked")
-    #
-    # if prefix + "head_erode_skin" in params.keys():
-    #     skullmask_pipe.connect(
-    #         head_erode_skin, "out_file",
-    #         skin_masked, "mask_file")
-    # else:
-    #     skullmask_pipe.connect(
-    #         inputnode, "headmask",
-    #         skin_masked, "mask_file")
-    #
-    # if prefix + "fast" in params.keys():
-    #     skullmask_pipe.connect(
-    #         skull_mask_binary, "out_file",
-    #         skin_masked, "in_file")
-    #
-    # else:
-    #     skullmask_pipe.connect(
-    #         skull_inv, "out_file",
-    #         skin_masked, "in_file")
+
+    # ### Masking li with head mask or skin_erode_head_mask
+    # skin_masked ####### [okey]
+    li_masked = pe.Node(interface=ApplyMask(),
+                          name=prefix + "li_masked")
+
+    skullmask_pipe.connect(
+        inputnode, "headmask",
+        skin_masked, "mask_file")
+
+    skullmask_pipe.connect(
+        li_masked, "out_file",
+        skin_masked, "in_file")
     #
     # if prefix+"mesh_rawskull" in params:
     #
