@@ -675,6 +675,21 @@ def _create_li_skull_mask(name="li_skullmask_pipe", params={}, prefix=""):
     skullmask_pipe.connect(
         skull_inv, "out_file",
         li_masked, "in_file")
+
+
+
+    # skull_gcc ####### [okey]
+    skull_gcc = pe.Node(
+        interface=niu.Function(
+            input_names=["nii_file"],
+            output_names=["gcc_nii_file"],
+            function=keep_gcc),
+        name=prefix + "skull_gcc")
+
+    skullmask_pipe.connect(
+        li_masked, "out_file",
+        skull_gcc, "nii_file")
+
     #
     # if prefix+"mesh_rawskull" in params:
     #
