@@ -648,9 +648,9 @@ def _create_li_skull_mask(name="li_skullmask_pipe", params={}, prefix=""):
                 function=apply_li_thresh),
             name=prefix + "skull_li_mask")
 
-        skullmask_pipe.connect(
-            inputnode, "headmasked_img",
-            skull_li_mask, "orig_img_file")
+    skullmask_pipe.connect(
+        inputnode, "headmasked_img",
+        skull_li_mask, "orig_img_file")
 
     # fslmaths mask -mul -1 -add 1 invmask
     skull_inv = pe.Node(
