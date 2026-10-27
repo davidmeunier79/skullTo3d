@@ -670,11 +670,11 @@ def _create_li_skull_mask(name="li_skullmask_pipe", params={}, prefix=""):
 
     skullmask_pipe.connect(
         inputnode, "headmask",
-        skin_masked, "mask_file")
+        li_masked, "mask_file")
 
     skullmask_pipe.connect(
-        li_masked, "out_file",
-        skin_masked, "in_file")
+        skull_inv, "out_file",
+        li_masked, "in_file")
     #
     # if prefix+"mesh_rawskull" in params:
     #
