@@ -162,21 +162,23 @@ def apply_masked_li_thresh(orig_img_file, mask_file):
 
     print("Min/max values orig img :", np.min(data_orig), np.max(data_orig))
 
+    lithresh = threshold_li(data_orig)
+
+    print(lithresh)
+
+    # redaing mask
     mask_img = nib.load(mask_file)
 
     data_mask = mask_img.get_fdata()
 
-    masked_data = data_orig [data_mask != 0]
+    # li_thresh with mask_data
+    lithresh = threshold_li(data_orig [data_mask])
 
-    print("Min/max values orig img :", np.min(masked_data), np.max(masked_data))
+    print(lithresh)
 
-
-    lithresh = threshold_li(masked_data)
-
-    img_lithresh_data = masked_data.astype(np.int16)
-
-    img_lithresh_data[masked_data <= lithresh] = 0
-    img_lithresh_data[lithresh < masked_data] = 1
+    img_lithresh_data = data_orig.astype(np.int16)
+    img_lithresh_data[data_orig <= lithresh] = 0
+    img_lithresh_data[data_orig < masked_data] = 1
 
     print("Min/max values after lithresh:", np.min(img_lithresh_data),
           np.max(img_lithresh_data))
