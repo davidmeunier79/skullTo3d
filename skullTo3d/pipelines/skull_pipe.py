@@ -1478,7 +1478,7 @@ def create_autonomous_skull_petra_pipe(name="skull_petra_pipe", params={}):
     if "skullmask_petra_pipe" in params:
 
         skullmask_pipe = _create_li_skull_mask(
-            name="skullmask_petra_pipe",
+            name="li_skullmask_petra_pipe",
             params=params["skullmask_petra_pipe"], prefix="petra_")
 
         skull_petra_pipe.connect(
