@@ -1134,10 +1134,11 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
             pref_deriv = "sub-%(sub)s_ses-%(ses)s"
             parse_str = r"sub-(?P<sub>\w*)_ses-(?P<ses>\w*)_.*"
 
-        rename_all_brain_derivatives(
-            params, main_workflow, segment_brain_pipe,
-            datasink, pref_deriv, parse_str, pad, ssoft,
-            brain_dt)
+        if len(brain_dt):
+            rename_all_brain_derivatives(
+                params, main_workflow, segment_brain_pipe,
+                datasink, pref_deriv, parse_str, pad, ssoft,
+                brain_dt)
 
         if "petra" in skull_dt and "skull_petra_pipe" in params.keys():
             rename_all_skull_petra_derivatives(
