@@ -643,19 +643,14 @@ def _create_li_skull_mask(name="li_skullmask_pipe", params={}, prefix=""):
     # skull_li_mask
     skull_li_mask = pe.Node(
             interface=niu.Function(
-                input_names=["orig_img_file", "mask_file"],
+                input_names=["orig_img_file"],
                 output_names=["lithr_img_file"],
-                function=apply_masked_li_thresh),
+                function=apply_li_thresh),
             name=prefix + "skull_li_mask")
 
     skullmask_pipe.connect(
         inputnode, "headmasked_img",
         skull_li_mask, "orig_img_file")
-
-    skullmask_pipe.connect(
-        inputnode, "headmask",
-        skull_li_mask, "mask_file")
-
 
     # fslmaths mask -mul -1 -add 1 invmask
     skull_inv = pe.Node(
@@ -693,6 +688,62 @@ def _create_li_skull_mask(name="li_skullmask_pipe", params={}, prefix=""):
     skullmask_pipe.connect(
         li_masked, "out_file",
         skull_gcc, "nii_file")
+
+
+    # # skull_li_mask
+    # skull_li_mask = pe.Node(
+    #         interface=niu.Function(
+    #             input_names=["orig_img_file", "mask_file"],
+    #             output_names=["lithr_img_file"],
+    #             function=apply_masked_li_thresh),
+    #         name=prefix + "skull_li_mask")
+    #
+    # skullmask_pipe.connect(
+    #     inputnode, "headmasked_img",
+    #     skull_li_mask, "orig_img_file")
+    #
+    # skullmask_pipe.connect(
+    #     inputnode, "headmask",
+    #     skull_li_mask, "mask_file")
+    #
+    #
+    # # fslmaths mask -mul -1 -add 1 invmask
+    # skull_inv = pe.Node(
+    #         interface=MathsCommand(),
+    #         name=prefix + "skull_inv")
+    #
+    # skull_inv.inputs.args = " -mul -1 -add 1"
+    #
+    # skullmask_pipe.connect(
+    #     skull_li_mask, "lithr_img_file",
+    #     skull_inv, "in_file")
+    #
+    # # ### Masking li with head mask or skin_erode_head_mask
+    # # skin_masked ####### [okey]
+    # li_masked = pe.Node(interface=ApplyMask(),
+    #                       name=prefix + "li_masked")
+    #
+    # skullmask_pipe.connect(
+    #     inputnode, "headmask",
+    #     li_masked, "mask_file")
+    #
+    # skullmask_pipe.connect(
+    #     skull_inv, "out_file",
+    #     li_masked, "in_file")
+    #
+    #
+    # # skull_gcc ####### [okey]
+    # skull_gcc = pe.Node(
+    #     interface=niu.Function(
+    #         input_names=["nii_file"],
+    #         output_names=["gcc_nii_file"],
+    #         function=keep_gcc),
+    #     name=prefix + "skull_gcc")
+    #
+    # skullmask_pipe.connect(
+    #     li_masked, "out_file",
+    #     skull_gcc, "nii_file")
+    #
 
     #
     # if prefix+"mesh_rawskull" in params:
