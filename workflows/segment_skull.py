@@ -1375,7 +1375,7 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
     params["full_command"] = cmd
 
     # saving real params.json
-    real_params_file = op.join(process_dir, wf_name, "real_params.json")
+    real_params_file = op.join(process_dir, wf_name, "real_params0.json")
 
     if os.path.exists(real_params_file):
         counter = 0
@@ -1394,7 +1394,7 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
             print("process_dir {} already exists".format(process_dir))
 
         real_params_file = op.join(process_dir,
-                                   datasink_name, "real_params.json")
+                                   datasink_name, "real_params0.json")
         if os.path.exists(real_params_file):
             counter = 0
             while os.path.exists(real_params_file):
