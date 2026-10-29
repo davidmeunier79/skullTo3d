@@ -1380,14 +1380,15 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
     if os.path.exists(real_params_file):
         counter = 0
         while os.path.exists(real_params_file):
+            counter += 1
             real_params_file = op.join(
                 process_dir, wf_name, f"real_params{counter}.json")
-            counter += 1
 
     with open(real_params_file, 'w+') as fp:
         json.dump(params, fp, sort_keys=True, indent=4)
 
     if deriv:
+
         try:
             os.makedirs(op.join(process_dir, datasink_name))
         except OSError:
@@ -1395,12 +1396,13 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
 
         real_params_file = op.join(process_dir,
                                    datasink_name, "real_params0.json")
+
         if os.path.exists(real_params_file):
             counter = 0
             while os.path.exists(real_params_file):
+                counter += 1
                 real_params_file = op.join(
                     datasink_name, f"real_params{counter}.json")
-                counter += 1
 
         with open(real_params_file, 'w+') as fp:
             json.dump(params, fp, sort_keys=True, indent=4)
