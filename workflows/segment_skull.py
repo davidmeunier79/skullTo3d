@@ -1401,7 +1401,7 @@ def create_main_workflow(cmd, data_dir, process_dir, soft, species, subjects,
             counter = 0
             while os.path.exists(real_params_file):
                 counter += 1
-                real_params_file = op.join(
+                real_params_file = op.join(process_dir,
                     datasink_name, f"real_params{counter}.json")
 
         with open(real_params_file, 'w+') as fp:
